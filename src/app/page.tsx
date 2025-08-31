@@ -7,25 +7,30 @@ import ZambooMascot from '@/components/zamboo/ZambooMascot'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-neutral-50 relative">
+    <div className="h-screen bg-neutral-50 relative flex flex-col">
       {/* Animated Background Decorations */}
       <BackgroundDecorations />
       {/* Navigation Header */}
-      <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10">
-        <div className="w-full px-6 py-4">
+      <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10 flex-shrink-0">
+        <div className="w-full px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="text-4xl">🐼</div>
-              <h1 className="logo-text-medium">zamboo</h1>
+              <div className="relative panda-logo-special group">
+                <div className="text-4xl animate-panda-eating cursor-pointer panda-icon transition-all duration-300 hover:scale-110">🐼</div>
+                <div className="absolute -right-2 top-1 text-lg animate-bamboo-appear bamboo-stick">🎋</div>
+                <div className="absolute -top-1 -right-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">✨</div>
+                <div className="absolute -bottom-1 -left-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">💫</div>
+              </div>
+              <h1 className="logo-text-small">zamboo</h1>
             </div>
             
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-duo-blue-600 font-medium">
-                <Trophy size={20} />
+                <Trophy size={18} />
                 <span>500</span>
               </div>
               <div className="flex items-center gap-2 text-duo-red-500 font-medium">
-                <Heart size={20} />
+                <Heart size={18} />
                 <span>5</span>
               </div>
             </div>
@@ -34,9 +39,9 @@ export default function Home() {
       </nav>
 
       {/* Main Content */}
-      <div className="flex min-h-screen relative z-10">
+      <div className="flex flex-1 relative z-10 min-h-0">
         {/* Full Height Sidebar - Duolingo Style */}
-        <aside className="hidden lg:flex lg:w-60 bg-white border-r border-neutral-200 flex-col">
+        <aside className="hidden lg:flex lg:w-64 bg-white border-r border-neutral-200 flex-col">
           <div className="p-4 flex-1">
             <div className="sticky top-6">
               <div className="space-y-1">
@@ -44,42 +49,42 @@ export default function Home() {
                   <div className="nav-icon">
                     🏠
                   </div>
-                  <span className="text-sm">CREATE</span>
+                  <span>CREATE</span>
                 </Link>
                 
                 <Link href="/templates" className="nav-item">
                   <div className="nav-icon">
                     🛡️
                   </div>
-                  <span className="text-sm">TEMPLATES</span>
+                  <span>TEMPLATES</span>
                 </Link>
                 
                 <div className="nav-item">
                   <div className="nav-icon">
                     🏆
                   </div>
-                  <span className="text-sm">QUESTS</span>
+                  <span>QUESTS</span>
                 </div>
                 
                 <div className="nav-item">
                   <div className="nav-icon">
                     📊
                   </div>
-                  <span className="text-sm">LEADERBOARD</span>
+                  <span>LEADERBOARD</span>
                 </div>
                 
                 <div className="nav-item">
                   <div className="nav-icon">
                     👤
                   </div>
-                  <span className="text-sm">PROFILE</span>
+                  <span>PROFILE</span>
                 </div>
                 
                 <div className="nav-item">
                   <div className="nav-icon">
                     ⋯
                   </div>
-                  <span className="text-sm">MORE</span>
+                  <span>MORE</span>
                 </div>
               </div>
             </div>
@@ -87,13 +92,13 @@ export default function Home() {
         </aside>
 
         {/* Main Content Area */}
-        <main className="flex-1 px-6 py-12 overflow-y-auto">
-          <div className="max-w-5xl mx-auto space-y-8">
+        <main className="flex-1 px-4 py-2 overflow-hidden">
+          <div className="max-w-5xl mx-auto h-full flex flex-col justify-between">
             {/* Hero Section */}
-            <div className="card p-8 text-center">
-              <div className="flex items-center justify-center mb-6">
+            <div className="card p-4 text-center mb-3">
+              <div className="flex items-center justify-center mb-3">
                 <ZambooMascot 
-                  size="xl"
+                  size="medium"
                   state={{ mood: 'happy', animation: 'idle' }}
                   interactive={true}
                   showSpeechBubble={true}
@@ -101,87 +106,107 @@ export default function Home() {
                 />
               </div>
               
-              <h1 className="title-fun mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-neutral-800 mb-3 font-display leading-tight">
                 Learn to Code with Games!
               </h1>
               
-              <p className="body-large mb-6 max-w-2xl mx-auto">
-                I'm Zamboo, your coding companion! Let's create amazing games together and learn programming concepts through play.
+              <p className="text-base text-neutral-600 mb-4 max-w-2xl mx-auto">
+                I'm Zamboo, your coding companion! Let's create amazing games together.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/create" className="btn-success inline-flex items-center gap-3 justify-center">
-                  <Play size={24} />
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link href="/create" className="btn-success inline-flex items-center gap-2 justify-center text-base py-3 px-6">
+                  <Play size={18} />
                   Start Creating Games
                 </Link>
                 
-                <Link href="/templates" className="btn-ghost inline-flex items-center gap-3 justify-center">
-                  <Sparkles size={20} />
+                <Link href="/templates" className="btn-ghost inline-flex items-center gap-2 justify-center text-base py-3 px-6">
+                  <Sparkles size={16} />
                   Try Templates
                 </Link>
               </div>
             </div>
 
-            {/* Feature Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="card-interactive p-6 text-center">
-                <div className="w-16 h-16 bg-duo-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Gamepad2 className="text-duo-green-600" size={28} />
+            <div className="flex-1 flex flex-col justify-between">
+              {/* Feature Cards - Single Row */}
+              <div className="grid grid-cols-3 gap-2 mb-4">
+                <div className="card-interactive p-4 text-center">
+                  <div className="w-14 h-14 bg-duo-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Gamepad2 className="text-duo-green-600" size={24} />
+                  </div>
+                  <h3 className="text-lg font-bold text-neutral-800 mb-2 font-display">Play & Create</h3>
+                  <p className="text-base text-neutral-600 leading-relaxed">Speak or type your game ideas and watch them come to life!</p>
                 </div>
-                <h3 className="title-small mb-2">Play & Create</h3>
-                <p className="body-medium">Speak or type your game ideas and watch them come to life instantly!</p>
-              </div>
-              
-              <div className="card-interactive p-6 text-center">
-                <div className="w-16 h-16 bg-duo-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Code className="text-duo-blue-600" size={28} />
+                
+                <div className="card-interactive p-4 text-center">
+                  <div className="w-14 h-14 bg-duo-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Code className="text-duo-blue-600" size={24} />
+                  </div>
+                  <h3 className="text-lg font-bold text-neutral-800 mb-2 font-display">Learn Coding</h3>
+                  <p className="text-base text-neutral-600 leading-relaxed">Discover loops, events, and conditions through gameplay!</p>
                 </div>
-                <h3 className="title-small mb-2">Learn Coding</h3>
-                <p className="body-medium">Discover loops, events, and conditions through fun interactive gameplay!</p>
-              </div>
-              
-              <div className="card-interactive p-6 text-center">
-                <div className="w-16 h-16 bg-duo-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="text-duo-purple-600" size={28} />
+                
+                <div className="card-interactive p-4 text-center">
+                  <div className="w-14 h-14 bg-duo-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Sparkles className="text-duo-purple-600" size={24} />
+                  </div>
+                  <h3 className="text-lg font-bold text-neutral-800 mb-2 font-display">Edit & Experiment</h3>
+                  <p className="text-base text-neutral-600 leading-relaxed">Use visual blocks to modify games in real-time!</p>
                 </div>
-                <h3 className="title-small mb-2">Edit & Experiment</h3>
-                <p className="body-medium">Use visual blocks to modify games and see changes in real-time!</p>
               </div>
-            </div>
 
-            {/* Progress Section */}
-            <div className="card p-6">
-              <h2 className="title-medium mb-6">Your Coding Journey</h2>
-              
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-duo-green-500 rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold text-sm">1</span>
+              {/* Progress Section */}
+              <div className="card p-3 overflow-hidden flex-1">
+                <h2 className="text-lg font-bold text-neutral-800 mb-3 font-display">Your Coding Journey</h2>
+                
+                <div className="space-y-3 flex-1">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-duo-green-500 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-xs">1</span>
+                      </div>
+                      <span className="font-medium text-neutral-700 text-sm">Create your first game</span>
                     </div>
-                    <span className="font-medium text-neutral-700">Create your first game</span>
+                    <div className="text-duo-green-600 font-bold text-sm">✓</div>
                   </div>
-                  <div className="text-duo-green-600 font-bold">✓</div>
+                  
+                  <div className="flex items-center justify-between opacity-60">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-neutral-200 rounded-full flex items-center justify-center">
+                        <span className="text-neutral-500 font-bold text-xs">2</span>
+                      </div>
+                      <span className="font-medium text-neutral-500 text-sm">Try all template games</span>
+                    </div>
+                    <div className="text-neutral-400 text-sm">0 / 4</div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between opacity-60">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-neutral-200 rounded-full flex items-center justify-center">
+                        <span className="text-neutral-500 font-bold text-xs">3</span>
+                      </div>
+                      <span className="font-medium text-neutral-500 text-sm">Edit a game with blocks</span>
+                    </div>
+                    <div className="text-neutral-400 text-sm">Coming Soon</div>
+                  </div>
                 </div>
                 
-                <div className="flex items-center justify-between opacity-60">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-neutral-200 rounded-full flex items-center justify-center">
-                      <span className="text-neutral-500 font-bold text-sm">2</span>
+                {/* Quick Stats */}
+                <div className="mt-auto p-2 bg-neutral-50 rounded-xl">
+                  <div className="grid grid-cols-3 gap-1 text-center">
+                    <div>
+                      <div className="text-sm font-bold text-duo-blue-600">5</div>
+                      <div className="text-xs text-neutral-600">Games</div>
                     </div>
-                    <span className="font-medium text-neutral-500">Try all template games</span>
-                  </div>
-                  <div className="text-neutral-400">0 / 4</div>
-                </div>
-                
-                <div className="flex items-center justify-between opacity-60">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-neutral-200 rounded-full flex items-center justify-center">
-                      <span className="text-neutral-500 font-bold text-sm">3</span>
+                    <div>
+                      <div className="text-sm font-bold text-duo-green-600">12</div>
+                      <div className="text-xs text-neutral-600">Hours</div>
                     </div>
-                    <span className="font-medium text-neutral-500">Edit a game with blocks</span>
+                    <div>
+                      <div className="text-sm font-bold text-duo-purple-600">3</div>
+                      <div className="text-xs text-neutral-600">Skills</div>
+                    </div>
                   </div>
-                  <div className="text-neutral-400">Coming Soon</div>
                 </div>
               </div>
             </div>
@@ -189,16 +214,6 @@ export default function Home() {
         </main>
       </div>
 
-      {/* Zamboo Floating Assistant */}
-      <div className="fixed bottom-6 right-6 z-20">
-        <ZambooMascot 
-          size="medium"
-          state={{ mood: 'excited', animation: 'idle' }}
-          interactive={true}
-          showSpeechBubble={true}
-          message="Click 'Start Creating' to make your first game! 🎮"
-        />
-      </div>
     </div>
   )
 }

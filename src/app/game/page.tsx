@@ -127,16 +127,16 @@ const GamePage: React.FC = () => {
       <BackgroundDecorations />
       {/* Navigation Header */}
       <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10">
-        <div className="w-full px-6 py-4">
+        <div className="w-full px-6 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <Link href="/" className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800 transition-colors">
-                <ArrowLeft size={20} />
+                <ArrowLeft size={18} />
                 <span>Back</span>
               </Link>
               
               <div className="flex items-center gap-3">
-                <div className="text-3xl">🐼</div>
+                <div className="text-4xl animate-panda-bounce cursor-pointer">🐼</div>
                 <h1 className="logo-text-small">zamboo</h1>
               </div>
               
@@ -164,11 +164,11 @@ const GamePage: React.FC = () => {
               <div className="h-6 w-px bg-neutral-300 hidden md:block"></div>
 
               <div className="flex items-center gap-2 text-duo-blue-600 font-medium">
-                <Trophy size={20} />
+                <Trophy size={18} />
                 <span>500</span>
               </div>
               <div className="flex items-center gap-2 text-duo-red-500 font-medium">
-                <Heart size={20} />
+                <Heart size={18} />
                 <span>5</span>
               </div>
             </div>

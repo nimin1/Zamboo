@@ -116,7 +116,7 @@ const CreateGamePage: React.FC = () => {
       {/* Main Content */}
       <div className="flex min-h-screen relative z-10">
         {/* Full Height Sidebar - Duolingo Style */}
-        <aside className="hidden lg:flex lg:w-60 bg-white border-r border-neutral-200 flex-col">
+        <aside className="hidden lg:flex lg:w-64 bg-white border-r border-neutral-200 flex-col">
           <div className="p-4 flex-1">
             <div className="sticky top-6">
               <div className="space-y-1">

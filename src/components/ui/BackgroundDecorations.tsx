@@ -169,6 +169,106 @@ const BackgroundDecorations = () => {
       <div className="absolute top-6/7 right-2/3 text-4xl animate-bounce-slow opacity-20">
         🎋
       </div>
+
+      {/* Panda paw prints scattered around */}
+      <div className="absolute top-1/4 left-3/4 text-2xl animate-twinkle opacity-10">
+        🐾
+      </div>
+      
+      <div className="absolute top-3/4 right-1/4 text-2xl animate-float opacity-15">
+        🐾
+      </div>
+      
+      <div className="absolute top-1/8 right-1/8 text-2xl animate-bounce-gentle opacity-10">
+        🐾
+      </div>
+      
+      <div className="absolute bottom-1/8 left-1/8 text-2xl animate-wiggle opacity-15">
+        🐾
+      </div>
+
+      {/* Fish for panda snacks */}
+      <div className="absolute top-2/5 right-1/5 text-3xl animate-float-slow opacity-10">
+        🐟
+      </div>
+      
+      <div className="absolute bottom-2/5 left-2/5 text-3xl animate-bounce-slow opacity-15">
+        🐟
+      </div>
+
+      {/* Cute stars for magical feeling */}
+      <div className="absolute top-1/10 left-1/10 text-2xl animate-twinkle opacity-15">
+        ⭐
+      </div>
+      
+      <div className="absolute top-9/10 right-1/10 text-2xl animate-pulse-gentle opacity-10">
+        ⭐
+      </div>
+      
+      <div className="absolute top-3/10 right-3/10 text-2xl animate-float opacity-15">
+        ⭐
+      </div>
+      
+      <div className="absolute bottom-3/10 left-7/10 text-2xl animate-twinkle opacity-10">
+        ⭐
+      </div>
+
+      {/* Mountain elements (panda habitat) */}
+      <div className="absolute top-1/5 left-4/5 text-4xl animate-float-reverse opacity-10">
+        ⛰️
+      </div>
+      
+      <div className="absolute bottom-1/5 right-4/5 text-4xl animate-bounce-slow opacity-15">
+        ⛰️
+      </div>
+
+      {/* More scattered small pandas for cuteness */}
+      <div className="absolute top-7/10 left-1/10 text-2xl animate-panda-bounce opacity-10">
+        🐼
+      </div>
+      
+      <div className="absolute top-1/10 right-7/10 text-2xl animate-panda-wiggle opacity-15">
+        🐼
+      </div>
+      
+      <div className="absolute bottom-3/10 right-1/10 text-2xl animate-float opacity-10">
+        🐼
+      </div>
+      
+      <div className="absolute top-4/10 left-1/10 text-2xl animate-bounce-gentle opacity-15">
+        🐼
+      </div>
+
+      {/* Sparkles for magic */}
+      <div className="absolute top-1/6 left-5/6 text-2xl animate-twinkle opacity-20">
+        ✨
+      </div>
+      
+      <div className="absolute bottom-1/6 right-5/6 text-2xl animate-pulse-gentle opacity-15">
+        ✨
+      </div>
+      
+      <div className="absolute top-5/6 right-1/6 text-2xl animate-float opacity-10">
+        ✨
+      </div>
+
+      {/* More bamboo shoots */}
+      <div className="absolute top-2/6 left-1/6 text-3xl animate-wiggle opacity-10">
+        🎍
+      </div>
+      
+      <div className="absolute bottom-2/6 right-2/6 text-3xl animate-float-reverse opacity-15">
+        🎍
+      </div>
+
+      {/* Small gaming elements for context */}
+      <div className="absolute top-4/6 right-4/6 text-2xl animate-spin-slow opacity-10">
+        🎮
+      </div>
+      
+      <div className="absolute bottom-4/6 left-4/6 text-2xl animate-bounce-gentle opacity-15">
+        🕹️
+      </div>
     </div>
   )
 }

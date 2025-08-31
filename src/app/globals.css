@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Nunito:wght@300;400;500;600;700;800;900&family=Fredoka:wght@300;400;500;600;700&family=Chewy&family=Kalam:wght@300;400;700&family=Comic+Neue:wght@300;400;700&family=Righteous&family=Bungee&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Schoolbell&display=swap');
 
 * {
   box-sizing: border-box;
@@ -13,13 +13,14 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Poppins', sans-serif;
   background-color: #fafafa;
 }
 
@@ -147,6 +148,46 @@ a {
   50% { opacity: 0.8; transform: scale(1.2); }
 }
 
+@keyframes panda-bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.05); }
+}
+
+@keyframes panda-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+@keyframes panda-heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes panda-eating {
+  0% { transform: translateY(0) rotate(0deg) scale(1); }
+  15% { transform: translateY(-2px) rotate(-3deg) scale(1.05); }
+  30% { transform: translateY(0) rotate(0deg) scale(1.1); }
+  45% { transform: translateY(-2px) rotate(3deg) scale(1.05); }
+  60% { transform: translateY(0) rotate(0deg) scale(1); }
+  75% { transform: translateY(-1px) rotate(-2deg) scale(1.02); }
+  100% { transform: translateY(0) rotate(0deg) scale(1); }
+}
+
+@keyframes bamboo-appear {
+  0% { opacity: 0; transform: translateX(10px) scale(0.5); }
+  20% { opacity: 1; transform: translateX(0) scale(1); }
+  80% { opacity: 1; transform: translateX(0) scale(1); }
+  100% { opacity: 0; transform: translateX(-10px) scale(0.8); }
+}
+
+@keyframes panda-happy-dance {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  25% { transform: translateY(-5px) rotate(-8deg) scale(1.05); }
+  50% { transform: translateY(-3px) rotate(0deg) scale(1.1); }
+  75% { transform: translateY(-5px) rotate(8deg) scale(1.05); }
+}
+
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
@@ -187,6 +228,39 @@ a {
   animation: twinkle 2.5s ease-in-out infinite;
 }
 
+.animate-panda-bounce {
+  animation: panda-bounce 2s ease-in-out infinite;
+}
+
+.animate-panda-wiggle {
+  animation: panda-wiggle 3s ease-in-out infinite;
+}
+
+.animate-panda-heartbeat {
+  animation: panda-heartbeat 1.5s ease-in-out infinite;
+}
+
+.animate-panda-eating {
+  animation: panda-eating 3s ease-in-out infinite;
+}
+
+.animate-bamboo-appear {
+  animation: bamboo-appear 3s ease-in-out infinite;
+}
+
+.animate-panda-happy-dance {
+  animation: panda-happy-dance 2.5s ease-in-out infinite;
+}
+
+/* Special panda logo hover effects for landing page */
+.panda-logo-special:hover .panda-icon {
+  animation: panda-happy-dance 1s ease-in-out;
+}
+
+.panda-logo-special:hover .bamboo-stick {
+  animation: bamboo-appear 1s ease-in-out;
+}
+
 /* Game canvas styles */
 .game-canvas {
   @apply rounded-2xl shadow-strong;
@@ -194,7 +268,8 @@ a {
 
 /* Duolingo-style sidebar navigation */
 .nav-item {
-  @apply flex items-center gap-4 px-4 py-4 rounded-2xl text-neutral-500 hover:bg-neutral-50 transition-all duration-200 font-bold text-sm cursor-pointer border-none mb-2;
+  @apply flex items-center gap-4 px-4 py-4 rounded-2xl text-neutral-500 hover:bg-neutral-50 transition-all duration-200 font-bold cursor-pointer border-none mb-2 font-sans;
+  font-size: 0.8125rem; /* 13px - increased by 0.5 from 12px */
 }
 
 .nav-item.active {
@@ -235,7 +310,7 @@ a {
 
 /* Clean Duolingo Logo Styling */
 .logo-text {
-  @apply font-display font-bold text-duo-green-500;
+  @apply font-logo font-bold text-duo-green-500;
 }
 
 .logo-text-large {
@@ -247,7 +322,7 @@ a {
 }
 
 .logo-text-small {
-  @apply logo-text text-xl;
+  @apply logo-text text-3xl;
 }
 
 /* Typography enhancements */

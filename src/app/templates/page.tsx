@@ -60,31 +60,31 @@ const TemplatesPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 relative">
+    <div className="h-screen bg-neutral-50 relative flex flex-col">
       <BackgroundDecorations />
       
-      <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10">
-        <div className="w-full px-6 py-4">
+      <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10 flex-shrink-0">
+        <div className="w-full px-6 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <Link href="/" className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800 transition-colors">
-                <ArrowLeft size={20} />
+                <ArrowLeft size={18} />
                 <span>Back</span>
               </Link>
               
               <div className="flex items-center gap-3">
-                <div className="text-3xl">🐼</div>
+                <div className="text-4xl animate-panda-bounce cursor-pointer">🐼</div>
                 <h1 className="logo-text-small">zamboo</h1>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-duo-blue-600 font-medium">
-                <Trophy size={20} />
+                <Trophy size={18} />
                 <span>500</span>
               </div>
               <div className="flex items-center gap-2 text-duo-red-500 font-medium">
-                <Heart size={20} />
+                <Heart size={18} />
                 <span>5</span>
               </div>
             </div>
@@ -92,8 +92,8 @@ const TemplatesPage: React.FC = () => {
         </div>
       </nav>
 
-      <div className="flex min-h-screen relative z-10">
-        <aside className="hidden lg:flex lg:w-60 bg-white border-r border-neutral-200 flex-col">
+      <div className="flex flex-1 relative z-10 min-h-0">
+        <aside className="hidden lg:flex lg:w-64 bg-white border-r border-neutral-200 flex-col">
           <div className="p-4 flex-1">
             <div className="sticky top-6">
               <div className="space-y-1">
@@ -101,59 +101,59 @@ const TemplatesPage: React.FC = () => {
                   <div className="nav-icon">
                     🏠
                   </div>
-                  <span className="text-sm">CREATE</span>
+                  <span>CREATE</span>
                 </Link>
                 
                 <Link href="/templates" className="nav-item active">
                   <div className="nav-icon">
                     🛡️
                   </div>
-                  <span className="text-sm">TEMPLATES</span>
+                  <span>TEMPLATES</span>
                 </Link>
                 
                 <div className="nav-item">
                   <div className="nav-icon">
                     🏆
                   </div>
-                  <span className="text-sm">QUESTS</span>
+                  <span>QUESTS</span>
                 </div>
                 
                 <div className="nav-item">
                   <div className="nav-icon">
                     📊
                   </div>
-                  <span className="text-sm">LEADERBOARD</span>
+                  <span>LEADERBOARD</span>
                 </div>
                 
                 <div className="nav-item">
                   <div className="nav-icon">
                     👤
                   </div>
-                  <span className="text-sm">PROFILE</span>
+                  <span>PROFILE</span>
                 </div>
                 
                 <div className="nav-item">
                   <div className="nav-icon">
                     ⋯
                   </div>
-                  <span className="text-sm">MORE</span>
+                  <span>MORE</span>
                 </div>
               </div>
             </div>
           </div>
         </aside>
 
-        <main className="flex-1 px-6 py-8 overflow-y-auto">
-          <div className="max-w-6xl mx-auto space-y-8">
-            <div className="text-center">
-              <h1 className="title-fun mb-2">Game Templates!</h1>
-              <p className="text-lg text-neutral-600">Choose a template and start playing instantly! 🎮</p>
+        <main className="flex-1 px-4 py-1 flex flex-col justify-between">
+          <div className="max-w-6xl mx-auto w-full">
+            <div className="text-center mb-3">
+              <h1 className="text-3xl font-bold text-neutral-800 mb-2 font-display">Game Templates!</h1>
+              <p className="text-base text-neutral-600">Choose a template and start playing instantly! 🎮</p>
             </div>
 
-            <div className="card p-6">
-              <div className="flex items-center justify-center mb-4">
+            <div className="card p-4 mb-3">
+              <div className="flex items-center justify-center mb-2">
                 <ZambooMascot 
-                  size="large"
+                  size="medium"
                   state={{ mood: 'happy', animation: 'idle' }}
                   interactive={true}
                   showSpeechBubble={true}
@@ -161,114 +161,103 @@ const TemplatesPage: React.FC = () => {
                 />
               </div>
               <div className="text-center">
-                <p className="text-lg text-neutral-700 mb-2">
+                <p className="text-base text-neutral-700 mb-2">
                   Pick any game template below and start playing right away!
                 </p>
-                <p className="text-neutral-600">
+                <p className="text-sm text-neutral-600">
                   Each game teaches different coding concepts while having fun! 🚀
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="card-interactive p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="card-interactive p-6 flex flex-col min-h-[300px]">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <Star className="text-duo-yellow-500" size={20} />
-                    <span className="text-sm font-bold text-duo-yellow-600">FEATURED</span>
+                    <span className="text-base font-bold text-duo-yellow-600">FEATURED</span>
                   </div>
-                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-duo-green-100 text-duo-green-600">
+                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-duo-green-100 text-duo-green-600">
                     Easy
                   </span>
                 </div>
                 
-                <h3 className="title-small mb-2">Star Collector</h3>
-                <p className="text-sm text-neutral-600 mb-4">
+                <h3 className="text-xl font-bold text-neutral-800 mb-3 font-display">Star Collector</h3>
+                <p className="text-base text-neutral-600 mb-4">
                   Help the panda collect stars while avoiding obstacles! Learn about movement and collision detection.
                 </p>
                 
-                <div className="flex flex-wrap gap-1 mb-4">
-                  <span className="px-2 py-1 rounded-full text-xs bg-duo-green-500 text-white">events</span>
-                  <span className="px-2 py-1 rounded-full text-xs bg-duo-yellow-500 text-white">physics</span>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <span className="px-3 py-1 rounded-full text-sm bg-duo-green-500 text-white">events</span>
+                  <span className="px-3 py-1 rounded-full text-sm bg-duo-yellow-500 text-white">physics</span>
                 </div>
                 
                 <button
                   onClick={() => {/* handle play */}}
-                  className="w-full btn-success flex items-center justify-center gap-2"
+                  className="w-full btn-success flex items-center justify-center gap-2 mt-auto"
                 >
                   <Play size={16} />
                   Play Now
                 </button>
               </div>
 
-              <div className="card-interactive p-6">
+              <div className="card-interactive p-6 flex flex-col min-h-[300px]">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <Clock className="text-neutral-400" size={20} />
                   </div>
-                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-duo-yellow-100 text-duo-yellow-600">
+                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-duo-yellow-100 text-duo-yellow-600">
                     Medium
                   </span>
                 </div>
                 
-                <h3 className="title-small mb-2">Maze Runner</h3>
-                <p className="text-sm text-neutral-600 mb-4">
+                <h3 className="text-xl font-bold text-neutral-800 mb-3 font-display">Maze Runner</h3>
+                <p className="text-base text-neutral-600 mb-4">
                   Navigate through mazes using arrow keys! Learn about conditions and logic.
                 </p>
                 
-                <div className="flex flex-wrap gap-1 mb-4">
-                  <span className="px-2 py-1 rounded-full text-xs bg-duo-purple-500 text-white">conditions</span>
-                  <span className="px-2 py-1 rounded-full text-xs bg-duo-red-500 text-white">logic</span>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <span className="px-3 py-1 rounded-full text-sm bg-duo-purple-500 text-white">conditions</span>
+                  <span className="px-3 py-1 rounded-full text-sm bg-duo-red-500 text-white">logic</span>
                 </div>
                 
                 <button
                   onClick={() => {/* handle play */}}
-                  className="w-full btn-success flex items-center justify-center gap-2"
+                  className="w-full btn-success flex items-center justify-center gap-2 mt-auto"
                 >
                   <Play size={16} />
                   Play Now
                 </button>
               </div>
 
-              <div className="card-interactive p-6">
+              <div className="card-interactive p-6 flex flex-col min-h-[300px]">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <Clock className="text-neutral-400" size={20} />
                   </div>
-                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-duo-green-100 text-duo-green-600">
+                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-duo-green-100 text-duo-green-600">
                     Easy
                   </span>
                 </div>
                 
-                <h3 className="title-small mb-2">Jumping Panda</h3>
-                <p className="text-sm text-neutral-600 mb-4">
+                <h3 className="text-xl font-bold text-neutral-800 mb-3 font-display">Jumping Panda</h3>
+                <p className="text-base text-neutral-600 mb-4">
                   Make the panda jump over obstacles! Learn about loops and timing.
                 </p>
                 
-                <div className="flex flex-wrap gap-1 mb-4">
-                  <span className="px-2 py-1 rounded-full text-xs bg-duo-blue-500 text-white">loops</span>
-                  <span className="px-2 py-1 rounded-full text-xs bg-duo-green-500 text-white">events</span>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <span className="px-3 py-1 rounded-full text-sm bg-duo-blue-500 text-white">loops</span>
+                  <span className="px-3 py-1 rounded-full text-sm bg-duo-green-500 text-white">events</span>
                 </div>
                 
                 <button
                   onClick={() => {/* handle play */}}
-                  className="w-full btn-success flex items-center justify-center gap-2"
+                  className="w-full btn-success flex items-center justify-center gap-2 mt-auto"
                 >
                   <Play size={16} />
                   Play Now
                 </button>
               </div>
-            </div>
-
-            <div className="card p-6 text-center">
-              <h3 className="text-xl font-bold text-neutral-800 mb-4">More Templates Coming Soon!</h3>
-              <p className="text-neutral-600 mb-4">
-                We're working on adding more exciting game templates for you to explore.
-              </p>
-              <Link href="/create" className="btn-ghost inline-flex items-center gap-2">
-                <Sparkles size={16} />
-                Create Custom Game Instead
-              </Link>
             </div>
           </div>
         </main>
