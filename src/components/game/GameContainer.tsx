@@ -3,12 +3,24 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Pause, RotateCcw, Home, Settings, Trophy, Heart, Star } from 'lucide-react'
-import GameEngine from './GameEngine'
+import AdvancedGameEngine from './AdvancedGameEngine'
+import EmergentGameEngine from './EmergentGameEngine'
 import ZambooGuide from '../zamboo/ZambooGuide'
 import type { GameLogic, GameEngineRef, ZambooState } from '@/types'
 
+interface ConceptFirstGame {
+  conceptFirst: true
+  experienceAnalysis: string
+  gameImplementation: string
+  userVision: string
+  title: string
+  description: string
+  id: string
+  createdBy: string
+}
+
 interface GameContainerProps {
-  gameLogic: GameLogic
+  gameLogic: GameLogic | ConceptFirstGame
   onGameComplete?: (won: boolean, score: number) => void
   onExit?: () => void
   showTutorial?: boolean
@@ -26,6 +38,11 @@ interface GameState {
   startTime: Date
 }
 
+// Type guard to check if game is concept-first
+const isConceptFirstGame = (game: GameLogic | ConceptFirstGame): game is ConceptFirstGame => {
+  return 'conceptFirst' in game && game.conceptFirst === true
+}
+
 const GameContainer: React.FC<GameContainerProps> = ({
   gameLogic,
   onGameComplete,
@@ -41,7 +58,7 @@ const GameContainer: React.FC<GameContainerProps> = ({
     score: 0,
     hasWon: false,
     showPauseMenu: false,
-    lives: gameLogic.rules.lives || 3,
+    lives: isConceptFirstGame(gameLogic) ? 3 : (gameLogic.rules?.lives || 3),
     startTime: new Date()
   })
   const [zambooState, setZambooState] = useState<ZambooState>({
@@ -92,11 +109,11 @@ const GameContainer: React.FC<GameContainerProps> = ({
       score: 0,
       hasWon: false,
       showPauseMenu: false,
-      lives: gameLogic.rules.lives || 3,
+      lives: isConceptFirstGame(gameLogic) ? 3 : (gameLogic.rules?.lives || 3),
       startTime: new Date()
     }))
     setZambooState({ mood: 'excited', animation: 'dance' })
-  }, [gameLogic.rules.lives])
+  }, [gameLogic])
 
   const handleScoreChange = useCallback((newScore: number) => {
     setGameState(prev => {
@@ -135,6 +152,15 @@ const GameContainer: React.FC<GameContainerProps> = ({
   }, [gameState.startTime, onGameComplete])
 
   const getTutorialMessages = (): string[] => {
+    if (isConceptFirstGame(gameLogic)) {
+      return [
+        `🚀 Welcome to your revolutionary concept-first game!`,
+        `This game was created using pure conceptual reasoning - no templates or constraints!`,
+        `Experience: ${gameLogic.userVision}`,
+        `Get ready for unlimited creativity! Click play when you're ready to explore!`
+      ]
+    }
+    
     const messages = [gameLogic.zambooDialogue.welcome]
     
     if (gameLogic.zambooDialogue.instructions) {
@@ -152,6 +178,14 @@ const GameContainer: React.FC<GameContainerProps> = ({
   }
 
   const getCompletionMessage = (): string => {
+    if (isConceptFirstGame(gameLogic)) {
+      if (gameState.hasWon) {
+        return "🎉 Amazing! You've mastered this revolutionary concept-first experience! The AI's creative vision came to life through your gameplay!"
+      } else {
+        return "💪 Great exploration! In concept-first games, every attempt teaches us something new. The AI created something unique - let's try again!"
+      }
+    }
+    
     if (gameState.hasWon) {
       return gameLogic.zambooDialogue.victory
     } else {
@@ -169,7 +203,7 @@ const GameContainer: React.FC<GameContainerProps> = ({
             <div className="flex items-center space-x-2 text-sm text-gray-600">
               <Trophy size={16} />
               <span>{gameState.score}</span>
-              {gameLogic.rules.lives && (
+              {!isConceptFirstGame(gameLogic) && gameLogic.rules?.lives && (
                 <>
                   <Heart size={16} className="ml-4" />
                   <span>{gameState.lives}</span>
@@ -235,15 +269,23 @@ const GameContainer: React.FC<GameContainerProps> = ({
         {/* Game Canvas */}
         <div className="flex-1 p-6">
           <div className="relative">
-            <GameEngine
-              ref={gameEngineRef}
-              gameLogic={gameLogic}
-              width={800}
-              height={600}
-              onScoreChange={handleScoreChange}
-              onGameComplete={handleGameComplete}
-              className="mx-auto"
-            />
+            {isConceptFirstGame(gameLogic) ? (
+              <EmergentGameEngine
+                conceptAnalysis={gameLogic.experienceAnalysis}
+                gameImplementation={gameLogic.gameImplementation}
+                userVision={gameLogic.userVision}
+                className="mx-auto"
+              />
+            ) : (
+              <AdvancedGameEngine
+                gameLogic={gameLogic}
+                width={800}
+                height={600}
+                onScoreChange={handleScoreChange}
+                onGameComplete={handleGameComplete}
+                className="mx-auto"
+              />
+            )}
             
             {/* Game Overlays */}
             <AnimatePresence>
@@ -363,7 +405,7 @@ const GameContainer: React.FC<GameContainerProps> = ({
                     : gameState.isPaused
                       ? ["Take your time! I'll wait here while you think."]
                       : gameState.isPlaying
-                        ? gameLogic.zambooDialogue.encouragement
+                        ? (isConceptFirstGame(gameLogic) ? ["Amazing! You're experiencing revolutionary AI creativity!"] : gameLogic.zambooDialogue.encouragement)
                         : ["Ready for an awesome coding adventure?"]
                 }
                 initialMood={zambooState.mood}
@@ -374,47 +416,89 @@ const GameContainer: React.FC<GameContainerProps> = ({
               />
             </div>
 
-            {/* Concept Cards */}
+            {/* Concept Cards / Experience Analysis */}
             <div className="space-y-4">
-              <h4 className="font-bold text-lg text-gray-800">What You're Learning</h4>
-              {gameLogic.concepts.map((concept, index) => (
-                <div key={index} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                  <div className="flex items-start space-x-3">
-                    <div className="bg-funky-purple text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1">
-                      <h5 className="font-semibold text-gray-800">{concept.name}</h5>
-                      <p className="text-sm text-gray-600 mt-1">{concept.description}</p>
-                      {concept.examples.length > 0 && (
+              {isConceptFirstGame(gameLogic) ? (
+                <>
+                  <h4 className="font-bold text-lg text-gray-800">🚀 Revolutionary Experience</h4>
+                  <div className="bg-gradient-to-r from-purple-100 to-blue-100 rounded-xl p-4 shadow-sm border border-purple-200">
+                    <div className="flex items-start space-x-3">
+                      <div className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
+                        ✨
+                      </div>
+                      <div className="flex-1">
+                        <h5 className="font-semibold text-purple-800">Concept-First Design</h5>
+                        <p className="text-sm text-purple-600 mt-1">This game was generated using pure conceptual reasoning - no schemas or templates!</p>
                         <div className="mt-2">
-                          <p className="text-xs text-gray-500">Example:</p>
-                          <p className="text-xs text-funky-purple italic">{concept.examples[0]}</p>
+                          <p className="text-xs text-purple-500 font-medium">Your Vision:</p>
+                          <p className="text-xs text-purple-700 italic">{gameLogic.userVision}</p>
                         </div>
-                      )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                </>
+              ) : (
+                <>
+                  <h4 className="font-bold text-lg text-gray-800">What You're Learning</h4>
+                  {gameLogic.concepts.map((concept, index) => (
+                    <div key={index} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                      <div className="flex items-start space-x-3">
+                        <div className="bg-funky-purple text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
+                          {index + 1}
+                        </div>
+                        <div className="flex-1">
+                          <h5 className="font-semibold text-gray-800">{concept.name}</h5>
+                          <p className="text-sm text-gray-600 mt-1">{concept.description}</p>
+                          {concept.examples.length > 0 && (
+                            <div className="mt-2">
+                              <p className="text-xs text-gray-500">Example:</p>
+                              <p className="text-xs text-funky-purple italic">{concept.examples[0]}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
 
             {/* Game Info */}
             <div className="bg-gradient-to-r from-panda-100 to-zamboo-100 rounded-xl p-4">
               <h4 className="font-bold text-gray-800 mb-2">Game Info</h4>
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Difficulty:</span>
-                  <span className="font-medium capitalize">{gameLogic.difficulty}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Age Group:</span>
-                  <span className="font-medium">{gameLogic.ageGroup}</span>
-                </div>
-                {gameLogic.rules.timer?.enabled && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Time Limit:</span>
-                    <span className="font-medium">{gameLogic.rules.timer.duration}s</span>
-                  </div>
+                {isConceptFirstGame(gameLogic) ? (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Generation:</span>
+                      <span className="font-medium text-purple-600">🚀 Concept-First</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Created By:</span>
+                      <span className="font-medium">{gameLogic.createdBy}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Approach:</span>
+                      <span className="font-medium text-purple-600">Experience-Driven</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Difficulty:</span>
+                      <span className="font-medium capitalize">{gameLogic.difficulty}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Age Group:</span>
+                      <span className="font-medium">{gameLogic.ageGroup}</span>
+                    </div>
+                    {!isConceptFirstGame(gameLogic) && gameLogic.rules?.timer?.enabled && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Time Limit:</span>
+                        <span className="font-medium">{gameLogic.rules.timer.duration}s</span>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>

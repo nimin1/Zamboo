@@ -16,16 +16,33 @@ export const SizeSchema = z.object({
   height: z.number().positive()
 })
 
-export const ColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/).or(
-  z.enum(['red', 'blue', 'green', 'yellow', 'purple', 'pink', 'orange', 'white', 'black'])
-)
+export const ColorSchema = z.string().min(1) // Allow any creative color strings for AI
 
 // Sprite/Asset types
 export const SpriteSchema = z.object({
-  type: z.enum(['circle', 'square', 'triangle', 'star', 'heart', 'diamond', 'panda', 'bamboo', 'rocket', 'gem']),
+  type: z.string(), // Allow any creative sprite type the AI generates
   color: ColorSchema,
+  colors: z.array(ColorSchema).optional(), // For gradients and multiple colors
+  glow: z.boolean().optional(), // For glowing effects
+  glowColor: ColorSchema.optional(), // Glow color
+  glowIntensity: z.number().min(0).max(1).optional(), // Glow strength
   size: SizeSchema.optional(),
-  image: z.string().optional() // For custom sprites
+  image: z.string().optional(), // For custom sprites
+  // Advanced visual properties
+  opacity: z.number().min(0).max(1).optional(),
+  rotation: z.number().optional(),
+  scale: z.number().positive().optional(),
+  tint: ColorSchema.optional(),
+  blend: z.enum(['normal', 'add', 'multiply', 'screen', 'overlay']).optional(),
+  // Material properties
+  material: z.string().optional(), // Allow any creative material the AI generates
+  // Particle trails
+  trail: z.object({
+    enabled: z.boolean(),
+    color: ColorSchema.optional(),
+    length: z.number().positive().optional(),
+    width: z.number().positive().optional()
+  }).optional()
 })
 
 // Physics and movement
@@ -38,10 +55,26 @@ export const PhysicsSchema = z.object({
 
 // Animation types
 export const AnimationSchema = z.object({
-  type: z.enum(['bounce', 'spin', 'float', 'pulse', 'wiggle', 'grow', 'fade']),
+  type: z.enum([
+    // Basic animations
+    'bounce', 'spin', 'float', 'pulse', 'wiggle', 'grow', 'fade',
+    // Advanced animations
+    'breathe', 'glow', 'sparkle', 'shimmer', 'ripple', 'wave', 'orbit',
+    'spiral', 'zoom', 'shake', 'swing', 'elastic', 'magnetic', 'plasma',
+    // Compound animations
+    'float-spin', 'pulse-glow', 'bounce-sparkle', 'wiggle-fade', 'grow-glow'
+  ]),
   duration: z.number().positive().default(1000),
   repeat: z.boolean().default(true),
-  easing: z.enum(['linear', 'ease', 'ease-in', 'ease-out', 'bounce']).default('ease')
+  easing: z.enum(['linear', 'ease', 'ease-in', 'ease-out', 'bounce', 'elastic', 'back']).default('ease'),
+  // Advanced animation properties
+  intensity: z.number().min(0).max(1).optional(),
+  speed: z.number().positive().optional(),
+  direction: z.enum(['normal', 'reverse', 'alternate']).optional(),
+  delay: z.number().optional(),
+  // Particle animation
+  particleCount: z.number().positive().optional(),
+  particleLifetime: z.number().positive().optional()
 })
 
 // Particles and effects
@@ -55,75 +88,71 @@ export const ParticleEffectSchema = z.object({
 
 // Background types
 export const BackgroundSchema = z.object({
-  type: z.enum(['solid', 'gradient', 'parallax', 'starfield', 'bamboo', 'space']),
+  type: z.string(), // Allow any creative background type the AI generates
   colors: z.array(ColorSchema).min(1),
   scrollSpeed: z.number().optional(), // For parallax
-  layers: z.array(z.string()).optional() // For complex backgrounds
+  layers: z.array(z.union([
+    z.string(), // Simple layer names
+    z.object({ // Complex layer objects
+      speed: z.number().optional(),
+      type: z.string().optional(),
+      colors: z.array(ColorSchema).optional(),
+      opacity: z.number().min(0).max(1).optional(),
+      direction: z.string().optional(),
+      // Advanced layer properties
+      parallaxFactor: z.number().optional(),
+      particleCount: z.number().positive().optional(),
+      animationSpeed: z.number().positive().optional(),
+      glow: z.boolean().optional(),
+      blur: z.number().min(0).optional()
+    })
+  ])).optional(), // For complex backgrounds
+  // Advanced background effects
+  effects: z.array(z.string()).optional(), // Allow any creative effects the AI generates
+  // Lighting
+  lighting: z.object({
+    ambient: ColorSchema.optional(),
+    directional: z.object({
+      color: ColorSchema,
+      intensity: z.number().min(0).max(1),
+      angle: z.number()
+    }).optional(),
+    glow: z.boolean().optional()
+  }).optional()
 })
 
-// Game object (entities in the game)
+// Game object (entities in the game) - COMPLETELY FLEXIBLE
 export const GameObjectSchema = z.object({
   id: z.string(),
-  type: z.enum(['player', 'collectible', 'obstacle', 'enemy', 'platform', 'goal', 'decoration']),
-  sprite: SpriteSchema,
+  type: z.string(), // Allow ANY game object type the AI creates
+  sprite: z.any(), // Allow ANY sprite configuration
   position: PositionSchema,
   velocity: VelocitySchema.optional(),
   size: SizeSchema,
-  physics: PhysicsSchema.optional(),
-  animation: AnimationSchema.optional(),
-  health: z.number().positive().optional(),
-  points: z.number().optional(), // Points awarded for interaction
-  collidable: z.boolean().default(true),
-  visible: z.boolean().default(true),
-  metadata: z.record(z.any()).optional() // Extra properties for specific behaviors
-})
+  // UNLIMITED FLEXIBILITY - AI can add any properties it needs
+}).catchall(z.any()) // Allow unlimited additional properties for maximum creativity
 
-// Event types
+// Event types - COMPLETELY DYNAMIC
 export const GameEventSchema = z.object({
   id: z.string(),
-  trigger: z.enum(['collision', 'timer', 'keypress', 'click', 'gamestart', 'gameend', 'score']),
-  condition: z.object({
-    objectId: z.string().optional(),
-    key: z.string().optional(), // For keypress events
-    value: z.number().optional(), // For score/timer conditions
-    operator: z.enum(['equals', 'greater', 'less', 'contains']).optional()
-  }).optional(),
-  actions: z.array(z.object({
-    type: z.enum(['move', 'destroy', 'spawn', 'score', 'sound', 'effect', 'win', 'lose', 'message']),
-    targetId: z.string().optional(),
-    value: z.union([z.string(), z.number(), PositionSchema]).optional(),
-    duration: z.number().optional()
-  }))
-})
+  trigger: z.string(), // Allow any creative trigger the AI generates
+  // UNLIMITED FLEXIBILITY for conditions and actions
+}).catchall(z.any()) // Allow AI to define any event structure it needs
 
-// Game rules and win conditions
+// Game rules and win conditions - UNLIMITED CREATIVITY
 export const WinConditionSchema = z.object({
-  type: z.enum(['collect_all', 'score_target', 'time_limit', 'reach_goal', 'survive']),
-  target: z.number().optional(), // For score targets or item counts
-  timeLimit: z.number().optional() // In seconds
-})
+  type: z.string(), // Allow any creative win condition type the AI generates
+}).catchall(z.any()) // Allow AI to define any win condition structure
 
 export const GameRulesSchema = z.object({
   winConditions: z.array(WinConditionSchema),
-  loseConditions: z.array(WinConditionSchema).optional(),
-  scoring: z.object({
-    enabled: z.boolean().default(true),
-    multiplier: z.number().positive().default(1)
-  }).optional(),
-  timer: z.object({
-    enabled: z.boolean().default(false),
-    duration: z.number().positive().optional()
-  }).optional(),
-  lives: z.number().positive().optional()
-})
+  // UNLIMITED FLEXIBILITY for game rules
+}).catchall(z.any()) // Allow AI to define any rule system it creates
 
-// Control scheme
+// Control scheme - DYNAMIC
 export const ControlsSchema = z.object({
-  type: z.enum(['arrows', 'wasd', 'mouse', 'touch', 'auto']),
-  mouseEnabled: z.boolean().default(true),
-  touchEnabled: z.boolean().default(true),
-  customKeys: z.record(z.string()).optional()
-})
+  type: z.string(), // Allow any control scheme the AI creates
+}).catchall(z.any()) // Allow AI to define any control system
 
 // Educational concepts that this game teaches
 export const ConceptSchema = z.object({
@@ -132,63 +161,45 @@ export const ConceptSchema = z.object({
   description: z.string(),
   examples: z.array(z.string()),
   difficulty: z.enum(['beginner', 'intermediate', 'advanced']),
-  category: z.enum(['loops', 'conditions', 'events', 'variables', 'functions', 'logic'])
+  category: z.enum(['loops', 'conditions', 'events', 'variables', 'functions', 'logic', 'physics', 'graphics', 'animation', 'effects'])
 })
 
-// Main GameLogic schema
+// Main GameLogic schema - MAXIMUM FLEXIBILITY FOR AI CREATIVITY
 export const GameLogicSchema = z.object({
-  // Basic game info
+  // Essential core structure - ONLY what's absolutely required
   id: z.string(),
-  title: z.string().min(1).max(50),
-  description: z.string().min(1).max(200),
-  difficulty: z.enum(['easy', 'medium', 'hard']),
-  ageGroup: z.enum(['5-7', '8-10', '11-13', '14+']),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  difficulty: z.string(), // Allow any difficulty the AI creates
+  ageGroup: z.string(), // Allow any age group format
   
-  // Game world
+  // Basic game world - flexible structure
   worldSize: SizeSchema,
-  background: BackgroundSchema,
-  camera: z.object({
-    followPlayer: z.boolean().default(true),
-    bounds: z.object({
-      x: z.number(),
-      y: z.number(),
-      width: z.number(),
-      height: z.number()
-    }).optional()
-  }).optional(),
+  background: z.any(), // Allow ANY background configuration
   
-  // Game elements
-  objects: z.array(GameObjectSchema),
-  events: z.array(GameEventSchema),
-  effects: z.array(ParticleEffectSchema).optional(),
+  // Core game elements - unlimited flexibility
+  objects: z.array(z.any()), // Allow ANY object structure
+  events: z.array(z.any()), // Allow ANY event structure
+  rules: z.any(), // Allow ANY rule system
+  controls: z.any(), // Allow ANY control scheme
   
-  // Game mechanics
-  rules: GameRulesSchema,
-  controls: ControlsSchema,
-  physics: PhysicsSchema.optional(),
+  // Educational content - flexible
+  concepts: z.array(z.any()), // Allow ANY educational concept structure
   
-  // Educational content
-  concepts: z.array(ConceptSchema),
-  hints: z.array(z.string()).optional(),
-  
-  // Zamboo personality
+  // Zamboo personality - flexible
   zambooDialogue: z.object({
     welcome: z.string(),
     instructions: z.string(),
-    encouragement: z.array(z.string()),
     victory: z.string(),
     defeat: z.string(),
-    hints: z.array(z.string()).optional()
-  }),
+  }).catchall(z.any()), // Allow additional dialogue properties
   
   // Metadata
-  createdBy: z.enum(['ai', 'template', 'user']),
-  template: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  
-  // Version for schema evolution
+  createdBy: z.string(), // Allow any creator type
   version: z.string().default('1.0')
-})
+
+  // UNLIMITED ADDITIONAL PROPERTIES - AI can add ANYTHING it needs
+}).catchall(z.any()) // This allows the AI to add any new properties for innovative game types
 
 // Export types
 export type Position = z.infer<typeof PositionSchema>

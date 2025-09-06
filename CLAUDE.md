@@ -18,6 +18,12 @@ npm install        # Install dependencies
 cp .env.example .env.local  # Set up environment variables (optional)
 ```
 
+### Testing
+```bash
+# No testing framework currently configured
+# E2E testing appears to be done manually with test-game-generation.js and e2e-test.js
+```
+
 ## Architecture Overview
 
 Zamboo is an educational coding platform where kids create games through natural language prompts. The architecture follows Next.js 14 App Router patterns with these core systems:
@@ -109,5 +115,49 @@ Zamboo is an educational coding platform where kids create games through natural
 - Service worker (`public/sw.js`) for offline gameplay
 - Manifest (`public/manifest.json`) for app installation
 - Templates work offline, AI generation requires internet
+
+### Styling & UI Framework
+- **Tailwind CSS** with custom design system
+- Custom color palette: duo-green, duo-blue, zamboo, panda, funky colors
+- Font families: Poppins (sans), Fredoka One (display/fun), Schoolbell (playful)
+- Custom animations: bounce-slow, wiggle, float, pulse-slow, scale
+- Child-friendly, vibrant design following Duolingo-inspired patterns
+
+### File Structure Overview
+```
+src/
+├── app/                    # Next.js 14 App Router pages
+│   ├── page.tsx           # Landing page
+│   ├── create/            # Game creation interface
+│   ├── game/              # Game player page  
+│   ├── templates/         # Template gallery
+│   └── api/               # API routes (DeepSeek integration)
+├── components/            # React components
+│   ├── zamboo/           # Mascot components
+│   ├── game/             # Game engine & containers
+│   └── ui/               # Reusable UI components
+├── lib/                  # Core utilities
+│   ├── gameLogicSchema.ts # Zod schemas & types
+│   └── gameGenerator.ts   # Template creation logic
+└── types/                # TypeScript definitions
+```
+
+## Important Implementation Notes
+
+### AI Generation Error Handling
+- Multiple JSON extraction strategies in `generateGame/route.ts`:657-420
+- Comprehensive fallback system when AI parsing fails
+- Schema validation with detailed error logging
+
+### Game Engine Architecture  
+- Phaser.js integration through React component wrapper
+- Real-time physics simulation with configurable properties
+- Dynamic object creation from GameLogic JSON schema
+- Particle effects and animation system
+
+### Environment Variables
+- `DEEPSEEK_API_KEY` - Required for AI game generation
+- Templates work without API key (offline mode)
+- No `.env.example` file currently exists in repo
 
 The codebase emphasizes educational value, safety, and kid-friendly design while maintaining technical robustness through comprehensive schema validation and fallback systems.

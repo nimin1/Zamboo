@@ -117,7 +117,7 @@ const ZambooMascot: React.FC<ZambooMascotProps> = ({
         duration: 2,
         ease: "easeInOut",
         repeat: Infinity,
-        repeatType: "reverse"
+        repeatType: "reverse" as const
       }
     },
     float: {
@@ -127,7 +127,7 @@ const ZambooMascot: React.FC<ZambooMascotProps> = ({
         duration: 3,
         ease: "easeInOut",
         repeat: Infinity,
-        repeatType: "reverse"
+        repeatType: "reverse" as const
       }
     },
     celebrate: {
@@ -171,19 +171,16 @@ const ZambooMascot: React.FC<ZambooMascotProps> = ({
   const handleClick = useCallback(() => {
     if (interactive) {
       // Random celebration animation like Duolingo
-      const celebrations = ['jump', 'dance', 'celebrate', 'clap']
+      const celebrations = ['jump', 'dance', 'clap'] as const
       const randomCelebration = celebrations[Math.floor(Math.random() * celebrations.length)]
       
       setCurrentAnimation(randomCelebration)
       setShowParticles(true)
       
       setTimeout(() => {
-        setCurrentAnimation('wave')
-        setTimeout(() => {
-          setCurrentAnimation('idle')
-          setShowParticles(false)
-        }, 1500)
-      }, randomCelebration === 'celebrate' ? 1500 : 800)
+        setCurrentAnimation('idle')
+        setShowParticles(false)
+      }, 1500)
     }
   }, [interactive])
 

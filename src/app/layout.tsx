@@ -5,8 +5,13 @@ export const metadata: Metadata = {
   title: 'Zamboo - Code Games with a Funky Panda!',
   description: 'Kids team up with Zamboo the Funky Panda to create games through vibecoding. Learn programming concepts while having fun!',
   manifest: '/manifest.json',
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
   themeColor: '#0ea5e9',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
 }
 
 export default function RootLayout({
