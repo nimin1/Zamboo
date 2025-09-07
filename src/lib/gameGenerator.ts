@@ -1,4 +1,4 @@
-import type { GameLogic, DeepSeekRequest, DeepSeekResponse, GameTemplate } from '@/types'
+import type { GameLogic, DeepSeekRequest, DeepSeekResponse, GameTemplateInfo } from '@/types'
 import { createCollectorTemplate, createMazeTemplate } from './gameLogicSchema'
 
 export class GameGenerator {
@@ -51,7 +51,7 @@ export class GameGenerator {
     return gameLogic
   }
 
-  static getAvailableTemplates(): GameTemplate[] {
+  static getAvailableTemplates(): GameTemplateInfo[] {
     return [
       {
         id: 'star_collector',

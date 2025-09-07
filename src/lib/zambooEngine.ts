@@ -1,7 +1,8 @@
 // Zamboo Game Assembly Engine
 // Assembles high-quality games from GameSpecs using templates and asset packs
 
-import type { GameSpec, GameLogic, GameTemplate, ThemePack } from '@/types'
+import type { GameLogic } from '@/types'
+import type { GameSpec, GameTemplate, ThemePack } from '@/types/gamespec'
 import { repairGameSpec, validateGameSpec } from '@/types/gamespec'
 import { assembleGameFromTemplate, selectBestTemplate, GAME_TEMPLATES } from './gameTemplates'
 import { getAssetPack, selectBestCollectible, selectBestObstacle, ASSET_PACKS } from './assetPacks'
@@ -218,7 +219,7 @@ function convertSpecToGameLogic(spec: GameSpec): GameLogic {
   const events = [
     {
       id: 'collect_item',
-      trigger: 'collision' as const,
+      trigger: 'collision',
       conditions: [{ objectType: 'player' }, { objectType: 'collectible' }],
       actions: [{ type: 'collect', value: 10 }, { type: 'remove_object' }]
     }
@@ -228,14 +229,14 @@ function convertSpecToGameLogic(spec: GameSpec): GameLogic {
   if (spec.winCondition === 'collect-all') {
     events.push({
       id: 'win_condition',
-      trigger: 'score_reached' as const,
-      conditions: [{ score: spec.winTarget * 10 }],
+      trigger: 'score_reached',
+      conditions: [{ score: spec.winTarget * 10 } as any],
       actions: [{ type: 'win_game' }]
     })
   } else if (spec.template !== 'endless-runner') {
     events.push({
       id: 'reach_goal',
-      trigger: 'collision' as const,
+      trigger: 'collision',
       conditions: [{ objectType: 'player' }, { objectType: 'goal' }],
       actions: [{ type: 'win_game' }]
     })
@@ -470,9 +471,9 @@ function evaluateGameBalance(spec: GameSpec): number {
   }
   
   // Check difficulty appropriateness
-  if ((spec.difficulty === 'easy' && range.easyDiff) ||
-      (spec.difficulty === 'medium' && range.mediumDiff) ||
-      (spec.difficulty === 'hard' && range.hardDiff)) {
+  if ((spec.difficulty === 'easy' && 'easyDiff' in range) ||
+      (spec.difficulty === 'medium' && 'mediumDiff' in range) ||
+      (spec.difficulty === 'hard' && 'hardDiff' in range)) {
     score += 15
   }
   
@@ -569,10 +570,8 @@ export function validateAndImproveGame(
   }
 }
 
-// Export main functions
+// Export internal functions that don't already have export keywords
 export {
-  createZambooGame,
   convertSpecToGameLogic,
-  calculateGameQuality,
-  validateAndImproveGame
+  calculateGameQuality
 }

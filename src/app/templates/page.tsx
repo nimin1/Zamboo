@@ -9,11 +9,11 @@ import ZambooMascot from '@/components/zamboo/ZambooMascot'
 import BackgroundDecorations from '@/components/ui/BackgroundDecorations'
 import Sidebar from '@/components/ui/Sidebar'
 import GameGenerator from '@/lib/gameGenerator'
-import type { GameTemplate, ZambooState } from '@/types'
+import type { GameTemplateInfo, ZambooState } from '@/types'
 
 const TemplatesPage: React.FC = () => {
   const router = useRouter()
-  const [selectedTemplate, setSelectedTemplate] = useState<GameTemplate | null>(null)
+  const [selectedTemplate, setSelectedTemplate] = useState<GameTemplateInfo | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [zambooState, setZambooState] = useState<ZambooState>({
     mood: 'happy',
@@ -24,7 +24,7 @@ const TemplatesPage: React.FC = () => {
   const featuredTemplates = templates.filter(t => t.featured)
   const allTemplates = templates
 
-  const handlePlayTemplate = async (template: GameTemplate) => {
+  const handlePlayTemplate = async (template: GameTemplateInfo) => {
     setIsLoading(true)
     setZambooState({ mood: 'excited', animation: 'dance' })
 

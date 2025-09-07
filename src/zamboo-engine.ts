@@ -741,13 +741,13 @@ export class ZambooGameEngine {
 export async function createZambooGame(root: HTMLElement, spec: GameSpec): Promise<ZambooGameEngine> {
   // Validate the spec
   const validation = validateGameSpec(spec)
-  if (!validation.success) {
-    throw new Error(`Invalid GameSpec: ${validation.errors}`)
+  if (!validation) {
+    throw new Error(`Invalid GameSpec`)
   }
   
   // Apply theme defaults
-  const themeDefaults = getThemeDefaults(spec.theme)
-  const finalSpec: GameSpec = { ...themeDefaults, ...spec }
+  const themeDefaults = getThemeDefaults(validation.theme)
+  const finalSpec: GameSpec = { ...themeDefaults, ...validation }
   
   // Create and return the engine
   const engine = new ZambooGameEngine(root, finalSpec)

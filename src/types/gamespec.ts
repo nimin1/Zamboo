@@ -304,12 +304,16 @@ export const TEMPLATE_DEFAULTS: Record<GameTemplate, Partial<GameSpec>> = {
     player: {
       speed: 150,
       abilities: ['jump'],
-      hitbox: { w: 32, h: 32 }
+      hitbox: { w: 32, h: 32 },
+      idleAnim: 'idle',
+      runAnim: 'run',
+      jumpAnim: 'jump'
     },
     level: {
       segments: 4,
       length: 1200,
       platforms: 'auto',
+      obstacles: [],
       goal: 'collect-N',
       goalValue: 10
     },
@@ -331,12 +335,16 @@ export const TEMPLATE_DEFAULTS: Record<GameTemplate, Partial<GameSpec>> = {
     player: {
       speed: 200,
       abilities: ['jump', 'dash'],
-      hitbox: { w: 28, h: 28 }
+      hitbox: { w: 28, h: 28 },
+      idleAnim: 'idle',
+      runAnim: 'run',
+      jumpAnim: 'jump'
     },
     level: {
       segments: 8,
       length: 3200,
       platforms: 'auto',
+      obstacles: [],
       goal: 'survive-time',
       goalValue: 60
     },
@@ -359,12 +367,16 @@ export const TEMPLATE_DEFAULTS: Record<GameTemplate, Partial<GameSpec>> = {
     player: {
       speed: 120,
       abilities: [],
-      hitbox: { w: 30, h: 30 }
+      hitbox: { w: 30, h: 30 },
+      idleAnim: 'idle',
+      runAnim: 'run',
+      jumpAnim: 'jump'
     },
     level: {
       segments: 1,
       length: 800,
       platforms: 'none',
+      obstacles: [],
       goal: 'collect-N',
       goalValue: 15
     },

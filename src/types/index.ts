@@ -37,7 +37,7 @@ export interface Achievement {
   category: 'creator' | 'player' | 'learner' | 'explorer'
 }
 
-export interface GameTemplate {
+export interface GameTemplateInfo {
   id: string
   name: string
   description: string
@@ -176,3 +176,6 @@ export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
 
 // Import from gameLogicSchema for convenience
 import type { GameLogic, GameEvent, GameObject, Concept } from '../lib/gameLogicSchema'
+
+// Export GameSpec and related types
+export type { GameSpec, ThemePack, GameTemplate } from './gamespec'

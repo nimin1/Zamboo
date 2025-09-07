@@ -645,22 +645,4 @@ function evaluatePerformance(pack: AssetPack, recommendations: string[]): number
   return score
 }
 
-// Export all asset pack functions
-export {
-  ASSET_PACKS,
-  FOREST_ASSET_PACK,
-  SPACE_ASSET_PACK,
-  OCEAN_ASSET_PACK,
-  getAssetPack,
-  getPlayerAsset,
-  getCollectibleAssets,
-  getObstacleAssets,
-  getPlatformAssets,
-  getDecorationAssets,
-  getThemeSounds,
-  getThemeParticles,
-  getThemeColors,
-  selectBestCollectible,
-  selectBestObstacle,
-  validateAssetQuality
-}
+// All functions and constants are already exported individually above

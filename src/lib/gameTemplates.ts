@@ -140,7 +140,7 @@ export function buildPlatformerGame(themePack: ThemePack, customization?: {
     ...themeCustomization,
     difficulty: customization?.difficulty || 'medium',
     winTarget: customization?.collectibleCount || 8,
-    ageGroup: customization?.difficulty === 'easy' ? '7-9' : '8-10'
+    ageGroup: customization?.difficulty === 'easy' ? '7-9' : '10-12'
   }
 }
 
@@ -158,7 +158,7 @@ export function buildEndlessRunnerGame(themePack: ThemePack, customization?: {
     ...themeCustomization,
     difficulty: customization?.difficulty || 'medium',
     winTarget: customization?.scoreTarget || 100,
-    ageGroup: customization?.difficulty === 'easy' ? '8-10' : '10-12'
+    ageGroup: customization?.difficulty === 'easy' ? '7-9' : '10-12'
   }
 }
 
@@ -353,14 +353,4 @@ export function evaluateTemplateQuality(template: GameTemplate, themePack: Theme
   return metrics
 }
 
-// 🎯 Export all template functions
-export {
-  GAME_TEMPLATES,
-  customizeTemplateForTheme,
-  buildPlatformerGame,
-  buildEndlessRunnerGame,
-  buildCollectorGame,
-  selectBestTemplate,
-  assembleGameFromTemplate,
-  evaluateTemplateQuality
-}
+// All functions and constants are already exported individually above
