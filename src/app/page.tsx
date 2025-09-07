@@ -59,14 +59,14 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex flex-1 relative z-10 min-h-0">
         {/* Expandable Sidebar */}
-        <Sidebar 
+        <Sidebar
           navItems={[
             { href: "/create", icon: "🏠", label: "CREATE", isActive: true },
             { href: "/savedgames", icon: "💾", label: "SAVED GAMES" },
             { href: "/quests", icon: "🏆", label: "QUESTS" },
             { href: "/leaderboard", icon: "📊", label: "LEADERBOARD" },
             { href: "/profile", icon: "👤", label: "PROFILE" },
-            { href: "/more", icon: "⋯", label: "MORE" }
+            { href: "/more", icon: "⋯", label: "MORE" },
           ]}
         />
 
@@ -81,7 +81,7 @@ export default function Home() {
                   state={{ mood: "happy", animation: "idle" }}
                   interactive={true}
                   showSpeechBubble={true}
-                  message="Hi there! Ready for a coding adventure? 🚀"
+                  message="Hi There! Ready for a vibe coding adventure? 🚀"
                 />
               </div>
 
@@ -90,8 +90,8 @@ export default function Home() {
               </h1>
 
               <p className="text-base text-neutral-600 mb-4 max-w-2xl mx-auto">
-                I'm Zamboo, your coding companion! Let's create amazing games
-                together.
+                I'm Zamboo, your vibe coding companion! Let's create amazing
+                games together.
               </p>
 
               <div className="flex justify-center">

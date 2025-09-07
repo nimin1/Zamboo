@@ -1,91 +1,113 @@
-'use client'
+"use client";
 
-import React, { useState, useCallback, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Mic, MicOff, Send, Sparkles, Loader, ArrowLeft, Gamepad2, Play, BookOpen, Users, Trophy, Heart } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import ZambooGuide from '@/components/zamboo/ZambooGuide'
-import BackgroundDecorations from '@/components/ui/BackgroundDecorations'
-import GameGenerator from '@/lib/gameGenerator'
-import type { DeepSeekRequest, GameLogic, ZambooState } from '@/types'
+import React, { useState, useCallback, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Mic,
+  MicOff,
+  Send,
+  Sparkles,
+  Loader,
+  ArrowLeft,
+  Gamepad2,
+  Play,
+  BookOpen,
+  Users,
+  Trophy,
+  Heart,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import ZambooGuide from "@/components/zamboo/ZambooGuide";
+import BackgroundDecorations from "@/components/ui/BackgroundDecorations";
+import GameGenerator from "@/lib/gameGenerator";
+import type { DeepSeekRequest, GameLogic, ZambooState } from "@/types";
 
 const CreateGamePage: React.FC = () => {
-  const router = useRouter()
-  const [prompt, setPrompt] = useState('')
-  const [ageGroup, setAgeGroup] = useState<'5-7' | '8-10' | '11-13' | '14+'>('8-10')
-  const [gameType, setGameType] = useState<'collector' | 'maze' | 'runner' | 'puzzle' | 'adventure'>('collector')
-  const [complexity, setComplexity] = useState<'simple' | 'medium' | 'complex'>('simple')
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [isListening, setIsListening] = useState(false)
-  const [voiceSupported, setVoiceSupported] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [generatedGame, setGeneratedGame] = useState<GameLogic | null>(null)
+  const router = useRouter();
+  const [prompt, setPrompt] = useState("");
+  const [ageGroup, setAgeGroup] = useState<"5-7" | "8-10" | "11-13" | "14+">(
+    "8-10"
+  );
+  const [gameType, setGameType] = useState<
+    "collector" | "maze" | "runner" | "puzzle" | "adventure"
+  >("collector");
+  const [complexity, setComplexity] = useState<"simple" | "medium" | "complex">(
+    "simple"
+  );
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [voiceSupported, setVoiceSupported] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [generatedGame, setGeneratedGame] = useState<GameLogic | null>(null);
 
   const handleGenerateGame = useCallback(async () => {
     if (!prompt.trim()) {
-      setError('Please describe your game idea first!')
-      return
+      setError("Please describe your game idea first!");
+      return;
     }
 
-    setIsGenerating(true)
-    setError(null)
+    setIsGenerating(true);
+    setError(null);
 
     try {
       // Map old age groups to new format
       const ageGroupMapping = {
-        '5-7': '4-6' as const,
-        '8-10': '7-9' as const,
-        '11-13': '10-12' as const,
-        '14+': '10-12' as const
-      }
+        "5-7": "4-6" as const,
+        "8-10": "7-9" as const,
+        "11-13": "10-12" as const,
+        "14+": "10-12" as const,
+      };
 
       const request: DeepSeekRequest = {
         prompt: prompt.trim(),
         kidAgeBand: ageGroupMapping[ageGroup],
         complexity,
-        gameType
-      }
+        gameType,
+      };
 
-      const response = await GameGenerator.generateGame(request)
+      const response = await GameGenerator.generateGame(request);
 
       if (response.success && response.gameLogic) {
-        setGeneratedGame(response.gameLogic)
-        
+        setGeneratedGame(response.gameLogic);
+
         setTimeout(() => {
-          localStorage.setItem('currentGame', JSON.stringify(response.gameLogic))
-          router.push('/game')
-        }, 2000)
+          localStorage.setItem(
+            "currentGame",
+            JSON.stringify(response.gameLogic)
+          );
+          router.push("/game");
+        }, 2000);
       } else {
-        setError(response.error || 'Failed to generate game')
+        setError(response.error || "Failed to generate game");
       }
     } catch (err) {
-      setError('Something went wrong. Please try again!')
+      setError("Something went wrong. Please try again!");
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }, [prompt, ageGroup, complexity, gameType, router])
+  }, [prompt, ageGroup, complexity, gameType, router]);
 
   const startListening = useCallback(() => {
     // Voice recognition placeholder
-    setIsListening(true)
-    setTimeout(() => setIsListening(false), 3000)
-  }, [])
+    setIsListening(true);
+    setTimeout(() => setIsListening(false), 3000);
+  }, []);
 
   const tutorialMessages = [
-    "Hi there! I'm Zamboo! 🐼 Let's create an awesome game together!",
+    "Hi There! I'm Zamboo! 🐼 Let's create an awesome game together!",
     "Tell me what kind of game you want to make. You can type or use your voice!",
     "Want a game about collecting stars? A maze adventure? A rocket in space? I can make it all!",
-    "Don't worry if you're not sure - just describe what sounds fun to you!"
-  ]
+    "Don't worry if you're not sure - just describe what sounds fun to you!",
+  ];
 
   const gameTypeDescriptions = {
-    collector: 'Collect items like stars, coins, or gems!',
-    maze: 'Navigate through puzzles and find the exit!',
-    runner: 'Run, jump, and avoid obstacles!',
-    puzzle: 'Solve challenges and use your brain!',
-    adventure: 'Explore and discover new things!'
-  }
+    collector: "Collect items like stars, coins, or gems!",
+    maze: "Navigate through puzzles and find the exit!",
+    runner: "Run, jump, and avoid obstacles!",
+    puzzle: "Solve challenges and use your brain!",
+    adventure: "Explore and discover new things!",
+  };
 
   return (
     <div className="min-h-screen bg-neutral-50 relative">
@@ -96,17 +118,20 @@ const CreateGamePage: React.FC = () => {
         <div className="w-full px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link href="/" className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800 transition-colors">
+              <Link
+                href="/"
+                className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800 transition-colors"
+              >
                 <ArrowLeft size={20} />
                 <span>Back</span>
               </Link>
-              
+
               <div className="flex items-center gap-3">
                 <div className="text-3xl">🐼</div>
                 <h1 className="logo-text-small">zamboo</h1>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-duo-blue-600 font-medium">
                 <Trophy size={20} />
@@ -129,44 +154,32 @@ const CreateGamePage: React.FC = () => {
             <div className="sticky top-6">
               <div className="space-y-1">
                 <Link href="/create" className="nav-item active">
-                  <div className="nav-icon">
-                    🏠
-                  </div>
+                  <div className="nav-icon">🏠</div>
                   <span className="text-sm">CREATE</span>
                 </Link>
-                
+
                 <Link href="/templates" className="nav-item">
-                  <div className="nav-icon">
-                    🛡️
-                  </div>
+                  <div className="nav-icon">🛡️</div>
                   <span className="text-sm">TEMPLATES</span>
                 </Link>
-                
+
                 <div className="nav-item">
-                  <div className="nav-icon">
-                    🏆
-                  </div>
+                  <div className="nav-icon">🏆</div>
                   <span className="text-sm">QUESTS</span>
                 </div>
-                
+
                 <div className="nav-item">
-                  <div className="nav-icon">
-                    🛍️
-                  </div>
+                  <div className="nav-icon">🛍️</div>
                   <span className="text-sm">SHOP</span>
                 </div>
-                
+
                 <div className="nav-item">
-                  <div className="nav-icon">
-                    👤
-                  </div>
+                  <div className="nav-icon">👤</div>
                   <span className="text-sm">PROFILE</span>
                 </div>
-                
+
                 <div className="nav-item">
-                  <div className="nav-icon">
-                    ⋯
-                  </div>
+                  <div className="nav-icon">⋯</div>
                   <span className="text-sm">MORE</span>
                 </div>
               </div>
@@ -180,7 +193,9 @@ const CreateGamePage: React.FC = () => {
             {/* Header */}
             <div className="text-center">
               <h1 className="title-fun mb-2">Create Your Game!</h1>
-              <p className="text-lg text-neutral-600">Tell me your game idea and I'll bring it to life! 🎮</p>
+              <p className="text-lg text-neutral-600">
+                Tell me your game idea and I'll bring it to life! 🎮
+              </p>
             </div>
 
             {/* Zamboo Guide */}
@@ -207,7 +222,7 @@ const CreateGamePage: React.FC = () => {
                 <Sparkles className="text-duo-blue-500" />
                 What's Your Game Idea?
               </h2>
-              
+
               <div className="space-y-4">
                 <div className="relative">
                   <textarea
@@ -217,16 +232,16 @@ const CreateGamePage: React.FC = () => {
                     className="textarea"
                     disabled={isGenerating}
                   />
-                  
+
                   <button
                     onClick={startListening}
                     disabled={isGenerating}
                     className={`absolute bottom-4 right-4 p-3 rounded-xl shadow-medium transition-all ${
-                      isListening 
-                        ? 'bg-duo-red-500 hover:bg-duo-red-600 text-white' 
-                        : 'bg-duo-blue-500 hover:bg-duo-blue-600 text-white'
+                      isListening
+                        ? "bg-duo-red-500 hover:bg-duo-red-600 text-white"
+                        : "bg-duo-blue-500 hover:bg-duo-blue-600 text-white"
                     } disabled:opacity-50`}
-                    title={isListening ? 'Stop listening' : 'Start voice input'}
+                    title={isListening ? "Stop listening" : "Start voice input"}
                   >
                     {isListening ? <MicOff size={20} /> : <Mic size={20} />}
                   </button>
@@ -249,11 +264,15 @@ const CreateGamePage: React.FC = () => {
 
             {/* Game Settings */}
             <div className="card p-6">
-              <h3 className="text-xl font-bold text-neutral-800 mb-6 font-display">Game Settings</h3>
-              
+              <h3 className="text-xl font-bold text-neutral-800 mb-6 font-display">
+                Game Settings
+              </h3>
+
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">Age Group</label>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                    Age Group
+                  </label>
                   <select
                     value={ageGroup}
                     onChange={(e) => setAgeGroup(e.target.value as any)}
@@ -268,7 +287,9 @@ const CreateGamePage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">Game Type</label>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                    Game Type
+                  </label>
                   <select
                     value={gameType}
                     onChange={(e) => setGameType(e.target.value as any)}
@@ -287,16 +308,18 @@ const CreateGamePage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-3">Complexity</label>
+                  <label className="block text-sm font-medium text-neutral-700 mb-3">
+                    Complexity
+                  </label>
                   <div className="grid grid-cols-3 gap-3">
-                    {['simple', 'medium', 'complex'].map((level) => (
+                    {["simple", "medium", "complex"].map((level) => (
                       <button
                         key={level}
                         onClick={() => setComplexity(level as any)}
                         className={`p-4 rounded-xl border-2 font-medium transition-all text-center ${
                           complexity === level
-                            ? 'border-duo-green-500 bg-duo-green-500 text-white shadow-medium'
-                            : 'border-neutral-200 bg-white text-neutral-700 hover:border-duo-green-300 hover:bg-duo-green-50'
+                            ? "border-duo-green-500 bg-duo-green-500 text-white shadow-medium"
+                            : "border-neutral-200 bg-white text-neutral-700 hover:border-duo-green-300 hover:bg-duo-green-50"
                         }`}
                         disabled={isGenerating}
                       >
@@ -313,7 +336,7 @@ const CreateGamePage: React.FC = () => {
               onClick={handleGenerateGame}
               disabled={!prompt.trim() || isGenerating}
               className={`w-full btn-success text-xl py-4 flex items-center justify-center gap-3 ${
-                isGenerating ? 'opacity-75 cursor-not-allowed' : ''
+                isGenerating ? "opacity-75 cursor-not-allowed" : ""
               }`}
             >
               {isGenerating ? (
@@ -331,13 +354,15 @@ const CreateGamePage: React.FC = () => {
 
             {/* Quick Examples */}
             <div className="card p-6">
-              <h3 className="text-lg font-bold text-neutral-800 mb-4 font-display">Need Ideas? Try These!</h3>
+              <h3 className="text-lg font-bold text-neutral-800 mb-4 font-display">
+                Need Ideas? Try These!
+              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
                   "A panda collecting bamboo in a forest",
                   "A rocket ship flying through space",
                   "A cat jumping on platforms",
-                  "A treasure hunter in a maze"
+                  "A treasure hunter in a maze",
                 ].map((example, index) => (
                   <button
                     key={index}
@@ -383,7 +408,9 @@ const CreateGamePage: React.FC = () => {
                 className="card p-6 text-center bg-gradient-to-br from-duo-green-50 to-duo-green-100 border-l-4 border-duo-green-500"
               >
                 <div className="text-4xl mb-4 success-bounce">🎉</div>
-                <h4 className="font-bold text-duo-green-800 text-xl mb-2 font-display">Game Created!</h4>
+                <h4 className="font-bold text-duo-green-800 text-xl mb-2 font-display">
+                  Game Created!
+                </h4>
                 <p className="text-duo-green-600 mb-4">
                   Your game "{generatedGame.title}" is ready to play!
                 </p>
@@ -397,7 +424,7 @@ const CreateGamePage: React.FC = () => {
         </main>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreateGamePage
+export default CreateGamePage;
