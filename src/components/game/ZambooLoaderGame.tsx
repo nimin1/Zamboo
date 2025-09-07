@@ -14,6 +14,8 @@ interface GameObject {
   height: number
   collected?: boolean
   animationOffset?: number
+  type?: 'leaf' | 'bamboo' | 'rock'
+  points?: number
 }
 
 interface GameState {
@@ -26,14 +28,22 @@ interface GameState {
     jumpVelocity: number
     animationFrame: number
     idleAnimation: number
+    isDead: boolean
+    invulnerable: boolean
+    invulnerabilityStart?: number
   }
-  bamboos: GameObject[]
-  leaves: GameObject[]
+  objects: GameObject[]
   score: number
-  collectedItems: number
+  highScore: number
+  lives: number
   gameTime: number
   lastFrameTime: number
   backgroundOffset: number
+  gameOver: boolean
+  restartTimer: number
+  combo: number
+  showCombo: boolean
+  comboTime?: number
 }
 
 const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({ progress, onGameComplete }) => {
@@ -41,71 +51,126 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({ progress, onGameCom
   const gameLoopRef = useRef<number>()
   const keysPressed = useRef<Set<string>>(new Set())
   
-  const [gameState, setGameState] = useState<GameState>({
-    panda: { 
-      x: 80, 
-      y: 200, 
-      width: 45, 
-      height: 45, 
-      isJumping: false, 
-      jumpVelocity: 0,
-      animationFrame: 0,
-      idleAnimation: 0
-    },
-    bamboos: [],
-    leaves: [],
-    score: 0,
-    collectedItems: 0,
-    gameTime: 0,
-    lastFrameTime: 0,
-    backgroundOffset: 0
-  })
-
   const CANVAS_WIDTH = 600
   const CANVAS_HEIGHT = 300
   const GRAVITY = 0.6
   const JUMP_STRENGTH = -14
   const GROUND_Y = 220
-  const SCROLL_SPEED = 1.5 // Slower, more relaxed pace
+  const SCROLL_SPEED = 2.0 // Faster for excitement!
   const TARGET_FPS = 60
 
-  // Initialize game objects with better spacing
-  useEffect(() => {
-    const initBamboos: GameObject[] = []
-    const initLeaves: GameObject[] = []
+  const [gameState, setGameState] = useState<GameState>({
+    panda: { 
+      x: 80, 
+      y: GROUND_Y, 
+      width: 45, 
+      height: 45, 
+      isJumping: false, 
+      jumpVelocity: 0,
+      animationFrame: 0,
+      idleAnimation: 0,
+      isDead: false,
+      invulnerable: false
+    },
+    objects: [],
+    score: 0,
+    highScore: parseInt(localStorage.getItem('zambooLoaderHighScore') || '0'),
+    lives: 3,
+    gameTime: 0,
+    lastFrameTime: 0,
+    backgroundOffset: 0,
+    gameOver: false,
+    restartTimer: 0,
+    combo: 0,
+    showCombo: false
+  })
 
-    // Create bamboos with better spacing and variety
-    for (let i = 0; i < 12; i++) {
-      initBamboos.push({
-        x: CANVAS_WIDTH + i * 180 + Math.random() * 60,
-        y: GROUND_Y - 25,
-        width: 22,
-        height: 25,
-        collected: false,
-        animationOffset: Math.random() * Math.PI * 2
-      })
+  // Initialize exciting game with mixed objects
+  const initializeGame = useCallback(() => {
+    const initObjects: GameObject[] = []
+
+    // Create initial mix of objects
+    for (let i = 0; i < 20; i++) {
+      const startX = CANVAS_WIDTH + i * (100 + Math.random() * 80)
+      const objectType = Math.random()
+      
+      if (objectType < 0.4) {
+        // Leaves (40% chance) - 1 point
+        initObjects.push({
+          x: startX,
+          y: 50 + Math.random() * 120, // Floating leaves at various heights
+          width: 20,
+          height: 20,
+          type: 'leaf',
+          points: 1,
+          collected: false,
+          animationOffset: Math.random() * Math.PI * 2
+        })
+      } else if (objectType < 0.65) {
+        // Bamboo trees (25% chance) - 5 points  
+        initObjects.push({
+          x: startX,
+          y: GROUND_Y - 30,
+          width: 25,
+          height: 30,
+          type: 'bamboo',
+          points: 5,
+          collected: false,
+          animationOffset: Math.random() * Math.PI * 2
+        })
+      } else {
+        // Rocks (35% chance) - Game over!
+        const rockY = Math.random() < 0.7 ? GROUND_Y - 25 : GROUND_Y - 60 // Ground or elevated rocks
+        initObjects.push({
+          x: startX,
+          y: rockY,
+          width: 30,
+          height: 25,
+          type: 'rock',
+          points: 0,
+          collected: false,
+          animationOffset: Math.random() * Math.PI * 2
+        })
+      }
     }
 
-    // Create leaves at different heights
-    for (let i = 0; i < 16; i++) {
-      const height = Math.random() < 0.5 ? 80 + Math.random() * 60 : 140 + Math.random() * 40
-      initLeaves.push({
-        x: CANVAS_WIDTH + i * 120 + Math.random() * 80,
-        y: height,
-        width: 18,
-        height: 18,
-        collected: false,
-        animationOffset: Math.random() * Math.PI * 2
-      })
+    return {
+      objects: initObjects,
+      lastFrameTime: performance.now()
     }
+  }, [])
 
+  // Restart game after death
+  const restartGame = useCallback(() => {
+    const initialData = initializeGame()
     setGameState(prev => ({
       ...prev,
-      bamboos: initBamboos,
-      leaves: initLeaves,
-      lastFrameTime: performance.now()
+      ...initialData,
+      panda: {
+        ...prev.panda,
+        x: 80,
+        y: GROUND_Y,
+        isJumping: false,
+        jumpVelocity: 0,
+        isDead: false,
+        invulnerable: false
+      },
+      score: 0,
+      lives: 3,
+      gameOver: false,
+      restartTimer: 0,
+      combo: 0,
+      showCombo: false
     }))
-  }, [])
+  }, [initializeGame])
+
+  useEffect(() => {
+    const initialData = initializeGame()
+    setGameState(prev => ({
+      ...prev,
+      ...initialData
+    }))
+  }, [initializeGame])
 
   // Smooth keyboard input handling
   useEffect(() => {
@@ -128,12 +193,11 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({ progress, onGameCom
     }
   }, [])
 
-  // Game logic with frame rate control
+  // Exciting game logic with collision detection and game over
   const updateGame = useCallback((currentTime: number) => {
-    const deltaTime = (currentTime - gameState.lastFrameTime) / 1000 // Convert to seconds
+    const deltaTime = (currentTime - gameState.lastFrameTime) / 1000
     const targetDelta = 1 / TARGET_FPS
 
-    // Only update if enough time has passed (frame rate limiting)
     if (deltaTime < targetDelta) {
       return gameState
     }
@@ -143,6 +207,30 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({ progress, onGameCom
     newState.gameTime += deltaTime
     newState.backgroundOffset = (newState.backgroundOffset + SCROLL_SPEED * deltaTime * 60) % CANVAS_WIDTH
 
+    // Handle game over state
+    if (newState.gameOver) {
+      newState.restartTimer += deltaTime
+      if (newState.restartTimer > 3) { // Auto restart after 3 seconds
+        restartGame()
+        return newState
+      }
+      return newState
+    }
+
+    // Update invulnerability timer
+    if (newState.panda.invulnerable && newState.panda.invulnerabilityStart) {
+      if (newState.gameTime - newState.panda.invulnerabilityStart > 2) {
+        newState.panda.invulnerable = false
+      }
+    }
+
+    // Update combo display timer
+    if (newState.showCombo && newState.comboTime) {
+      if (newState.gameTime - newState.comboTime > 1.5) {
+        newState.showCombo = false
+      }
+    }
+
     // Update panda animation
     newState.panda.idleAnimation += deltaTime * 3
     if (newState.panda.isJumping) {
@@ -151,8 +239,10 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({ progress, onGameCom
       newState.panda.animationFrame = Math.sin(newState.panda.idleAnimation) * 0.1
     }
 
-    // Handle jump input
-    if ((keysPressed.current.has('Space') || keysPressed.current.has('ArrowUp')) && !newState.panda.isJumping) {
+    // Handle jump input (only if panda is alive)
+    if (!newState.panda.isDead &&
+        (keysPressed.current.has('Space') || keysPressed.current.has('ArrowUp')) && 
+        !newState.panda.isJumping) {
       newState.panda.isJumping = true
       newState.panda.jumpVelocity = JUMP_STRENGTH
     }
@@ -162,7 +252,6 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({ progress, onGameCom
       newState.panda.jumpVelocity += GRAVITY
       newState.panda.y += newState.panda.jumpVelocity
 
-      // Land on ground
       if (newState.panda.y >= GROUND_Y) {
         newState.panda.y = GROUND_Y
         newState.panda.isJumping = false
@@ -170,82 +259,128 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({ progress, onGameCom
       }
     }
 
-    // Move objects smoothly
+    // Move and manage objects
     const moveSpeed = SCROLL_SPEED * deltaTime * 60
+    newState.objects = newState.objects.map(obj => ({
+      ...obj,
+      x: obj.x - moveSpeed
+    })).filter(obj => obj.x > -50)
 
-    newState.bamboos = newState.bamboos.map(bamboo => ({
-      ...bamboo,
-      x: bamboo.x - moveSpeed
-    })).filter(bamboo => bamboo.x > -50)
+    // Add new objects dynamically
+    if (newState.objects.length < 20) {
+      const lastObj = newState.objects[newState.objects.length - 1]
+      const startX = lastObj ? Math.max(lastObj.x + 100 + Math.random() * 80, CANVAS_WIDTH + 50) : CANVAS_WIDTH + 50
+      const objectType = Math.random()
+      
+      let newObject: GameObject
+      if (objectType < 0.4) {
+        // Leaf
+        newObject = {
+          x: startX,
+          y: 50 + Math.random() * 120,
+          width: 20,
+          height: 20,
+          type: 'leaf',
+          points: 1,
+          collected: false,
+          animationOffset: Math.random() * Math.PI * 2
+        }
+      } else if (objectType < 0.65) {
+        // Bamboo
+        newObject = {
+          x: startX,
+          y: GROUND_Y - 30,
+          width: 25,
+          height: 30,
+          type: 'bamboo',
+          points: 5,
+          collected: false,
+          animationOffset: Math.random() * Math.PI * 2
+        }
+      } else {
+        // Rock
+        const rockY = Math.random() < 0.7 ? GROUND_Y - 25 : GROUND_Y - 60
+        newObject = {
+          x: startX,
+          y: rockY,
+          width: 30,
+          height: 25,
+          type: 'rock',
+          points: 0,
+          collected: false,
+          animationOffset: Math.random() * Math.PI * 2
+        }
+      }
+      newState.objects.push(newObject)
+    }
 
-    newState.leaves = newState.leaves.map(leaf => ({
-      ...leaf,
-      x: leaf.x - moveSpeed
-    })).filter(leaf => leaf.x > -50)
+    // Collision detection with improved logic
+    if (!newState.panda.isDead && !newState.panda.invulnerable) {
+      const pandaRect = {
+        x: newState.panda.x + 5, // Slight margin for better gameplay
+        y: newState.panda.y + 5,
+        width: newState.panda.width - 10,
+        height: newState.panda.height - 10
+      }
 
-    // Add new objects when needed
-    if (newState.bamboos.length < 12) {
-      const lastBamboo = newState.bamboos[newState.bamboos.length - 1]
-      const lastX = lastBamboo ? lastBamboo.x : CANVAS_WIDTH
-      newState.bamboos.push({
-        x: Math.max(lastX + 180 + Math.random() * 60, CANVAS_WIDTH + 100),
-        y: GROUND_Y - 25,
-        width: 22,
-        height: 25,
-        collected: false,
-        animationOffset: Math.random() * Math.PI * 2
+      newState.objects.forEach(obj => {
+        if (obj.collected) return
+
+        const collision = 
+          pandaRect.x < obj.x + obj.width &&
+          pandaRect.x + pandaRect.width > obj.x &&
+          pandaRect.y < obj.y + obj.height &&
+          pandaRect.y + pandaRect.height > obj.y
+
+        if (collision) {
+          if (obj.type === 'rock') {
+            // Hit a rock - lose a life!
+            newState.panda.isDead = true
+            newState.lives--
+            newState.combo = 0
+            
+            if (newState.lives <= 0) {
+              newState.gameOver = true
+              newState.restartTimer = 0
+              // Save high score
+              if (newState.score > newState.highScore) {
+                newState.highScore = newState.score
+                localStorage.setItem('zambooLoaderHighScore', newState.score.toString())
+              }
+            } else {
+              // Respawn with invulnerability
+              setTimeout(() => {
+                setGameState(prev => ({
+                  ...prev,
+                  panda: {
+                    ...prev.panda,
+                    isDead: false,
+                    invulnerable: true,
+                    invulnerabilityStart: prev.gameTime
+                  }
+                }))
+              }, 500)
+            }
+            obj.collected = true
+          } else {
+            // Collect leaf or bamboo
+            obj.collected = true
+            newState.score += obj.points || 1
+            newState.combo++
+            
+            if (newState.combo >= 5) {
+              // Combo bonus!
+              newState.score += Math.floor(newState.combo / 5) * 2
+              newState.showCombo = true
+              newState.comboTime = newState.gameTime
+            }
+          }
+        }
       })
     }
-
-    if (newState.leaves.length < 16) {
-      const lastLeaf = newState.leaves[newState.leaves.length - 1]
-      const lastX = lastLeaf ? lastLeaf.x : CANVAS_WIDTH
-      const height = Math.random() < 0.5 ? 80 + Math.random() * 60 : 140 + Math.random() * 40
-      newState.leaves.push({
-        x: Math.max(lastX + 120 + Math.random() * 80, CANVAS_WIDTH + 100),
-        y: height,
-        width: 18,
-        height: 18,
-        collected: false,
-        animationOffset: Math.random() * Math.PI * 2
-      })
-    }
-
-    // Collision detection with satisfying feedback
-    const pandaRect = {
-      x: newState.panda.x + 5,
-      y: newState.panda.y + 5,
-      width: newState.panda.width - 10,
-      height: newState.panda.height - 10
-    }
-
-    const checkCollision = (obj: GameObject) => {
-      return pandaRect.x < obj.x + obj.width - 5 &&
-             pandaRect.x + pandaRect.width > obj.x + 5 &&
-             pandaRect.y < obj.y + obj.height - 5 &&
-             pandaRect.y + pandaRect.height > obj.y + 5
-    }
-
-    // Check bamboo collection
-    newState.bamboos.forEach(bamboo => {
-      if (!bamboo.collected && checkCollision(bamboo)) {
-        bamboo.collected = true
-        newState.score += 10
-        newState.collectedItems += 1
-      }
-    })
-
-    // Check leaf collection
-    newState.leaves.forEach(leaf => {
-      if (!leaf.collected && checkCollision(leaf)) {
-        leaf.collected = true
-        newState.score += 5
-        newState.collectedItems += 1
-      }
-    })
 
     return newState
-  }, [gameState])
+  }, [gameState, restartGame])
 
   // Main game loop with proper timing
   useEffect(() => {
@@ -268,21 +403,124 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({ progress, onGameCom
       ctx.fillStyle = gradient
       ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 
-      // Draw animated background elements
-      drawBackground(ctx, updatedState)
+      // Draw scrolling clouds
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
+      for (let i = 0; i < 3; i++) {
+        const cloudX = (updatedState.backgroundOffset * 0.3 + i * 200) % (CANVAS_WIDTH + 100) - 50
+        ctx.beginPath()
+        ctx.arc(cloudX, 50 + i * 20, 25, 0, Math.PI * 2)
+        ctx.arc(cloudX + 25, 50 + i * 20, 35, 0, Math.PI * 2)
+        ctx.arc(cloudX + 50, 50 + i * 20, 25, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      // Draw ground
+      ctx.fillStyle = '#8B4513'
+      ctx.fillRect(0, GROUND_Y + 45, CANVAS_WIDTH, 10)
       
-      // Draw game objects
-      drawPanda(ctx, updatedState.panda, updatedState.gameTime)
-      drawBamboos(ctx, updatedState.bamboos, updatedState.gameTime)
-      drawLeaves(ctx, updatedState.leaves, updatedState.gameTime)
+      // Draw grass
+      ctx.fillStyle = '#32CD32'
+      ctx.fillRect(0, GROUND_Y + 45, CANVAS_WIDTH, 35)
+
+      // Draw objects with exciting visuals
+      updatedState.objects.forEach(obj => {
+        if (obj.collected) return
+        
+        ctx.save()
+        ctx.translate(obj.x + obj.width/2, obj.y + obj.height/2)
+        
+        if (obj.type === 'leaf') {
+          // Animated floating leaves
+          const float = Math.sin(updatedState.gameTime * 2 + (obj.animationOffset || 0)) * 3
+          ctx.translate(0, float)
+          ctx.rotate(Math.sin(updatedState.gameTime + (obj.animationOffset || 0)) * 0.2)
+          ctx.font = '20px Arial'
+          ctx.textAlign = 'center'
+          ctx.fillText('🍃', 0, 5)
+        } else if (obj.type === 'bamboo') {
+          // Swaying bamboo
+          ctx.rotate(Math.sin(updatedState.gameTime * 1.5 + (obj.animationOffset || 0)) * 0.1)
+          ctx.font = '30px Arial'
+          ctx.textAlign = 'center'
+          ctx.fillText('🎋', 0, 8)
+        } else if (obj.type === 'rock') {
+          // Menacing rocks with warning effect
+          if (obj.x < 200) { // Warning when close
+            ctx.shadowColor = 'red'
+            ctx.shadowBlur = 10
+          }
+          const wobble = Math.sin(updatedState.gameTime * 8 + (obj.animationOffset || 0)) * 2
+          ctx.translate(wobble, 0)
+          ctx.font = '25px Arial'
+          ctx.textAlign = 'center'
+          ctx.fillText('🪨', 0, 5)
+          ctx.shadowBlur = 0
+        }
+        
+        ctx.restore()
+      })
+
+      // Draw panda with death/invulnerability states
+      ctx.save()
+      ctx.translate(updatedState.panda.x + updatedState.panda.width/2, updatedState.panda.y + updatedState.panda.height/2)
       
-      // Draw ground with grass texture
-      drawGround(ctx)
+      // Invulnerability flashing effect
+      if (updatedState.panda.invulnerable) {
+        ctx.globalAlpha = Math.sin(updatedState.gameTime * 20) > 0 ? 0.3 : 1.0
+      }
+      
+      // Death effect
+      if (updatedState.panda.isDead) {
+        ctx.rotate(Math.PI) // Flip upside down
+        ctx.globalAlpha = 0.5
+      } else if (updatedState.panda.isJumping) {
+        ctx.rotate(updatedState.panda.animationFrame * 0.1)
+      } else {
+        ctx.translate(0, updatedState.panda.animationFrame * 2)
+      }
+      
+      ctx.font = '45px Arial'
+      ctx.textAlign = 'center'
+      ctx.fillText('🐼', 0, 10)
+      ctx.restore()
+
+      // Draw UI elements
+      ctx.fillStyle = '#333'
+      ctx.font = 'bold 16px Arial'
+      ctx.textAlign = 'left'
+      ctx.fillText(`Score: ${updatedState.score}`, 10, 25)
+      ctx.fillText(`High: ${updatedState.highScore}`, 10, 45)
+      ctx.fillText(`Lives: ${'❤️'.repeat(updatedState.lives)}`, 10, 65)
+
+      // Draw combo
+      if (updatedState.showCombo && updatedState.combo >= 5) {
+        ctx.fillStyle = '#FF6B6B'
+        ctx.font = 'bold 20px Arial'
+        ctx.textAlign = 'center'
+        ctx.fillText(`${updatedState.combo}x COMBO!`, CANVAS_WIDTH/2, 50)
+      }
+
+      // Draw game over screen
+      if (updatedState.gameOver) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.8)'
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+        
+        ctx.fillStyle = '#FF4444'
+        ctx.font = 'bold 32px Arial'
+        ctx.textAlign = 'center'
+        ctx.fillText('GAME OVER!', CANVAS_WIDTH/2, CANVAS_HEIGHT/2 - 40)
+        
+        ctx.fillStyle = '#FFF'
+        ctx.font = '20px Arial'
+        ctx.fillText(`Final Score: ${updatedState.score}`, CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
+        ctx.fillText(`High Score: ${updatedState.highScore}`, CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 25)
+        ctx.fillText('Restarting in ' + Math.ceil(3 - updatedState.restartTimer) + '...', CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 55)
+      }
 
       gameLoopRef.current = requestAnimationFrame(gameLoop)
     }
 
-    gameLoop(performance.now())
+    gameLoopRef.current = requestAnimationFrame(gameLoop)
 
     return () => {
       if (gameLoopRef.current) {
@@ -291,192 +529,21 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({ progress, onGameCom
     }
   }, [updateGame])
 
-  const drawBackground = (ctx: CanvasRenderingContext2D, state: GameState) => {
-    // Draw clouds
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
-    for (let i = 0; i < 4; i++) {
-      const cloudX = (i * 150 - state.backgroundOffset * 0.3) % (CANVAS_WIDTH + 100)
-      const cloudY = 30 + Math.sin(state.gameTime + i) * 10
-      drawCloud(ctx, cloudX, cloudY)
-    }
-
-    // Draw distant hills
-    ctx.fillStyle = 'rgba(60, 179, 113, 0.6)'
-    ctx.beginPath()
-    ctx.moveTo(0, CANVAS_HEIGHT - 80)
-    for (let x = 0; x <= CANVAS_WIDTH; x += 20) {
-      const y = CANVAS_HEIGHT - 80 + Math.sin((x + state.backgroundOffset * 0.5) * 0.01) * 15
-      ctx.lineTo(x, y)
-    }
-    ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT)
-    ctx.lineTo(0, CANVAS_HEIGHT)
-    ctx.closePath()
-    ctx.fill()
-  }
-
-  const drawCloud = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
-    ctx.beginPath()
-    ctx.arc(x, y, 15, 0, Math.PI * 2)
-    ctx.arc(x + 15, y, 20, 0, Math.PI * 2)
-    ctx.arc(x + 30, y, 15, 0, Math.PI * 2)
-    ctx.arc(x + 15, y - 10, 12, 0, Math.PI * 2)
-    ctx.fill()
-  }
-
-  const drawGround = (ctx: CanvasRenderingContext2D) => {
-    // Ground base
-    ctx.fillStyle = '#228B22'
-    ctx.fillRect(0, GROUND_Y + 25, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y - 25)
-    
-    // Grass texture
-    ctx.strokeStyle = '#32CD32'
-    ctx.lineWidth = 2
-    for (let x = 0; x < CANVAS_WIDTH; x += 8) {
-      const grassHeight = 5 + Math.random() * 8
-      ctx.beginPath()
-      ctx.moveTo(x, GROUND_Y + 25)
-      ctx.lineTo(x + Math.random() * 2 - 1, GROUND_Y + 25 - grassHeight)
-      ctx.stroke()
-    }
-  }
-
-  const drawPanda = (ctx: CanvasRenderingContext2D, panda: typeof gameState.panda, gameTime: number) => {
-    const centerX = panda.x + panda.width / 2
-    const centerY = panda.y + panda.height / 2
-    const bounce = Math.sin(gameTime * 4) * 2
-
-    ctx.save()
-    ctx.translate(centerX, centerY + bounce + panda.animationFrame)
-    
-    // Panda body (black)
-    ctx.fillStyle = '#2C3E50'
-    ctx.fillRect(-panda.width/2, -panda.height/2, panda.width, panda.height * 0.8)
-    
-    // Panda belly (white)
-    ctx.fillStyle = '#FFFFFF'
-    ctx.fillRect(-panda.width/3, -panda.height/3, panda.width * 0.66, panda.height * 0.5)
-    
-    // Panda head (white)
-    ctx.beginPath()
-    ctx.arc(0, -panda.height/2 - 5, 18, 0, Math.PI * 2)
-    ctx.fill()
-    
-    // Panda ears (black)
-    ctx.fillStyle = '#2C3E50'
-    ctx.beginPath()
-    ctx.arc(-12, -panda.height/2 - 15, 8, 0, Math.PI * 2)
-    ctx.arc(12, -panda.height/2 - 15, 8, 0, Math.PI * 2)
-    ctx.fill()
-    
-    // Panda eyes
-    ctx.fillStyle = '#2C3E50'
-    ctx.beginPath()
-    ctx.arc(-6, -panda.height/2 - 8, 3, 0, Math.PI * 2)
-    ctx.arc(6, -panda.height/2 - 8, 3, 0, Math.PI * 2)
-    ctx.fill()
-    
-    // Eye shine
-    ctx.fillStyle = '#FFFFFF'
-    ctx.beginPath()
-    ctx.arc(-5, -panda.height/2 - 7, 1, 0, Math.PI * 2)
-    ctx.arc(7, -panda.height/2 - 7, 1, 0, Math.PI * 2)
-    ctx.fill()
-    
-    // Panda nose
-    ctx.fillStyle = '#2C3E50'
-    ctx.beginPath()
-    ctx.arc(0, -panda.height/2 - 2, 2, 0, Math.PI * 2)
-    ctx.fill()
-
-    ctx.restore()
-  }
-
-  const drawBamboos = (ctx: CanvasRenderingContext2D, bamboos: GameObject[], gameTime: number) => {
-    bamboos.forEach(bamboo => {
-      if (bamboo.collected) return
-      
-      const sway = Math.sin(gameTime * 2 + (bamboo.animationOffset || 0)) * 2
-      
-      ctx.save()
-      ctx.translate(bamboo.x + bamboo.width/2, bamboo.y + bamboo.height)
-      ctx.rotate(sway * 0.1)
-      
-      // Bamboo stalk
-      ctx.fillStyle = '#90EE90'
-      ctx.fillRect(-bamboo.width/2, -bamboo.height, bamboo.width, bamboo.height)
-      
-      // Bamboo segments
-      ctx.strokeStyle = '#228B22'
-      ctx.lineWidth = 2
-      for (let i = 1; i < 4; i++) {
-        const y = -bamboo.height + (i * bamboo.height / 4)
-        ctx.beginPath()
-        ctx.moveTo(-bamboo.width/2, y)
-        ctx.lineTo(bamboo.width/2, y)
-        ctx.stroke()
-      }
-      
-      // Bamboo leaves
-      ctx.fillStyle = '#32CD32'
-      ctx.beginPath()
-      ctx.ellipse(-bamboo.width/3, -bamboo.height, 6, 12, -0.3, 0, Math.PI * 2)
-      ctx.ellipse(bamboo.width/3, -bamboo.height + 5, 5, 10, 0.3, 0, Math.PI * 2)
-      ctx.fill()
-      
-      ctx.restore()
-    })
-  }
-
-  const drawLeaves = (ctx: CanvasRenderingContext2D, leaves: GameObject[], gameTime: number) => {
-    leaves.forEach(leaf => {
-      if (leaf.collected) return
-      
-      const float = Math.sin(gameTime * 3 + (leaf.animationOffset || 0)) * 3
-      const spin = gameTime + (leaf.animationOffset || 0)
-      
-      ctx.save()
-      ctx.translate(leaf.x + leaf.width/2, leaf.y + leaf.height/2 + float)
-      ctx.rotate(spin * 0.5)
-      
-      // Leaf shape
-      ctx.fillStyle = '#32CD32'
-      ctx.beginPath()
-      ctx.ellipse(0, 0, leaf.width/2, leaf.height/2, 0, 0, Math.PI * 2)
-      ctx.fill()
-      
-      // Leaf vein
-      ctx.strokeStyle = '#228B22'
-      ctx.lineWidth = 1
-      ctx.beginPath()
-      ctx.moveTo(0, -leaf.height/2)
-      ctx.lineTo(0, leaf.height/2)
-      ctx.stroke()
-      
-      // Leaf shine
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
-      ctx.beginPath()
-      ctx.ellipse(-2, -2, 3, 5, -0.3, 0, Math.PI * 2)
-      ctx.fill()
-      
-      ctx.restore()
-    })
-  }
-
   return (
-    <div className="flex flex-col items-center p-6 bg-gradient-to-b from-blue-50 to-green-50 rounded-2xl shadow-lg">
-      <div className="mb-6 text-center">
-        <h3 className="text-2xl font-bold text-neutral-800 mb-3 font-display">
-          🐼 Zamboo's Peaceful Garden
-        </h3>
-        <p className="text-neutral-600 mb-2">
-          Help Zamboo collect bamboo 🎋 and leaves 🍃 while your amazing game is being created!
+    <div className="flex flex-col items-center gap-4 p-4">
+      {/* Game Title and Instructions */}
+      <div className="text-center">
+        <h3 className="text-xl font-bold text-neutral-800 mb-2">🐼 Panda's Bamboo Adventure!</h3>
+        <p className="text-sm text-neutral-600 mb-2">
+          <strong>🎯 Goal:</strong> Collect 🍃 leaves (1pt) and 🎋 bamboo (5pts), avoid 🪨 rocks!
         </p>
-        <p className="text-sm text-neutral-500">
-          Press SPACE or ↑ to jump • Score: {gameState.score} • Collected: {gameState.collectedItems}
+        <p className="text-xs text-neutral-500">
+          <strong>Controls:</strong> Press SPACE or ↑ to jump • Get 5+ combo for bonus points!
         </p>
       </div>
 
-      <div className="relative mb-6">
+      {/* Game Canvas */}
+      <div className="relative">
         <canvas
           ref={canvasRef}
           width={CANVAS_WIDTH}
@@ -509,12 +576,23 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({ progress, onGameCom
         </div>
         
         <div className="text-center mt-3">
-          <p className="text-sm text-neutral-600">
-            {progress < 25 ? "🔨 Building game world..." : 
-             progress < 50 ? "🎨 Adding colors and sprites..." :
-             progress < 75 ? "⚙️ Programming game mechanics..." :
-             progress < 95 ? "✨ Adding final polish..." :
-             "🎉 Almost ready!"}
+          <p className="text-sm text-neutral-600 font-medium">
+            {progress < 10 ? "🌱 Planting the seeds of your game world..." : 
+             progress < 20 ? "🏗️ Building the foundation and game structure..." :
+             progress < 30 ? "🎨 Painting beautiful backgrounds and environments..." :
+             progress < 40 ? "👾 Creating characters and bringing them to life..." :
+             progress < 50 ? "⚡ Adding special powers and abilities..." :
+             progress < 60 ? "🎵 Composing sound effects and music..." :
+             progress < 70 ? "🔧 Programming game logic and interactions..." :
+             progress < 80 ? "🌟 Adding sparkles, animations, and magic..." :
+             progress < 90 ? "🎮 Testing gameplay and fine-tuning controls..." :
+             progress < 95 ? "✨ Polishing every detail to perfection..." :
+             "🎉 Your amazing game is ready to play!"}
+          </p>
+          <p className="text-xs text-neutral-500 mt-1">
+            {progress < 50 ? "Play the panda game above while we work! Avoid the rocks! 🐼" :
+             progress < 90 ? "Almost there! Try to beat your high score! 🏆" :
+             "Get ready for an amazing gaming experience! 🚀"}
           </p>
         </div>
       </div>

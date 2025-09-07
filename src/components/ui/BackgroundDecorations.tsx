@@ -1247,6 +1247,251 @@ const BackgroundDecorations = () => {
       <div className="absolute bottom-20/22 right-22/22 text-2xl animate-float-slow opacity-15">
         💙
       </div>
+
+      {/* Dynamic Moving Pandas - Horizontal Movement */}
+      <div className="absolute top-1/8 left-0 text-4xl opacity-20 animate-[slide-right_15s_linear_infinite]">
+        🐼
+      </div>
+      <div className="absolute top-3/8 right-0 text-4xl opacity-20 animate-[slide-left_12s_linear_infinite]">
+        🐼
+      </div>
+      <div className="absolute top-5/8 left-0 text-3xl opacity-15 animate-[slide-right_18s_linear_infinite]">
+        🐼
+      </div>
+      <div className="absolute bottom-1/8 right-0 text-4xl opacity-20 animate-[slide-left_14s_linear_infinite]">
+        🐼
+      </div>
+
+      {/* Vertical Moving Pandas */}
+      <div className="absolute left-1/8 top-0 text-3xl opacity-15 animate-[slide-down_16s_linear_infinite]">
+        🐼
+      </div>
+      <div className="absolute right-1/8 bottom-0 text-4xl opacity-20 animate-[slide-up_13s_linear_infinite]">
+        🐼
+      </div>
+      <div className="absolute left-3/8 top-0 text-3xl opacity-15 animate-[slide-down_19s_linear_infinite]">
+        🐼
+      </div>
+      <div className="absolute right-3/8 bottom-0 text-4xl opacity-20 animate-[slide-up_11s_linear_infinite]">
+        🐼
+      </div>
+
+      {/* Diagonal Moving Pandas */}
+      <div className="absolute top-0 left-0 text-3xl opacity-15 animate-[diagonal-bounce_20s_ease-in-out_infinite]">
+        🐼
+      </div>
+      <div className="absolute top-0 right-0 text-4xl opacity-20 animate-[diagonal-bounce-reverse_17s_ease-in-out_infinite]">
+        🐼
+      </div>
+      <div className="absolute bottom-0 left-0 text-3xl opacity-15 animate-[diagonal-bounce-up_22s_ease-in-out_infinite]">
+        🐼
+      </div>
+      <div className="absolute bottom-0 right-0 text-4xl opacity-20 animate-[diagonal-bounce-up-reverse_19s_ease-in-out_infinite]">
+        🐼
+      </div>
+
+      {/* Orbiting Pandas */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="relative w-64 h-64">
+          <div className="absolute text-3xl opacity-15 animate-[orbit_25s_linear_infinite]" style={{transformOrigin: '128px 128px'}}>
+            🐼
+          </div>
+        </div>
+      </div>
+      <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="relative w-48 h-48">
+          <div className="absolute text-2xl opacity-12 animate-[orbit-reverse_20s_linear_infinite]" style={{transformOrigin: '96px 96px'}}>
+            🐼
+          </div>
+        </div>
+      </div>
+      <div className="absolute top-2/3 right-1/3 transform translate-x-1/2 translate-y-1/2">
+        <div className="relative w-56 h-56">
+          <div className="absolute text-3xl opacity-18 animate-[orbit_30s_linear_infinite]" style={{transformOrigin: '112px 112px'}}>
+            🐼
+          </div>
+        </div>
+      </div>
+
+      {/* Bouncing Pandas with Trails */}
+      <div className="absolute top-1/4 left-1/4 text-3xl opacity-20 animate-[mega-bounce_8s_ease-in-out_infinite]">
+        🐼
+      </div>
+      <div className="absolute top-1/4 right-1/4 text-3xl opacity-20 animate-[mega-bounce_6s_ease-in-out_infinite_0.5s]">
+        🐼
+      </div>
+      <div className="absolute bottom-1/4 left-1/4 text-3xl opacity-20 animate-[mega-bounce_7s_ease-in-out_infinite_1s]">
+        🐼
+      </div>
+      <div className="absolute bottom-1/4 right-1/4 text-3xl opacity-20 animate-[mega-bounce_9s_ease-in-out_infinite_1.5s]">
+        🐼
+      </div>
+
+      {/* Spinning Dancing Pandas */}
+      <div className="absolute top-1/6 left-1/2 text-4xl opacity-25 animate-[spin-dance_10s_ease-in-out_infinite]">
+        🐼
+      </div>
+      <div className="absolute bottom-1/6 right-1/2 text-4xl opacity-25 animate-[spin-dance-reverse_12s_ease-in-out_infinite]">
+        🐼
+      </div>
+
+      {/* Pulsing Scale Pandas */}
+      <div className="absolute top-2/5 left-1/5 text-5xl opacity-30 animate-[pulse-scale_5s_ease-in-out_infinite]">
+        🐼
+      </div>
+      <div className="absolute top-3/5 right-1/5 text-5xl opacity-30 animate-[pulse-scale_4s_ease-in-out_infinite_0.5s]">
+        🐼
+      </div>
+
+      {/* Wave Motion Pandas */}
+      <div className="absolute top-1/2 left-1/10 text-3xl opacity-18 animate-[wave-motion_14s_ease-in-out_infinite]">
+        🐼
+      </div>
+      <div className="absolute top-1/2 left-2/10 text-3xl opacity-18 animate-[wave-motion_14s_ease-in-out_infinite_0.2s]">
+        🐼
+      </div>
+      <div className="absolute top-1/2 left-3/10 text-3xl opacity-18 animate-[wave-motion_14s_ease-in-out_infinite_0.4s]">
+        🐼
+      </div>
+      <div className="absolute top-1/2 left-7/10 text-3xl opacity-18 animate-[wave-motion_14s_ease-in-out_infinite_0.6s]">
+        🐼
+      </div>
+      <div className="absolute top-1/2 left-8/10 text-3xl opacity-18 animate-[wave-motion_14s_ease-in-out_infinite_0.8s]">
+        🐼
+      </div>
+      <div className="absolute top-1/2 left-9/10 text-3xl opacity-18 animate-[wave-motion_14s_ease-in-out_infinite_1s]">
+        🐼
+      </div>
+
+      {/* Floating Bamboo with Movement */}
+      <div className="absolute top-1/5 left-1/3 text-4xl opacity-20 animate-[float-sway_18s_ease-in-out_infinite]">
+        🎋
+      </div>
+      <div className="absolute top-4/5 right-1/3 text-4xl opacity-20 animate-[float-sway-reverse_16s_ease-in-out_infinite]">
+        🎋
+      </div>
+      <div className="absolute top-2/5 left-2/3 text-4xl opacity-20 animate-[float-sway_20s_ease-in-out_infinite_1s]">
+        🎋
+      </div>
+      <div className="absolute bottom-2/5 right-2/3 text-4xl opacity-20 animate-[float-sway-reverse_14s_ease-in-out_infinite_0.5s]">
+        🎋
+      </div>
+
+      {/* Dynamic Sparkles Following Pandas */}
+      <div className="absolute top-1/3 left-1/4 text-2xl opacity-25 animate-[sparkle-trail_12s_ease-in-out_infinite]">
+        ✨
+      </div>
+      <div className="absolute top-2/3 right-1/4 text-2xl opacity-25 animate-[sparkle-trail-reverse_10s_ease-in-out_infinite]">
+        ✨
+      </div>
+      <div className="absolute top-1/2 left-3/4 text-2xl opacity-25 animate-[sparkle-trail_15s_ease-in-out_infinite_0.5s]">
+        ✨
+      </div>
+      <div className="absolute bottom-1/3 right-3/4 text-2xl opacity-25 animate-[sparkle-trail-reverse_13s_ease-in-out_infinite_1s]">
+        ✨
+      </div>
+
+      {/* Custom Animation Styles */}
+      <style jsx>{`
+        @keyframes slide-right {
+          0% { transform: translateX(-100vw); }
+          100% { transform: translateX(100vw); }
+        }
+        @keyframes slide-left {
+          0% { transform: translateX(100vw); }
+          100% { transform: translateX(-100vw); }
+        }
+        @keyframes slide-down {
+          0% { transform: translateY(-100vh); }
+          100% { transform: translateY(100vh); }
+        }
+        @keyframes slide-up {
+          0% { transform: translateY(100vh); }
+          100% { transform: translateY(-100vh); }
+        }
+        @keyframes diagonal-bounce {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          25% { transform: translate(50vw, 25vh) rotate(90deg); }
+          50% { transform: translate(75vw, 50vh) rotate(180deg); }
+          75% { transform: translate(25vw, 75vh) rotate(270deg); }
+        }
+        @keyframes diagonal-bounce-reverse {
+          0%, 100% { transform: translate(0, 0) rotate(360deg); }
+          25% { transform: translate(-50vw, 25vh) rotate(270deg); }
+          50% { transform: translate(-75vw, 50vh) rotate(180deg); }
+          75% { transform: translate(-25vw, 75vh) rotate(90deg); }
+        }
+        @keyframes diagonal-bounce-up {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          25% { transform: translate(50vw, -25vh) rotate(-90deg); }
+          50% { transform: translate(75vw, -50vh) rotate(-180deg); }
+          75% { transform: translate(25vw, -75vh) rotate(-270deg); }
+        }
+        @keyframes diagonal-bounce-up-reverse {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          25% { transform: translate(-50vw, -25vh) rotate(90deg); }
+          50% { transform: translate(-75vw, -50vh) rotate(180deg); }
+          75% { transform: translate(-25vw, -75vh) rotate(270deg); }
+        }
+        @keyframes orbit {
+          0% { transform: rotate(0deg) translateX(128px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(128px) rotate(-360deg); }
+        }
+        @keyframes orbit-reverse {
+          0% { transform: rotate(0deg) translateX(96px) rotate(0deg); }
+          100% { transform: rotate(-360deg) translateX(96px) rotate(360deg); }
+        }
+        @keyframes mega-bounce {
+          0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+          25% { transform: translateY(-100px) scale(1.2) rotate(90deg); }
+          50% { transform: translateY(-200px) scale(1.5) rotate(180deg); }
+          75% { transform: translateY(-100px) scale(1.2) rotate(270deg); }
+        }
+        @keyframes spin-dance {
+          0%, 100% { transform: rotate(0deg) scale(1); }
+          25% { transform: rotate(90deg) scale(1.3) translateY(-20px); }
+          50% { transform: rotate(180deg) scale(1.6) translateY(-40px); }
+          75% { transform: rotate(270deg) scale(1.3) translateY(-20px); }
+        }
+        @keyframes spin-dance-reverse {
+          0%, 100% { transform: rotate(360deg) scale(1); }
+          25% { transform: rotate(270deg) scale(1.3) translateY(-20px); }
+          50% { transform: rotate(180deg) scale(1.6) translateY(-40px); }
+          75% { transform: rotate(90deg) scale(1.3) translateY(-20px); }
+        }
+        @keyframes pulse-scale {
+          0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; }
+          50% { transform: scale(2) rotate(180deg); opacity: 0.1; }
+        }
+        @keyframes wave-motion {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          25% { transform: translateY(-50px) rotate(45deg); }
+          50% { transform: translateY(-100px) rotate(90deg); }
+          75% { transform: translateY(-50px) rotate(135deg); }
+        }
+        @keyframes float-sway {
+          0%, 100% { transform: translateX(0) rotate(0deg); }
+          33% { transform: translateX(30px) rotate(10deg); }
+          66% { transform: translateX(-30px) rotate(-10deg); }
+        }
+        @keyframes float-sway-reverse {
+          0%, 100% { transform: translateX(0) rotate(0deg); }
+          33% { transform: translateX(-30px) rotate(-10deg); }
+          66% { transform: translateX(30px) rotate(10deg); }
+        }
+        @keyframes sparkle-trail {
+          0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.25; }
+          25% { transform: translate(100px, -50px) scale(1.5) rotate(90deg); opacity: 0.5; }
+          50% { transform: translate(200px, 0) scale(2) rotate(180deg); opacity: 0.8; }
+          75% { transform: translate(100px, 50px) scale(1.5) rotate(270deg); opacity: 0.5; }
+        }
+        @keyframes sparkle-trail-reverse {
+          0%, 100% { transform: translate(0, 0) scale(1) rotate(360deg); opacity: 0.25; }
+          25% { transform: translate(-100px, -50px) scale(1.5) rotate(270deg); opacity: 0.5; }
+          50% { transform: translate(-200px, 0) scale(2) rotate(180deg); opacity: 0.8; }
+          75% { transform: translate(-100px, 50px) scale(1.5) rotate(90deg); opacity: 0.5; }
+        }
+      `}</style>
     </div>
   )
 }

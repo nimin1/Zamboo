@@ -51,14 +51,15 @@ const CreateGamePage: React.FC = () => {
       // Use the new HTML game generation API
       console.log("🎮 Using HTML game generation!");
 
-      // Simulate progress updates during generation
+      // Simulate progress updates during generation (adjusted for ~2 minute API response)
       const progressInterval = setInterval(() => {
         setGenerationProgress(prev => {
-          const increment = Math.random() * 15 + 5; // 5-20% increments
+          // Much smaller increments to match 2-minute API time
+          const increment = Math.random() * 2 + 0.5; // 0.5-2.5% increments
           const newProgress = Math.min(prev + increment, 95); // Cap at 95% until complete
           return newProgress;
         });
-      }, 800);
+      }, 3000); // Update every 3 seconds instead of 800ms
 
       const response = await fetch("/api/generateHTMLGame", {
         method: "POST",
