@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  Settings,
+  Save,
   Code,
   RotateCcw,
   Home,
@@ -21,6 +21,9 @@ import {
   Package,
   Play,
   Square,
+  Zap,
+  Trash2,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -93,14 +96,64 @@ const GamePage: React.FC = () => {
   const [voicePrompt, setVoicePrompt] = useState("");
   const [isProcessingVoice, setIsProcessingVoice] = useState(false);
   const [recognitionRef, setRecognitionRef] = useState<any>(null);
-  const [codingBlocks, setCodingBlocks] = useState([
-    { id: 'player', type: 'object', name: 'Player', color: 'bg-blue-500', x: 50, y: 50 },
-    { id: 'collectible', type: 'object', name: 'Collectible', color: 'bg-yellow-500', x: 200, y: 50 },
-    { id: 'move-right', type: 'action', name: 'Move Right', color: 'bg-green-500', x: 50, y: 150 },
-    { id: 'jump', type: 'action', name: 'Jump', color: 'bg-purple-500', x: 200, y: 150 },
-    { id: 'collect', type: 'event', name: 'When Collected', color: 'bg-orange-500', x: 50, y: 250 },
-    { id: 'score', type: 'action', name: 'Add Score', color: 'bg-red-500', x: 200, y: 250 }
+  const [selectedCategory, setSelectedCategory] = useState('events');
+  const [workspaceBlocks, setWorkspaceBlocks] = useState([
+    { id: 'start-1', type: 'event', category: 'events', name: 'When game starts', shape: 'hat', color: 'bg-amber-500', x: 20, y: 20, connected: false },
+    { id: 'move-1', type: 'motion', category: 'motion', name: 'Move player right', shape: 'stack', color: 'bg-blue-500', x: 20, y: 80, connected: true, parent: 'start-1' }
   ]);
+  
+  const blockCategories = {
+    events: {
+      name: 'Events',
+      color: 'bg-amber-500',
+      blocks: [
+        { id: 'when-start', name: 'When game starts', shape: 'hat' },
+        { id: 'when-key', name: 'When [arrow] key pressed', shape: 'hat' },
+        { id: 'when-touch', name: 'When touching [collectible]', shape: 'hat' },
+        { id: 'when-click', name: 'When clicked', shape: 'hat' }
+      ]
+    },
+    motion: {
+      name: 'Motion',
+      color: 'bg-blue-500',
+      blocks: [
+        { id: 'move-right', name: 'Move right [10] steps', shape: 'stack' },
+        { id: 'move-left', name: 'Move left [10] steps', shape: 'stack' },
+        { id: 'jump', name: 'Jump with power [300]', shape: 'stack' },
+        { id: 'set-speed', name: 'Set speed to [200]', shape: 'stack' }
+      ]
+    },
+    control: {
+      name: 'Control',
+      color: 'bg-emerald-500',
+      blocks: [
+        { id: 'repeat', name: 'Repeat [10] times', shape: 'c-stack' },
+        { id: 'if', name: 'If [touching collectible]', shape: 'c-stack' },
+        { id: 'wait', name: 'Wait [1] seconds', shape: 'stack' },
+        { id: 'forever', name: 'Forever', shape: 'c-stack' }
+      ]
+    },
+    game: {
+      name: 'Game',
+      color: 'bg-purple-500',
+      blocks: [
+        { id: 'add-score', name: 'Add [10] to score', shape: 'stack' },
+        { id: 'play-sound', name: 'Play sound [jump]', shape: 'stack' },
+        { id: 'change-bg', name: 'Change background to [space]', shape: 'stack' },
+        { id: 'game-over', name: 'Game over', shape: 'stack' }
+      ]
+    },
+    sensing: {
+      name: 'Sensing',
+      color: 'bg-cyan-500',
+      blocks: [
+        { id: 'get-score', name: 'Score', shape: 'reporter' },
+        { id: 'get-x', name: 'Player X position', shape: 'reporter' },
+        { id: 'touching', name: 'Touching [collectible]?', shape: 'boolean' },
+        { id: 'key-pressed', name: 'Key [space] pressed?', shape: 'boolean' }
+      ]
+    }
+  };
 
   useEffect(() => {
     // Load game from localStorage (from create page or template)
@@ -176,16 +229,18 @@ const GamePage: React.FC = () => {
 
     const savedGames = JSON.parse(localStorage.getItem("savedGames") || "[]");
     const gameToSave = {
+      id: `game_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       ...gameLogic,
       savedAt: new Date().toISOString(),
       stats: gameStats,
+      blockWorkspace: workspaceBlocks,
     };
 
     savedGames.push(gameToSave);
     localStorage.setItem("savedGames", JSON.stringify(savedGames));
 
     setZambooState({ mood: "happy", animation: "clap" });
-    alert("Game saved successfully!");
+    alert(`Game "${gameLogic.title || 'Untitled Game'}" saved successfully! 🎮✨`);
   };
 
   const startVoicePrompt = () => {
@@ -264,7 +319,7 @@ const GamePage: React.FC = () => {
   };
 
   const handleBlockDrag = (blockId: string, newX: number, newY: number) => {
-    setCodingBlocks(blocks => 
+    setWorkspaceBlocks(blocks => 
       blocks.map(block => 
         block.id === blockId 
           ? { ...block, x: newX, y: newY }
@@ -272,11 +327,58 @@ const GamePage: React.FC = () => {
       )
     );
   };
+  
+  const addBlockToWorkspace = (blockTemplate: any) => {
+    const newBlock = {
+      id: `${blockTemplate.id}-${Date.now()}`,
+      type: selectedCategory,
+      category: selectedCategory,
+      name: blockTemplate.name,
+      shape: blockTemplate.shape,
+      color: blockCategories[selectedCategory as keyof typeof blockCategories].color,
+      x: Math.random() * 200 + 20,
+      y: Math.random() * 150 + 20,
+      connected: false
+    };
+    setWorkspaceBlocks(prev => [...prev, newBlock]);
+  };
+  
+  const deleteBlock = (blockId: string) => {
+    setWorkspaceBlocks(prev => prev.filter(block => block.id !== blockId));
+    setZambooState({ mood: "happy", animation: "idle" });
+  };
+  
+  const clearAllBlocks = () => {
+    if (workspaceBlocks.length > 0) {
+      setWorkspaceBlocks([]);
+      setZambooState({ mood: "encouraging", animation: "thinking" });
+    }
+  };
+  
+  const getBlockShape = (shape: string) => {
+    switch (shape) {
+      case 'hat':
+        return 'rounded-t-2xl rounded-b-lg border-b-4';
+      case 'stack':
+        return 'rounded-lg border-b-2';
+      case 'c-stack':
+        return 'rounded-lg border-l-4 border-b-2';
+      case 'reporter':
+        return 'rounded-full px-4';
+      case 'boolean':
+        return 'rounded-2xl px-3';
+      default:
+        return 'rounded-lg';
+    }
+  };
 
   const applyBlockChanges = async () => {
     if (!gameLogic) return;
     
     try {
+      // Generate code from blocks
+      const generatedCode = generateCodeFromBlocks(workspaceBlocks);
+      
       const response = await fetch('/api/applyBlockChanges', {
         method: 'POST',
         headers: {
@@ -284,7 +386,8 @@ const GamePage: React.FC = () => {
         },
         body: JSON.stringify({
           gameLogic: gameLogic,
-          blocks: codingBlocks
+          blocks: workspaceBlocks,
+          generatedCode: generatedCode
         })
       });
       
@@ -293,7 +396,7 @@ const GamePage: React.FC = () => {
         setGameLogic(modifiedGame);
         localStorage.setItem('currentGame', JSON.stringify(modifiedGame));
         setZambooState({ mood: "celebrating", animation: "dance" });
-        alert('Block changes applied to game!');
+        alert(`🎉 Your blocks have been turned into game code! ${generatedCode.summary}`);
       } else {
         alert('Failed to apply block changes');
       }
@@ -301,6 +404,35 @@ const GamePage: React.FC = () => {
       console.error('Error applying block changes:', error);
       alert('Error applying block changes');
     }
+  };
+  
+  const generateCodeFromBlocks = (blocks: any[]) => {
+    let code = [];
+    let summary = '';
+    
+    blocks.forEach(block => {
+      switch (block.name.split(' ')[0]) {
+        case 'Move':
+          code.push('player.move()');
+          summary += 'Movement, ';
+          break;
+        case 'Jump':
+          code.push('player.jump()');
+          summary += 'Jumping, ';
+          break;
+        case 'Add':
+          code.push('score.add()');
+          summary += 'Scoring, ';
+          break;
+        default:
+          code.push(`// ${block.name}`);
+      }
+    });
+    
+    return {
+      code: code.join('\n'),
+      summary: summary.slice(0, -2) || 'Block logic applied'
+    };
   };
 
   if (!gameLogic) {
@@ -447,10 +579,11 @@ const GamePage: React.FC = () => {
 
                     <button
                       onClick={handleSaveGame}
-                      className="btn-ghost p-3 rounded-xl"
+                      className="btn-primary p-3 rounded-xl flex items-center gap-2 text-white bg-duo-green-500 hover:bg-duo-green-600"
                       title="Save game"
                     >
-                      <Settings size={18} />
+                      <Save size={18} />
+                      <span className="text-sm font-medium">Save</span>
                     </button>
 
                     <button
@@ -559,176 +692,185 @@ const GamePage: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Visual Coding Blocks */}
+                    {/* Scratch-like Visual Coding Blocks */}
                     <div className="flex-1 flex flex-col min-h-0">
                       <div className="flex items-center justify-between mb-3">
                         <h4 className="text-base font-semibold text-neutral-800 flex items-center gap-2">
                           <Package className="text-duo-purple-500" size={18} />
-                          Coding Blocks
+                          Code Blocks
                         </h4>
-                        <button
-                          onClick={applyBlockChanges}
-                          className="btn-success text-sm px-3 py-2 flex items-center gap-2"
-                        >
-                          <Play size={14} />
-                          Apply Changes
-                        </button>
+                        <div className="flex items-center gap-2">
+                          {workspaceBlocks.length > 0 && (
+                            <button
+                              onClick={clearAllBlocks}
+                              className="btn-ghost text-xs px-1 py-0.5 flex items-center gap-1 text-red-600 hover:bg-red-50 transition-all"
+                              title="Clear all blocks"
+                            >
+                              <Trash2 size={12} />
+                              Clear
+                            </button>
+                          )}
+                          <button
+                            onClick={applyBlockChanges}
+                            className="btn-success text-xs px-2 py-1 flex items-center gap-1 shadow-lg hover:shadow-xl transition-all"
+                          >
+                            <Play size={12} />
+                            🚀 Run Code
+                          </button>
+                        </div>
                       </div>
                       
-                      <div className="relative flex-1 bg-neutral-50 rounded-lg border-2 border-dashed border-neutral-300 overflow-hidden">
-                        <div className="absolute inset-2">
-                          {codingBlocks.map((block) => (
+                      {/* Block Categories */}
+                      <div className="mb-3">
+                        <div className="flex gap-2 text-sm">
+                          {Object.entries(blockCategories).map(([key, category]) => (
+                            <button
+                              key={key}
+                              onClick={() => setSelectedCategory(key)}
+                              className={`px-2 py-1 rounded-lg transition-all font-semibold ${
+                                selectedCategory === key 
+                                  ? `${category.color} text-white shadow-lg` 
+                                  : 'bg-neutral-200 text-neutral-600 hover:bg-neutral-300'
+                              }`}
+                            >
+                              {category.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Block Palette */}
+                      <div className="mb-4 bg-neutral-100 rounded-lg p-3 max-h-36 overflow-y-auto">
+                        <div className="space-y-2">
+                          {blockCategories[selectedCategory as keyof typeof blockCategories]?.blocks.map((block) => (
                             <div
                               key={block.id}
-                              className={`absolute ${block.color} text-white px-3 py-2 rounded-lg shadow-md text-sm font-medium transition-transform hover:scale-105 select-none cursor-move`}
-                              style={{ 
-                                left: `${Math.min(Math.max(block.x * 0.7, 0), 180)}px`, 
-                                top: `${Math.min(Math.max(block.y * 0.8, 0), 160)}px` 
-                              }}
-                              draggable
-                              onDragStart={(e) => {
-                                e.dataTransfer.setData('text/plain', block.id);
-                              }}
-                              onDragEnd={(e) => {
-                                const rect = e.currentTarget.parentElement?.getBoundingClientRect();
-                                if (rect) {
-                                  const newX = Math.min(Math.max((e.clientX - rect.left - 30) / 0.7, 0), 260);
-                                  const newY = Math.min(Math.max((e.clientY - rect.top - 15) / 0.8, 0), 200);
-                                  handleBlockDrag(block.id, newX, newY);
-                                }
-                              }}
+                              onClick={() => addBlockToWorkspace(block)}
+                              className={`${
+                                blockCategories[selectedCategory as keyof typeof blockCategories].color
+                              } text-white px-3 py-2 text-sm rounded-lg cursor-pointer hover:opacity-80 transition-all ${
+                                getBlockShape(block.shape)
+                              } shadow-md hover:shadow-lg transform hover:scale-105`}
                             >
-                              <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 bg-white rounded-full opacity-70"></div>
-                                <span>{block.name}</span>
+                              <div className="flex items-center gap-1">
+                                {block.shape === 'hat' && <span>🎯</span>}
+                                {block.shape === 'stack' && <span>📦</span>}
+                                {block.shape === 'c-stack' && <span>🔄</span>}
+                                {block.shape === 'reporter' && <span>📊</span>}
+                                {block.shape === 'boolean' && <span>❓</span>}
+                                <span>{block.name.replace(/\[(.*?)\]/g, '($1)')}</span>
                               </div>
                             </div>
                           ))}
                         </div>
+                      </div>
+                      
+                      {/* Workspace */}
+                      <div className="flex-1 bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-lg border-2 border-dashed border-neutral-300 overflow-hidden relative">
+                        <div className="absolute inset-2">
+                          {workspaceBlocks.map((block) => (
+                            <div
+                              key={block.id}
+                              className={`group absolute ${block.color} text-white text-base font-semibold transition-all hover:scale-105 select-none cursor-move shadow-lg hover:shadow-xl ${
+                                getBlockShape(block.shape)
+                              } ${block.connected ? 'border-l-4 border-yellow-400' : ''}`}
+                              style={{ 
+                                left: `${Math.min(Math.max(block.x, 0), 220)}px`, 
+                                top: `${Math.min(Math.max(block.y, 0), 180)}px`,
+                                minWidth: '140px',
+                                padding: block.shape === 'reporter' ? '6px 16px' : '8px 12px'
+                              }}
+                              draggable
+                              onDragStart={(e) => {
+                                e.dataTransfer.setData('text/plain', block.id);
+                                e.currentTarget.style.transform = 'rotate(5deg)';
+                              }}
+                              onDragEnd={(e) => {
+                                e.currentTarget.style.transform = 'rotate(0deg)';
+                                const rect = e.currentTarget.parentElement?.getBoundingClientRect();
+                                if (rect) {
+                                  const newX = Math.min(Math.max(e.clientX - rect.left - 60, 0), 220);
+                                  const newY = Math.min(Math.max(e.clientY - rect.top - 15, 0), 180);
+                                  handleBlockDrag(block.id, newX, newY);
+                                }
+                              }}
+                              onDoubleClick={() => deleteBlock(block.id)}
+                            >
+                              <div className="flex items-center gap-1 relative">
+                                {/* Block type indicators */}
+                                {block.shape === 'hat' && (
+                                  <div className="w-2 h-2 bg-yellow-300 rounded-full animate-pulse"></div>
+                                )}
+                                {block.shape === 'stack' && (
+                                  <div className="w-1 h-4 bg-white/30 rounded"></div>
+                                )}
+                                
+                                <span className="text-xs leading-tight flex-1">
+                                  {block.name.replace(/\[(.*?)\]/g, '($1)')}
+                                </span>
+                                
+                                {/* Delete button (appears on hover) */}
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    deleteBlock(block.id);
+                                  }}
+                                  className="opacity-0 group-hover:opacity-100 absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-all duration-200 z-10"
+                                  title="Delete block (or double-click)"
+                                >
+                                  <X size={10} className="text-white" />
+                                </button>
+                                
+                                {block.shape === 'c-stack' && (
+                                  <div className="ml-auto text-white/70">⟐</div>
+                                )}
+                              </div>
+                              
+                              {/* Connection points */}
+                              {block.shape !== 'hat' && (
+                                <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-white/20 rounded-t-full"></div>
+                              )}
+                              {block.shape !== 'reporter' && block.shape !== 'boolean' && (
+                                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-white/40 rounded-b-full"></div>
+                              )}
+                            </div>
+                          ))}
+                          
+                          {workspaceBlocks.length === 0 && (
+                            <div className="absolute inset-0 flex items-center justify-center text-neutral-400 text-center">
+                              <div>
+                                <div className="text-4xl mb-2">🧩</div>
+                                <div className="text-sm">Click blocks above to add them here!</div>
+                                <div className="text-xs mt-1">Then drag them around to build your game logic</div>
+                                <div className="text-xs mt-2 bg-yellow-50 text-yellow-700 p-1 rounded border">
+                                  💡 <strong>Tips:</strong> Double-click or use X button to delete blocks
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                         
-                        {/* Grid lines for visual guidance */}
-                        <div className="absolute inset-0 pointer-events-none opacity-10">
-                          <div className="grid grid-cols-8 grid-rows-6 h-full w-full">
-                            {Array.from({ length: 48 }).map((_, i) => (
-                              <div key={i} className="border border-neutral-400"></div>
+                        {/* Snap guidelines */}
+                        <div className="absolute inset-0 pointer-events-none">
+                          <div className="grid grid-cols-6 grid-rows-5 h-full w-full opacity-5">
+                            {Array.from({ length: 30 }).map((_, i) => (
+                              <div key={i} className="border border-blue-300"></div>
                             ))}
                           </div>
                         </div>
                       </div>
                       
-                      <div className="mt-2 text-sm text-neutral-500 text-center">
-                        💡 Drag blocks to arrange them, then click "Apply Changes" to update your game!
-                      </div>
-                    </div>
-
-                    {/* Game Info */}
-                    <div className="bg-neutral-50 rounded-lg p-3 mt-3">
-                      <h5 className="text-base font-semibold text-neutral-800 mb-3">
-                        Game Details
-                      </h5>
-                      <div className="space-y-2 text-sm">
-                        {isConceptFirstGame(gameLogic) ? (
-                          <>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">
-                                Generation:
-                              </span>
-                              <span className="font-medium text-purple-600">
-                                🚀 Concept-First
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">
-                                Approach:
-                              </span>
-                              <span className="font-medium">
-                                Experience-Driven
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">
-                                Created By:
-                              </span>
-                              <span className="font-medium capitalize">
-                                {gameLogic.createdBy}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">
-                                Architecture:
-                              </span>
-                              <span className="font-medium text-purple-600">
-                                Revolutionary AI
-                              </span>
-                            </div>
-                          </>
-                        ) : isHTMLGame(gameLogic) ? (
-                          <>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">Type:</span>
-                              <span className="font-medium text-blue-600">
-                                🎮 HTML Game
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">Format:</span>
-                              <span className="font-medium">Self-contained</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">Engine:</span>
-                              <span className="font-medium">Canvas/JavaScript</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">
-                                Interactive:
-                              </span>
-                              <span className="font-medium text-green-600">
-                                ✓ Touch & Keyboard
-                              </span>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">
-                                Difficulty:
-                              </span>
-                              <span className="font-medium capitalize">
-                                {gameLogic.difficulty}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">
-                                Age Group:
-                              </span>
-                              <span className="font-medium">
-                                {gameLogic.ageGroup}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">Objects:</span>
-                              <span className="font-medium">
-                                {gameLogic.objects.length}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">Events:</span>
-                              <span className="font-medium">
-                                {gameLogic.events.length}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-neutral-600">
-                                Created By:
-                              </span>
-                              <span className="font-medium capitalize">
-                                {gameLogic.createdBy}
-                              </span>
-                            </div>
-                          </>
+                      <div className="mt-2 text-xs text-neutral-500 text-center bg-gradient-to-r from-blue-50 to-purple-50 p-1 rounded">
+                        🎮 <strong>How to use:</strong> Click blocks above → Drag them around → Double-click or use ❌ to delete → Click "Run Code"!
+                        {workspaceBlocks.length > 0 && (
+                          <div className="mt-1 text-xs text-green-700">
+                            ✨ You have {workspaceBlocks.length} block{workspaceBlocks.length !== 1 ? 's' : ''} in your workspace
+                          </div>
                         )}
                       </div>
                     </div>
+
                   </div>
                 </motion.div>
               )}

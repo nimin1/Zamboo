@@ -275,10 +275,10 @@ const CreateGamePage: React.FC = () => {
                   </span>
                 </Link>
 
-                <Link href="/templates" className="nav-item">
-                  <div className="nav-icon">🛡️</div>
+                <Link href="/savedgames" className="nav-item">
+                  <div className="nav-icon">💾</div>
                   <span className="font-bold text-sm tracking-wide">
-                    TEMPLATES
+                    SAVED GAMES
                   </span>
                 </Link>
 

@@ -67,9 +67,9 @@ export default function Home() {
                   <span>CREATE</span>
                 </Link>
 
-                <Link href="/templates" className="nav-item">
-                  <div className="nav-icon">🛡️</div>
-                  <span>TEMPLATES</span>
+                <Link href="/savedgames" className="nav-item">
+                  <div className="nav-icon">💾</div>
+                  <span>SAVED GAMES</span>
                 </Link>
 
                 <div className="nav-item">

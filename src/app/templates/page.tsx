@@ -104,11 +104,11 @@ const TemplatesPage: React.FC = () => {
                   <span>CREATE</span>
                 </Link>
                 
-                <Link href="/templates" className="nav-item active">
+                <Link href="/savedgames" className="nav-item">
                   <div className="nav-icon">
-                    🛡️
+                    💾
                   </div>
-                  <span>TEMPLATES</span>
+                  <span>SAVED GAMES</span>
                 </Link>
                 
                 <div className="nav-item">
