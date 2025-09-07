@@ -16,6 +16,11 @@ import {
   Users,
   Trophy,
   Heart,
+  Mic,
+  MicOff,
+  Package,
+  Play,
+  Square,
 } from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -74,7 +79,7 @@ const GamePage: React.FC = () => {
   const [gameLogic, setGameLogic] = useState<
     GameLogic | ConceptFirstGame | HTMLGame | null
   >(null);
-  const [showEditor, setShowEditor] = useState(false);
+  const [showEditor, setShowEditor] = useState(true);
   const [zambooState, setZambooState] = useState<ZambooState>({
     mood: "excited",
     animation: "idle",
@@ -84,6 +89,18 @@ const GamePage: React.FC = () => {
     totalScore: 0,
     bestScore: 0,
   });
+  const [isListening, setIsListening] = useState(false);
+  const [voicePrompt, setVoicePrompt] = useState("");
+  const [isProcessingVoice, setIsProcessingVoice] = useState(false);
+  const [recognitionRef, setRecognitionRef] = useState<any>(null);
+  const [codingBlocks, setCodingBlocks] = useState([
+    { id: 'player', type: 'object', name: 'Player', color: 'bg-blue-500', x: 50, y: 50 },
+    { id: 'collectible', type: 'object', name: 'Collectible', color: 'bg-yellow-500', x: 200, y: 50 },
+    { id: 'move-right', type: 'action', name: 'Move Right', color: 'bg-green-500', x: 50, y: 150 },
+    { id: 'jump', type: 'action', name: 'Jump', color: 'bg-purple-500', x: 200, y: 150 },
+    { id: 'collect', type: 'event', name: 'When Collected', color: 'bg-orange-500', x: 50, y: 250 },
+    { id: 'score', type: 'action', name: 'Add Score', color: 'bg-red-500', x: 200, y: 250 }
+  ]);
 
   useEffect(() => {
     // Load game from localStorage (from create page or template)
@@ -171,6 +188,121 @@ const GamePage: React.FC = () => {
     alert("Game saved successfully!");
   };
 
+  const startVoicePrompt = () => {
+    // @ts-ignore
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      alert('Speech recognition not supported in this browser');
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => {
+      setIsListening(true);
+      setZambooState({ mood: "thinking", animation: "thinking" });
+    };
+
+    recognition.onresult = async (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setVoicePrompt(transcript);
+      setIsListening(false);
+      setIsProcessingVoice(true);
+      
+      try {
+        const response = await fetch('/api/modifyGame', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            gameLogic: gameLogic,
+            modification: transcript
+          })
+        });
+        
+        if (response.ok) {
+          const modifiedGame = await response.json();
+          setGameLogic(modifiedGame);
+          localStorage.setItem('currentGame', JSON.stringify(modifiedGame));
+          setZambooState({ mood: "excited", animation: "dance" });
+          alert(`Game modified: "${transcript}"`);
+        } else {
+          alert('Failed to modify game');
+        }
+      } catch (error) {
+        console.error('Error modifying game:', error);
+        alert('Error modifying game');
+      } finally {
+        setIsProcessingVoice(false);
+      }
+    };
+
+    recognition.onerror = () => {
+      setIsListening(false);
+      setIsProcessingVoice(false);
+      alert('Voice recognition error');
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    setRecognitionRef(recognition);
+    recognition.start();
+  };
+
+  const stopVoicePrompt = () => {
+    if (recognitionRef) {
+      recognitionRef.stop();
+    }
+    setIsListening(false);
+  };
+
+  const handleBlockDrag = (blockId: string, newX: number, newY: number) => {
+    setCodingBlocks(blocks => 
+      blocks.map(block => 
+        block.id === blockId 
+          ? { ...block, x: newX, y: newY }
+          : block
+      )
+    );
+  };
+
+  const applyBlockChanges = async () => {
+    if (!gameLogic) return;
+    
+    try {
+      const response = await fetch('/api/applyBlockChanges', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          gameLogic: gameLogic,
+          blocks: codingBlocks
+        })
+      });
+      
+      if (response.ok) {
+        const modifiedGame = await response.json();
+        setGameLogic(modifiedGame);
+        localStorage.setItem('currentGame', JSON.stringify(modifiedGame));
+        setZambooState({ mood: "celebrating", animation: "dance" });
+        alert('Block changes applied to game!');
+      } else {
+        alert('Failed to apply block changes');
+      }
+    } catch (error) {
+      console.error('Error applying block changes:', error);
+      alert('Error applying block changes');
+    }
+  };
+
   if (!gameLogic) {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
@@ -185,12 +317,12 @@ const GamePage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 relative">
+    <div className="h-screen bg-neutral-50 relative flex flex-col">
       {/* Animated Background Decorations */}
       <BackgroundDecorations />
       {/* Navigation Header */}
-      <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10">
-        <div className="w-full px-6 py-3">
+      <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10 flex-shrink-0">
+        <div className="w-full px-4 py-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Link
@@ -252,19 +384,19 @@ const GamePage: React.FC = () => {
         </div>
       </nav>
 
-      <div className="p-6 relative z-10">
-        <div className="w-full">
+      <div className="flex-1 p-3 relative z-10 min-h-0">
+        <div className="h-full">
           {/* Game Layout */}
           <div
             className={`grid ${
-              showEditor ? "grid-cols-1 xl:grid-cols-3" : "grid-cols-1"
-            } gap-8`}
+              showEditor ? "grid-cols-1 xl:grid-cols-4" : "grid-cols-1"
+            } gap-3 h-full`}
           >
             {/* Main Game Area */}
-            <div className={showEditor ? "xl:col-span-2" : "col-span-1"}>
-              <div className="card p-6">
+            <div className={`${showEditor ? "xl:col-span-3" : "col-span-1"} flex flex-col`}>
+              <div className="card p-4 flex-1 flex flex-col">
                 {/* Game Control Bar */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-duo-green-500 rounded-full flex items-center justify-center shadow-medium">
                       <span className="text-xl">🎮</span>
@@ -276,12 +408,35 @@ const GamePage: React.FC = () => {
                       <p className="text-sm text-neutral-600">
                         {isConceptFirstGame(gameLogic)
                           ? `🚀 Concept-First • Created by: ${gameLogic.createdBy}`
+                          : isHTMLGame(gameLogic)
+                          ? "🎮 HTML Game"
                           : `Age: ${gameLogic.ageGroup} • Difficulty: ${gameLogic.difficulty}`}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
+                    <button
+                      onClick={isListening ? stopVoicePrompt : startVoicePrompt}
+                      disabled={isProcessingVoice}
+                      className={`p-3 rounded-xl transition-all ${
+                        isListening 
+                          ? "bg-duo-red-500 text-white shadow-medium animate-pulse"
+                          : isProcessingVoice
+                          ? "bg-duo-blue-500 text-white shadow-medium"
+                          : "btn-ghost hover:bg-duo-blue-100"
+                      }`}
+                      title={isListening ? "Stop voice prompt" : "Voice modify game"}
+                    >
+                      {isProcessingVoice ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : isListening ? (
+                        <MicOff size={18} />
+                      ) : (
+                        <Mic size={18} />
+                      )}
+                    </button>
+
                     <button
                       onClick={handleShare}
                       className="btn-ghost p-3 rounded-xl"
@@ -313,35 +468,37 @@ const GamePage: React.FC = () => {
                 </div>
 
                 {/* Render different game types */}
-                {isHTMLGame(gameLogic) ? (
-                  /* HTML Game in iframe */
-                  <div className="w-full bg-white rounded-xl shadow-lg overflow-hidden">
-                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4">
-                      <h4 className="font-bold">🎮 {gameLogic.title}</h4>
-                      <p className="text-sm opacity-90">{gameLogic.description}</p>
+                <div className="flex-1 min-h-0">
+                  {isHTMLGame(gameLogic) ? (
+                    /* HTML Game in iframe */
+                    <div className="h-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+                      <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-2 flex-shrink-0">
+                        <h4 className="font-bold text-sm">🎮 {gameLogic.title}</h4>
+                        <p className="text-xs opacity-90">{gameLogic.description}</p>
+                      </div>
+                      <iframe
+                        srcDoc={gameLogic.html}
+                        className="flex-1 border-0"
+                        sandbox="allow-scripts allow-same-origin"
+                        title={gameLogic.title}
+                      />
+                      <div className="p-2 bg-gray-50 border-t flex-shrink-0">
+                        <p className="text-xs text-gray-600 text-center">
+                          🎯 Use arrow keys or touch controls to play!
+                        </p>
+                      </div>
                     </div>
-                    <iframe
-                      srcDoc={gameLogic.html}
-                      className="w-full h-[600px] border-0"
-                      sandbox="allow-scripts allow-same-origin"
-                      title={gameLogic.title}
+                  ) : (
+                    /* Traditional GameLogic games */
+                    <GameContainer
+                      gameLogic={gameLogic}
+                      onGameComplete={handleGameComplete}
+                      onExit={handleExit}
+                      showTutorial={true}
+                      className="w-full h-full game-canvas"
                     />
-                    <div className="p-4 bg-gray-50 border-t">
-                      <p className="text-sm text-gray-600 text-center">
-                        🎯 Use arrow keys or touch controls to play!
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  /* Traditional GameLogic games */
-                  <GameContainer
-                    gameLogic={gameLogic}
-                    onGameComplete={handleGameComplete}
-                    onExit={handleExit}
-                    showTutorial={true}
-                    className="w-full game-canvas"
-                  />
-                )}
+                  )}
+                </div>
               </div>
             </div>
 
@@ -352,10 +509,10 @@ const GamePage: React.FC = () => {
                   initial={{ opacity: 0, x: 300 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 300 }}
-                  className="xl:col-span-1"
+                  className="xl:col-span-1 flex flex-col"
                 >
-                  <div className="card p-6 h-full">
-                    <div className="flex items-center justify-between mb-6">
+                  <div className="card p-3 flex-1 flex flex-col min-h-0">
+                    <div className="flex items-center justify-between mb-3">
                       <h3 className="text-xl font-bold text-neutral-800 flex items-center gap-2 font-display">
                         <Code className="text-duo-purple-500" />
                         Game Code
@@ -369,35 +526,104 @@ const GamePage: React.FC = () => {
                     </div>
 
                     {/* Zamboo Code Tutor */}
-                    <div className="mb-6 p-4 bg-duo-green-50 rounded-xl">
+                    <div className="mb-3 p-3 bg-duo-green-50 rounded-lg">
                       <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 bg-duo-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-xl">🐼</span>
+                        <div className="w-8 h-8 bg-duo-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-lg">🐼</span>
                         </div>
                         <div>
                           <p className="text-sm font-medium text-neutral-800 mb-1">
                             Zamboo says:
                           </p>
                           <p className="text-sm text-neutral-600">
-                            "Want to change how your game works? You can edit
-                            the blocks here soon!"
+                            "Drag blocks to change your game!"
                           </p>
                         </div>
                       </div>
                     </div>
 
-                    {/* Placeholder for future Blockly integration */}
-                    <div className="mb-6 p-6 border-2 border-dashed border-neutral-300 rounded-xl text-center">
-                      <div className="text-4xl mb-2">🧩</div>
-                      <p className="text-neutral-600 text-sm">
-                        Visual code editor coming soon! You'll be able to drag
-                        and drop blocks to change your game.
-                      </p>
+                    {/* Voice Prompt Status */}
+                    {(isListening || voicePrompt || isProcessingVoice) && (
+                      <div className="mb-3 p-3 bg-duo-blue-50 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Mic className="text-duo-blue-500" size={16} />
+                          <span className="text-sm font-medium text-duo-blue-700">
+                            {isListening ? "Listening..." : isProcessingVoice ? "Processing..." : "Voice Command"}
+                          </span>
+                        </div>
+                        {voicePrompt && (
+                          <p className="text-sm text-duo-blue-600 italic">
+                            "{voicePrompt}"
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Visual Coding Blocks */}
+                    <div className="flex-1 flex flex-col min-h-0">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="text-base font-semibold text-neutral-800 flex items-center gap-2">
+                          <Package className="text-duo-purple-500" size={18} />
+                          Coding Blocks
+                        </h4>
+                        <button
+                          onClick={applyBlockChanges}
+                          className="btn-success text-sm px-3 py-2 flex items-center gap-2"
+                        >
+                          <Play size={14} />
+                          Apply Changes
+                        </button>
+                      </div>
+                      
+                      <div className="relative flex-1 bg-neutral-50 rounded-lg border-2 border-dashed border-neutral-300 overflow-hidden">
+                        <div className="absolute inset-2">
+                          {codingBlocks.map((block) => (
+                            <div
+                              key={block.id}
+                              className={`absolute ${block.color} text-white px-3 py-2 rounded-lg shadow-md text-sm font-medium transition-transform hover:scale-105 select-none cursor-move`}
+                              style={{ 
+                                left: `${Math.min(Math.max(block.x * 0.7, 0), 180)}px`, 
+                                top: `${Math.min(Math.max(block.y * 0.8, 0), 160)}px` 
+                              }}
+                              draggable
+                              onDragStart={(e) => {
+                                e.dataTransfer.setData('text/plain', block.id);
+                              }}
+                              onDragEnd={(e) => {
+                                const rect = e.currentTarget.parentElement?.getBoundingClientRect();
+                                if (rect) {
+                                  const newX = Math.min(Math.max((e.clientX - rect.left - 30) / 0.7, 0), 260);
+                                  const newY = Math.min(Math.max((e.clientY - rect.top - 15) / 0.8, 0), 200);
+                                  handleBlockDrag(block.id, newX, newY);
+                                }
+                              }}
+                            >
+                              <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 bg-white rounded-full opacity-70"></div>
+                                <span>{block.name}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        {/* Grid lines for visual guidance */}
+                        <div className="absolute inset-0 pointer-events-none opacity-10">
+                          <div className="grid grid-cols-8 grid-rows-6 h-full w-full">
+                            {Array.from({ length: 48 }).map((_, i) => (
+                              <div key={i} className="border border-neutral-400"></div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-2 text-sm text-neutral-500 text-center">
+                        💡 Drag blocks to arrange them, then click "Apply Changes" to update your game!
+                      </div>
                     </div>
 
                     {/* Game Info */}
-                    <div className="bg-neutral-50 rounded-xl p-4">
-                      <h5 className="font-semibold text-neutral-800 mb-3 font-display">
+                    <div className="bg-neutral-50 rounded-lg p-3 mt-3">
+                      <h5 className="text-base font-semibold text-neutral-800 mb-3">
                         Game Details
                       </h5>
                       <div className="space-y-2 text-sm">
@@ -433,6 +659,31 @@ const GamePage: React.FC = () => {
                               </span>
                               <span className="font-medium text-purple-600">
                                 Revolutionary AI
+                              </span>
+                            </div>
+                          </>
+                        ) : isHTMLGame(gameLogic) ? (
+                          <>
+                            <div className="flex justify-between">
+                              <span className="text-neutral-600">Type:</span>
+                              <span className="font-medium text-blue-600">
+                                🎮 HTML Game
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-neutral-600">Format:</span>
+                              <span className="font-medium">Self-contained</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-neutral-600">Engine:</span>
+                              <span className="font-medium">Canvas/JavaScript</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-neutral-600">
+                                Interactive:
+                              </span>
+                              <span className="font-medium text-green-600">
+                                ✓ Touch & Keyboard
                               </span>
                             </div>
                           </>
@@ -484,39 +735,6 @@ const GamePage: React.FC = () => {
             </AnimatePresence>
           </div>
 
-          {/* Bottom Actions */}
-          <div className="mt-8">
-            <div className="card p-6 text-center">
-              <h3 className="text-xl font-bold text-neutral-800 mb-4 font-display">
-                What's Next?
-              </h3>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button
-                  onClick={() => router.push("/create")}
-                  className="btn-success flex items-center gap-2 px-6 py-3"
-                >
-                  <Sparkles size={20} />
-                  Create Another Game
-                </button>
-
-                <button
-                  onClick={() => router.push("/templates")}
-                  className="btn-secondary flex items-center gap-2 px-6 py-3"
-                >
-                  <RotateCcw size={20} />
-                  Try Templates
-                </button>
-
-                <button
-                  onClick={handleExit}
-                  className="btn-ghost flex items-center gap-2 px-6 py-3"
-                >
-                  <Home size={20} />
-                  Back Home
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

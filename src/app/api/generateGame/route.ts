@@ -20,6 +20,16 @@ interface DeepSeekMessage {
   content: string
 }
 
+const ZAMBOO_GAMESPEC_SYSTEM_PROMPT = `You are Zamboo's Game Generator. Create educational games for kids using the GameLogic schema. Always return valid JSON that matches the schema exactly.
+
+Focus on:
+- Age-appropriate content and complexity
+- Educational coding concepts (loops, events, conditions)
+- Encouraging Zamboo personality and messages
+- Safe, family-friendly themes
+
+Return ONLY the GameLogic JSON, no other text.`;
+
 const ZAMBOO_HTML_GAME_SYSTEM_PROMPT = `You are Zamboo's Game Generator. Create ONE self-contained <html> file with inline <style> and <script> that runs a small playable game in a sandboxed iframe.
 
 Rules:
@@ -90,26 +100,15 @@ export async function POST(req: NextRequest) {
       } as DeepSeekResponse)
     }
 
-    // Create HTML game generation prompt for DeepSeek
+    // Create GameLogic generation prompt for DeepSeek  
     const enhancedPrompt = `User idea: ${prompt}
 
-Create a complete HTML game for kids age ${kidAgeBand}:
+Create a GameLogic JSON for kids age ${kidAgeBand}:
 - Theme and mechanics based on: "${prompt}"
 - Difficulty: ${complexity || 'medium'}
 - Kid-friendly colors and simple controls
-- Canvas-based with smooth animations
-- Score system and restart functionality
-- Touch controls for mobile devices
-
-Generate the complete HTML file now:`
-
-2. Theme: Which theme matches?
-   - "forest" for nature, animals, magical themes
-   - "space" for rockets, stars, aliens, sci-fi
-   - "ocean" for underwater, fish, sea themes
-
-3. Educational concepts that fit the game type
-4. Kid-friendly Zamboo messages
+- Educational concepts that fit the game type
+- Kid-friendly Zamboo messages
 
 Return ONLY valid JSON matching the schema exactly.`
 

@@ -111,8 +111,7 @@ const CreateGamePage: React.FC = () => {
     }
 
     // @ts-ignore - Web Speech API types
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     const recognitionInstance = new SpeechRecognition();
 
     recognitionInstance.continuous = false;
