@@ -220,7 +220,21 @@ export type Concept = z.infer<typeof ConceptSchema>
 export type GameLogic = z.infer<typeof GameLogicSchema>
 
 // Validation helpers
-export const validateGameLogic = (data: unknown): GameLogic => {
+export const validateGameLogic = (data: unknown) => {
+  try {
+    const validatedData = GameLogicSchema.parse(data)
+    return { success: true, data: validatedData, errors: null }
+  } catch (error: any) {
+    return { 
+      success: false, 
+      data: null, 
+      errors: error.errors || error.message || error
+    }
+  }
+}
+
+// For direct parsing when you want to throw on error
+export const parseGameLogic = (data: unknown): GameLogic => {
   return GameLogicSchema.parse(data)
 }
 

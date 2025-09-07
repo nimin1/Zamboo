@@ -26,26 +26,30 @@ cp .env.example .env.local  # Set up environment variables (optional)
 
 ## Architecture Overview
 
-Zamboo is an educational coding platform where kids create games through natural language prompts. The architecture follows Next.js 14 App Router patterns with these core systems:
+Zamboo is a creative, evolving educational platform where kids aged 4-12 create and evolve games through natural language voice/text prompts. Kids can continuously add new elements to their games, save their creations, and learn programming through play. The architecture follows Next.js 14 App Router patterns with these core systems:
 
-### Game Creation Flow
-1. **Input Processing** (`src/app/create/`) - Kids describe games via text/voice
-2. **AI Generation** (`src/app/api/generateGame/route.ts`) - DeepSeek API converts prompts to structured game logic
-3. **Schema Validation** (`src/lib/gameLogicSchema.ts`) - Zod schemas ensure valid game structure
-4. **Game Rendering** (`src/components/game/GameEngine.tsx`) - Phaser.js renders games from JSON
+### Creative Evolution Flow
+1. **Voice/Text Input** (`src/app/create/`) - Kids describe games via microphone or text input
+2. **Child-Focused AI** (`src/app/api/generateGame/route.ts`) - DeepSeek API converts kid prompts to magical game worlds
+3. **Game Evolution** - Kids can add "more colors", "add a friend", "make them fly" to evolve existing games
+4. **Schema Validation** (`src/lib/gameLogicSchema.ts`) - Flexible Zod schemas support unlimited creativity
+5. **Game Rendering** (`src/components/game/GameEngine.tsx`) - Phaser.js renders evolving games with sparkles and joy
+6. **Save & Share** - Kids can save evolved games and return to them later
 
 ### Core Systems
 
-**GameLogic Schema** (`src/lib/gameLogicSchema.ts`)
-- Comprehensive Zod schema defining all game elements
-- Covers: game objects, physics, events, animations, educational concepts
-- Provides type safety and validation for AI-generated content
-- Template helpers for common game patterns (collector, maze)
+**Evolution-Ready GameLogic Schema** (`src/lib/gameLogicSchema.ts`)
+- Flexible Zod schema supporting unlimited creative game elements
+- Evolution tracking: tracks child requests, game history, and save timestamps
+- Child-friendly concepts: princesses, animals, dinosaurs, space adventures
+- Scratch-style blocks: visual programming elements kids can understand
+- Template helpers for kid-beloved patterns (princess castle, dino world, space adventure)
 
-**Game Generator** (`src/lib/gameGenerator.ts`)
-- Creates games from templates or AI prompts
-- Manages built-in templates: Star Collector, Bamboo Maze, Rocket Adventure, Panda Platformer
-- Fallback system when AI generation fails
+**Child-Focused Game Generator** (`src/lib/gameGenerator.ts`)
+- Creates magical worlds from kid voice/text prompts
+- Evolution system: `evolveExistingGame()` adds new elements to existing games
+- Kid-beloved templates: Princess Castle, Dino Adventure, Space Explorer, Animal Friends
+- Child-safe fallback system with magical themes and bright colors
 
 **Phaser Integration** (`src/components/game/GameEngine.tsx`)
 - React component wrapping Phaser.js game engine
@@ -71,22 +75,42 @@ Zamboo is an educational coding platform where kids create games through natural
 - Easy (5-7): Star Collector, Rocket Adventure (loops, events)
 - Medium (8-10): Bamboo Maze, Panda Platformer (conditions, physics)
 
-### DeepSeek AI Integration
+### Child-Focused AI Integration
 
-**API Route** (`src/app/api/generateGame/route.ts`)
-- Processes natural language prompts into GameLogic JSON
-- Uses comprehensive system prompt with safety guidelines
-- Validates AI output against schema
-- Provides fallback games when AI generation fails
+**Evolution-Ready API** (`src/app/api/generateGame/route.ts`)
+- **NEW**: Processes child voice/text into magical, evolving games
+- **NEW**: Game evolution system - adds elements to existing games instead of replacing them
+- **NEW**: Child-psychology aware prompts focusing on ages 4-12
+- **NEW**: Scratch-style visual programming integration
+- Enhanced safety system with zero violence, bright colors, happy themes
 - Requires `DEEPSEEK_API_KEY` environment variable
 
-**Safety System**
-- Content filtering for family-friendly games only
-- Age-appropriate complexity matching
-- Educational focus on coding concepts
-- Zamboo's encouraging, positive personality
+**Child Safety & Learning System**
+- **NEW**: Age bands updated to 4-6, 7-9, 10-12 for better targeting
+- **NEW**: Evolution tracking with save/restore capabilities  
+- **NEW**: Visual programming concepts integrated through play
+- **NEW**: Creative empowerment - every child idea gets incorporated
+- Zero violence, always positive and encouraging themes
 
 ## Development Notes
+
+### Game Evolution System (NEW!)
+The evolution system allows kids to continuously enhance their games:
+
+**Evolution Flow:**
+1. Child creates initial game: "I want a cat game"
+2. AI creates magical cat collecting fish
+3. Child adds: "Add a dog friend!" 
+4. System calls `evolveExistingGame()` to add dog companion to existing world
+5. Child continues: "Make them fly!"
+6. System adds flying abilities to both cat and dog
+7. All changes are tracked in `evolutionHistory` and `childRequests` arrays
+
+**Key Functions:**
+- `createChildMagicalGame()` - Creates initial kid-focused game
+- `evolveExistingGame()` - Adds new elements to existing games  
+- Evolution tracking via `evolutionStage`, `parentGameId`, `saveTimestamp`
+- Visual programming blocks auto-generated for each evolution
 
 ### Adding New Game Templates
 1. Create template function in `GameGenerator.createXXXTemplate()`

@@ -48,12 +48,14 @@ export interface GameTemplate {
   featured: boolean
 }
 
-// DeepSeek API types
+// DeepSeek API types - Enhanced for Evolution
 export interface DeepSeekRequest {
   prompt: string
-  kidAgeBand: '5-7' | '8-10' | '11-13' | '14+'
+  kidAgeBand: '4-6' | '7-9' | '10-12'
   complexity?: 'simple' | 'medium' | 'complex'
   gameType?: 'collector' | 'maze' | 'runner' | 'puzzle' | 'adventure'
+  isEvolution?: boolean
+  existingGame?: GameLogic
 }
 
 export interface DeepSeekResponse {
@@ -62,6 +64,9 @@ export interface DeepSeekResponse {
   error?: string
   suggestions?: string[]
   zambooMessage?: string
+  evolutionReady?: boolean
+  aiGenerated?: boolean
+  fallbackUsed?: boolean
 }
 
 // Phaser game engine integration types
@@ -98,6 +103,16 @@ export interface CodeBlock {
   values?: Record<string, any>
   statements?: Record<string, CodeBlock[]>
   next?: CodeBlock
+}
+
+// Scratch-style Programming Blocks for Kids
+export interface ScratchBlock {
+  type: string
+  message: string
+  connections: string[]
+  color?: string
+  shape?: 'hat' | 'stack' | 'boolean' | 'reporter'
+  category?: 'motion' | 'events' | 'control' | 'sensing' | 'operators' | 'variables'
 }
 
 // Voice recognition types

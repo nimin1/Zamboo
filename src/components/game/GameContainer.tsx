@@ -3,7 +3,7 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Pause, RotateCcw, Home, Settings, Trophy, Heart, Star } from 'lucide-react'
-import AdvancedGameEngine from './AdvancedGameEngine'
+import BeautifulGameEngine from './BeautifulGameEngine'
 import EmergentGameEngine from './EmergentGameEngine'
 import ZambooGuide from '../zamboo/ZambooGuide'
 import type { GameLogic, GameEngineRef, ZambooState } from '@/types'
@@ -277,7 +277,7 @@ const GameContainer: React.FC<GameContainerProps> = ({
                 className="mx-auto"
               />
             ) : (
-              <AdvancedGameEngine
+              <BeautifulGameEngine
                 gameLogic={gameLogic}
                 width={800}
                 height={600}

@@ -1157,8 +1157,8 @@ export default function AdvancedGameEngine({
       const trailColor = obj.trail.color || obj.glowColor || obj.color
       const particleCount = obj.trail.particleCount || 50
       
-      obj.animations.trail.positions.forEach((pos, i) => {
-        const alpha = pos.alpha * (1 - i / obj.animations.trail.positions.length)
+      obj.animations.trail?.positions.forEach((pos, i) => {
+        const alpha = pos.alpha * (1 - i / (obj.animations.trail?.positions.length || 1))
         ctx.globalAlpha = alpha
         
         // Create gradient for trail particles

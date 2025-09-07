@@ -30,19 +30,23 @@ const CreateGamePage: React.FC = () => {
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
 
   const handleGenerateGame = useCallback(async () => {
+    console.log("🎮 CREATE MY GAME CLICKED! Prompt:", prompt.trim());
+    
     if (!prompt.trim()) {
+      console.log("❌ No prompt provided");
       setError("Please describe your game idea first!");
       return;
     }
 
+    console.log("✅ Starting game generation...");
     setIsGenerating(true);
     setError(null);
 
     try {
-      // Use the regular generateGame API that follows user prompts literally
-      console.log("🎮 Using literal prompt-following game generation!");
+      // Use the new HTML game generation API
+      console.log("🎮 Using HTML game generation!");
 
-      const response = await fetch("/api/generateGame", {
+      const response = await fetch("/api/generateHTMLGame", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,22 +64,36 @@ const CreateGamePage: React.FC = () => {
       }
 
       const data = await response.json();
+      console.log("📨 API Response:", data);
 
-      if (data.success) {
-        // Store the regular game data
-        localStorage.setItem("currentGame", JSON.stringify(data.gameLogic));
+      if (data.success && data.htmlGame) {
+        console.log("✅ HTML Game generated successfully!");
+        console.log("🎮 Game title:", data.gameTitle);
+        console.log("📏 HTML size:", data.htmlGame.length, "characters");
+        // Store the HTML game data
+        const gameData = {
+          type: 'html',
+          html: data.htmlGame,
+          title: data.gameTitle,
+          description: `Generated from: "${prompt.trim()}"`,
+          zambooMessage: data.zambooMessage
+        };
+        localStorage.setItem("currentGame", JSON.stringify(gameData));
+        console.log("🔄 Navigating to game page...");
         router.push("/game");
       } else {
+        console.log("❌ Game generation failed:", data.error);
         throw new Error(data.error || "Game generation failed");
       }
     } catch (err) {
-      console.error("Game generation error:", err);
+      console.error("💥 Game generation error:", err);
       setError(
         err instanceof Error
           ? err.message
           : "Something went wrong. Please try again!"
       );
     } finally {
+      console.log("🏁 Setting isGenerating to false");
       setIsGenerating(false);
     }
   }, [prompt, router]);
@@ -106,39 +124,39 @@ const CreateGamePage: React.FC = () => {
   }, [showChat, helpfulTips.length]);
 
   return (
-    <div className="h-screen bg-neutral-50 relative flex flex-col">
+    <div className="min-h-screen bg-neutral-50 relative flex flex-col">
       {/* Animated Background Decorations */}
       <BackgroundDecorations />
 
       {/* Navigation Header */}
       <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10 flex-shrink-0">
-        <div className="w-full px-6 py-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4 sm:gap-6">
               <Link
                 href="/"
-                className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800 transition-colors"
+                className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800 transition-colors font-medium"
               >
-                <ArrowLeft size={18} />
-                <span>Back</span>
+                <ArrowLeft size={20} />
+                <span className="text-base hidden sm:inline">Back</span>
               </Link>
 
-              <div className="flex items-center gap-3">
-                <div className="text-4xl animate-panda-bounce cursor-pointer">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="text-3xl sm:text-4xl animate-panda-bounce cursor-pointer">
                   🐼
                 </div>
-                <h1 className="logo-text-small">zamboo</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-duo-green-500 font-display">zamboo</h1>
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-duo-blue-600 font-medium">
-                <Trophy size={18} />
-                <span>500</span>
+            <div className="flex items-center gap-3 sm:gap-6">
+              <div className="flex items-center gap-1 sm:gap-2 text-duo-blue-600 font-bold">
+                <Trophy size={18} className="sm:w-5 sm:h-5" />
+                <span className="text-base sm:text-lg">500</span>
               </div>
-              <div className="flex items-center gap-2 text-duo-red-500 font-medium">
-                <Heart size={18} />
-                <span>5</span>
+              <div className="flex items-center gap-1 sm:gap-2 text-duo-red-500 font-bold">
+                <Heart size={18} className="sm:w-5 sm:h-5" />
+                <span className="text-base sm:text-lg">5</span>
               </div>
             </div>
           </div>
@@ -148,38 +166,38 @@ const CreateGamePage: React.FC = () => {
       {/* Main Content */}
       <div className="flex flex-1 relative z-10 min-h-0">
         {/* Full Height Sidebar - Duolingo Style */}
-        <aside className="hidden lg:flex lg:w-64 bg-white border-r border-neutral-200 flex-col">
-          <div className="p-4 flex-1">
+        <aside className="hidden lg:flex lg:w-72 bg-white border-r border-neutral-200 flex-col flex-shrink-0">
+          <div className="p-6 flex-1">
             <div className="sticky top-6">
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <Link href="/create" className="nav-item active">
                   <div className="nav-icon">🏠</div>
-                  <span>CREATE</span>
+                  <span className="font-bold text-sm tracking-wide">CREATE</span>
                 </Link>
 
                 <Link href="/templates" className="nav-item">
                   <div className="nav-icon">🛡️</div>
-                  <span>TEMPLATES</span>
+                  <span className="font-bold text-sm tracking-wide">TEMPLATES</span>
                 </Link>
 
                 <div className="nav-item">
                   <div className="nav-icon">🏆</div>
-                  <span>QUESTS</span>
+                  <span className="font-bold text-sm tracking-wide">QUESTS</span>
                 </div>
 
                 <div className="nav-item">
                   <div className="nav-icon">📊</div>
-                  <span>LEADERBOARD</span>
+                  <span className="font-bold text-sm tracking-wide">LEADERBOARD</span>
                 </div>
 
                 <div className="nav-item">
                   <div className="nav-icon">👤</div>
-                  <span>PROFILE</span>
+                  <span className="font-bold text-sm tracking-wide">PROFILE</span>
                 </div>
 
                 <div className="nav-item">
                   <div className="nav-icon">⋯</div>
-                  <span>MORE</span>
+                  <span className="font-bold text-sm tracking-wide">MORE</span>
                 </div>
               </div>
             </div>
@@ -187,46 +205,46 @@ const CreateGamePage: React.FC = () => {
         </aside>
 
         {/* Main Content Area */}
-        <main className="flex-1 px-4 py-3 overflow-y-auto">
-          <div className="max-w-4xl mx-auto h-full flex flex-col">
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 lg:py-8 overflow-y-auto min-w-0">
+          <div className="max-w-4xl mx-auto w-full">
             {/* Header */}
-            <div className="text-center mb-4">
-              <h1 className="text-3xl font-bold text-neutral-800 mb-2 font-display">
+            <div className="text-center mb-6 lg:mb-8">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-800 mb-3 lg:mb-4 font-display leading-tight">
                 Create Your Game!
               </h1>
-              <p className="text-base text-neutral-600">
+              <p className="text-lg sm:text-xl text-neutral-600 font-medium px-4">
                 Tell me your game idea and I'll bring it to life! 🎮
               </p>
             </div>
 
             {/* Main Game Idea Section */}
-            <div className="card p-6 mb-4 flex-1">
-              <h2 className="text-2xl font-bold text-neutral-800 mb-4 font-display flex items-center gap-3">
-                <Sparkles className="text-duo-blue-500" size={28} />
-                What's Your Game Idea?
+            <div className="bg-white rounded-2xl shadow-soft p-4 sm:p-6 lg:p-8 mb-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-neutral-800 mb-4 sm:mb-6 font-display flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                <Sparkles className="text-duo-blue-500 flex-shrink-0" size={28} />
+                <span className="leading-tight">What's Your Game Idea?</span>
               </h2>
 
-              <div className="space-y-4">
+              <div className="space-y-4 sm:space-y-6">
                 <div className="relative">
                   <textarea
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     placeholder="Describe your game idea here... like 'a panda collecting bamboo in a magical forest'!"
-                    className="w-full px-4 py-4 border-2 border-neutral-200 rounded-xl focus:border-duo-blue-500 focus:ring-2 focus:ring-duo-blue-100 outline-none transition-all duration-200 text-lg min-h-[245px] resize-none"
+                    className="w-full px-4 sm:px-6 py-4 sm:py-5 border-2 border-neutral-200 rounded-2xl focus:border-duo-blue-500 focus:ring-4 focus:ring-duo-blue-100 outline-none transition-all duration-200 text-base sm:text-lg min-h-[150px] sm:min-h-[200px] resize-none font-medium"
                     disabled={isGenerating}
                   />
 
                   <button
                     onClick={startListening}
                     disabled={isGenerating}
-                    className={`absolute bottom-3 right-3 p-3 rounded-xl shadow-medium transition-all ${
+                    className={`absolute bottom-4 right-4 p-4 rounded-2xl shadow-medium transition-all ${
                       isListening
                         ? "bg-duo-red-500 hover:bg-duo-red-600 text-white"
                         : "bg-duo-blue-500 hover:bg-duo-blue-600 text-white"
                     } disabled:opacity-50`}
                     title={isListening ? "Stop listening" : "Start voice input"}
                   >
-                    {isListening ? <MicOff size={20} /> : <Mic size={20} />}
+                    {isListening ? <MicOff size={22} /> : <Mic size={22} />}
                   </button>
                 </div>
 
@@ -246,11 +264,11 @@ const CreateGamePage: React.FC = () => {
                 )}
 
                 {/* Revolutionary Examples */}
-                <div className="bg-neutral-50 rounded-xl p-4">
-                  <h3 className="text-lg font-bold text-neutral-800 mb-3 font-display">
+                <div className="bg-neutral-50 rounded-2xl p-4 sm:p-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-neutral-800 mb-3 sm:mb-4 font-display">
                     Revolutionary Examples - Try These!
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3">
                     {[
                       "time-traveling puzzle where your past self helps solve present challenges",
                       "empathic connection game where understanding others unlocks new abilities",
@@ -262,10 +280,13 @@ const CreateGamePage: React.FC = () => {
                       <button
                         key={index}
                         onClick={() => setPrompt(example)}
-                        className="btn-ghost text-left p-3 text-sm hover:text-duo-blue-600 transition-colors"
+                        className="bg-white hover:bg-duo-blue-50 text-left p-3 sm:p-4 text-sm font-medium rounded-xl border border-neutral-200 hover:border-duo-blue-200 hover:text-duo-blue-700 transition-colors disabled:opacity-50 leading-relaxed"
                         disabled={isGenerating}
                       >
-                        💡 {example}
+                        <span className="flex items-start gap-2">
+                          <span className="flex-shrink-0">💡</span>
+                          <span className="min-w-0">{example}</span>
+                        </span>
                       </button>
                     ))}
                   </div>
@@ -277,19 +298,19 @@ const CreateGamePage: React.FC = () => {
             <button
               onClick={handleGenerateGame}
               disabled={!prompt.trim() || isGenerating}
-              className={`w-full btn-success text-lg py-4 flex items-center justify-center gap-3 ${
-                isGenerating ? "opacity-75 cursor-not-allowed" : ""
+              className={`w-full bg-duo-green-500 hover:bg-duo-green-600 active:bg-duo-green-700 text-white font-bold py-4 sm:py-5 px-6 sm:px-8 rounded-2xl text-lg sm:text-xl shadow-medium transition-all duration-200 flex items-center justify-center gap-3 sm:gap-4 ${
+                isGenerating ? "opacity-75 cursor-not-allowed" : "hover:shadow-strong transform hover:scale-[1.02]"
               }`}
             >
               {isGenerating ? (
                 <>
-                  <Loader className="animate-spin" size={24} />
-                  Creating Your Game...
+                  <Loader className="animate-spin flex-shrink-0" size={24} />
+                  <span className="truncate">Creating Your Game...</span>
                 </>
               ) : (
                 <>
-                  <Play size={24} />
-                  Create My Game!
+                  <Play className="flex-shrink-0" size={24} />
+                  <span className="truncate">Create My Game!</span>
                 </>
               )}
             </button>
@@ -301,18 +322,18 @@ const CreateGamePage: React.FC = () => {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="card p-4 border-l-4 border-duo-red-500 mt-4"
+                  className="bg-white rounded-2xl shadow-soft p-6 border-l-4 border-duo-red-500 mt-6"
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="text-duo-red-500 text-2xl">⚠️</div>
+                  <div className="flex items-start gap-4">
+                    <div className="text-duo-red-500 text-3xl">⚠️</div>
                     <div className="flex-1">
-                      <h4 className="font-bold text-duo-red-800 text-base mb-1">
+                      <h4 className="font-bold text-duo-red-800 text-lg mb-2">
                         Oops!
                       </h4>
-                      <p className="text-duo-red-600 text-sm mb-3">{error}</p>
+                      <p className="text-duo-red-600 text-base mb-4 font-medium">{error}</p>
                       <button
                         onClick={() => setError(null)}
-                        className="btn-ghost text-sm py-2 px-3"
+                        className="bg-white hover:bg-neutral-50 text-neutral-700 font-bold py-2 px-4 rounded-xl border border-neutral-200 hover:border-neutral-300 transition-colors"
                       >
                         Dismiss
                       </button>
@@ -326,18 +347,18 @@ const CreateGamePage: React.FC = () => {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
-                  className="card p-6 text-center bg-gradient-to-br from-duo-green-50 to-duo-green-100 border-l-4 border-duo-green-500 mt-4"
+                  className="bg-white rounded-2xl shadow-soft p-8 text-center bg-gradient-to-br from-duo-green-50 to-duo-green-100 border-l-4 border-duo-green-500 mt-6"
                 >
-                  <div className="text-4xl mb-3">🎉</div>
-                  <h4 className="font-bold text-duo-green-800 text-xl mb-2 font-display">
+                  <div className="text-5xl mb-4">🎉</div>
+                  <h4 className="font-bold text-duo-green-800 text-2xl mb-3 font-display">
                     Game Created!
                   </h4>
-                  <p className="text-duo-green-600 mb-3 text-base">
+                  <p className="text-duo-green-600 mb-4 text-lg font-medium">
                     Your game "{generatedGame.title}" is ready to play!
                   </p>
                   <div className="flex items-center justify-center gap-3 text-duo-green-700 animate-pulse">
-                    <Play size={18} />
-                    <span className="text-sm font-medium">
+                    <Play size={20} />
+                    <span className="text-base font-bold">
                       Starting game...
                     </span>
                   </div>
@@ -349,14 +370,14 @@ const CreateGamePage: React.FC = () => {
       </div>
 
       {/* Floating Chat Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50">
         <AnimatePresence>
           {showChat && (
             <motion.div
               initial={{ opacity: 0, y: 20, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.8 }}
-              className="absolute bottom-16 right-0 w-80 bg-white rounded-2xl shadow-strong border border-neutral-200 p-4 mb-2"
+              className="absolute bottom-14 sm:bottom-16 right-0 w-72 sm:w-80 bg-white rounded-2xl shadow-strong border border-neutral-200 p-4 mb-2 max-w-[calc(100vw-2rem)]"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -403,7 +424,7 @@ const CreateGamePage: React.FC = () => {
 
         <motion.button
           onClick={() => setShowChat(!showChat)}
-          className="w-14 h-14 bg-duo-green-500 hover:bg-duo-green-600 text-white rounded-full shadow-strong flex items-center justify-center transition-colors"
+          className="w-12 h-12 sm:w-14 sm:h-14 bg-duo-green-500 hover:bg-duo-green-600 text-white rounded-full shadow-strong flex items-center justify-center transition-colors"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           animate={
@@ -424,7 +445,7 @@ const CreateGamePage: React.FC = () => {
                 }
           }
         >
-          {showChat ? <X size={24} /> : <MessageCircle size={24} />}
+          {showChat ? <X size={20} className="sm:w-6 sm:h-6" /> : <MessageCircle size={20} className="sm:w-6 sm:h-6" />}
         </motion.button>
       </div>
     </div>

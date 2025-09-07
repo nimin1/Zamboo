@@ -34,11 +34,26 @@ interface ConceptFirstGame {
   createdBy: string;
 }
 
+interface HTMLGame {
+  type: 'html';
+  html: string;
+  title: string;
+  description: string;
+  zambooMessage?: string;
+}
+
 // Type guard to check if game is concept-first
 const isConceptFirstGame = (
-  game: GameLogic | ConceptFirstGame
+  game: GameLogic | ConceptFirstGame | HTMLGame
 ): game is ConceptFirstGame => {
   return "conceptFirst" in game && game.conceptFirst === true;
+};
+
+// Type guard to check if game is HTML
+const isHTMLGame = (
+  game: GameLogic | ConceptFirstGame | HTMLGame
+): game is HTMLGame => {
+  return "type" in game && game.type === 'html';
 };
 
 // Dynamically import GameContainer to avoid SSR issues
@@ -57,7 +72,7 @@ const GameContainer = dynamic(() => import("@/components/game/GameContainer"), {
 const GamePage: React.FC = () => {
   const router = useRouter();
   const [gameLogic, setGameLogic] = useState<
-    GameLogic | ConceptFirstGame | null
+    GameLogic | ConceptFirstGame | HTMLGame | null
   >(null);
   const [showEditor, setShowEditor] = useState(false);
   const [zambooState, setZambooState] = useState<ZambooState>({
@@ -75,7 +90,7 @@ const GamePage: React.FC = () => {
     const savedGame = localStorage.getItem("currentGame");
     if (savedGame) {
       try {
-        const game = JSON.parse(savedGame) as GameLogic | ConceptFirstGame;
+        const game = JSON.parse(savedGame) as GameLogic | ConceptFirstGame | HTMLGame;
         setGameLogic(game);
         setZambooState({ mood: "excited", animation: "dance" });
 
@@ -297,13 +312,36 @@ const GamePage: React.FC = () => {
                   </div>
                 </div>
 
-                <GameContainer
-                  gameLogic={gameLogic}
-                  onGameComplete={handleGameComplete}
-                  onExit={handleExit}
-                  showTutorial={true}
-                  className="w-full game-canvas"
-                />
+                {/* Render different game types */}
+                {isHTMLGame(gameLogic) ? (
+                  /* HTML Game in iframe */
+                  <div className="w-full bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4">
+                      <h4 className="font-bold">🎮 {gameLogic.title}</h4>
+                      <p className="text-sm opacity-90">{gameLogic.description}</p>
+                    </div>
+                    <iframe
+                      srcDoc={gameLogic.html}
+                      className="w-full h-[600px] border-0"
+                      sandbox="allow-scripts allow-same-origin"
+                      title={gameLogic.title}
+                    />
+                    <div className="p-4 bg-gray-50 border-t">
+                      <p className="text-sm text-gray-600 text-center">
+                        🎯 Use arrow keys or touch controls to play!
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  /* Traditional GameLogic games */
+                  <GameContainer
+                    gameLogic={gameLogic}
+                    onGameComplete={handleGameComplete}
+                    onExit={handleExit}
+                    showTutorial={true}
+                    className="w-full game-canvas"
+                  />
+                )}
               </div>
             </div>
 

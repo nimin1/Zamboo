@@ -32,9 +32,17 @@ const CreateGamePage: React.FC = () => {
     setError(null)
 
     try {
+      // Map old age groups to new format
+      const ageGroupMapping = {
+        '5-7': '4-6' as const,
+        '8-10': '7-9' as const,
+        '11-13': '10-12' as const,
+        '14+': '10-12' as const
+      }
+
       const request: DeepSeekRequest = {
         prompt: prompt.trim(),
-        kidAgeBand: ageGroup,
+        kidAgeBand: ageGroupMapping[ageGroup],
         complexity,
         gameType
       }

@@ -393,7 +393,7 @@ const GameEngine = forwardRef<GameEngineRef, GameEngineProps>(({
       }
 
       private checkWinConditions() {
-        logic.rules.winConditions.forEach(condition => {
+        logic.rules.winConditions.forEach((condition: any) => {
           switch (condition.type) {
             case 'score_target':
               if (condition.target && this.score >= condition.target) {

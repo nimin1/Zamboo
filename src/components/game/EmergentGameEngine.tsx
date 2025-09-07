@@ -214,14 +214,14 @@ export default function EmergentGameEngine({
 
     patterns.forEach(pattern => {
       const matches = text.matchAll(pattern)
-      for (const match of matches) {
+      for (const match of Array.from(matches)) {
         if (match[1] && match[1].length > 3) {
           concepts.push(match[1].trim().toLowerCase())
         }
       }
     })
 
-    return [...new Set(concepts)].slice(0, 10) // Unique concepts, max 10
+    return Array.from(new Set(concepts)).slice(0, 10) // Unique concepts, max 10
   }
 
   const extractObjectives = (analysis: string): string[] => {
@@ -236,7 +236,7 @@ export default function EmergentGameEngine({
 
     objectivePatterns.forEach(pattern => {
       const matches = analysis.matchAll(pattern)
-      for (const match of matches) {
+      for (const match of Array.from(matches)) {
         if (match[1] && match[1].length > 5) {
           objectives.push(match[1].trim())
         }
@@ -289,7 +289,7 @@ export default function EmergentGameEngine({
       case 'progression':
         system.properties.complexity += gameState.playerState.engagement * deltaTime * 0.1
         break
-      case 'experience':
+      case 'emergent':
         system.properties.intensity = gameState.playerState.understanding * 0.8 + 0.2
         break
     }
