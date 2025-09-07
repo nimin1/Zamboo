@@ -1,4 +1,4 @@
-import { GameSpec, validateGameSpec, getThemeDefaults, THEME_PALETTES } from './types/gamespec'
+import { GameSpec, validateGameSpec, repairGameSpec, getThemeDefaults, THEME_PALETTES } from './types/gamespec'
 
 export interface DeepSeekGameRequest {
   prompt: string
@@ -218,16 +218,16 @@ export async function generateGameFromPrompt(request: DeepSeekGameRequest): Prom
     // Validate against schema
     const validation = validateGameSpec(gameSpec)
     
-    if (!validation.success) {
-      console.error('❌ GameSpec validation failed:', validation.errors)
-      throw new Error(`Invalid GameSpec: ${JSON.stringify(validation.errors)}`)
+    if (!validation) {
+      console.error('❌ GameSpec validation failed')
+      throw new Error(`Invalid GameSpec`)
     }
 
     console.log('✅ GameSpec generated and validated successfully!')
 
     return {
       success: true,
-      gameSpec: validation.data!,
+      gameSpec: validation,
       aiGenerated: true,
       fallbackUsed: false,
       suggestions: [
@@ -322,7 +322,7 @@ function createSmartFallbackGame(request: DeepSeekGameRequest): DeepSeekGameResp
   // Smart difficulty mapping
   const difficultyMap = {
     '4-6': 'easy' as const,
-    '7-9': 'normal' as const,
+    '7-9': 'medium' as const,
     '10-12': 'hard' as const
   }
 
@@ -338,9 +338,14 @@ function createSmartFallbackGame(request: DeepSeekGameRequest): DeepSeekGameResp
     goalValue = 1
   }
 
-  // Create the GameSpec with smart defaults
-  const gameSpec: GameSpec = {
+  // Create the GameSpec with smart defaults using repairGameSpec
+  const gameSpec = repairGameSpec({
     title: generateGameTitle(request.prompt),
+    description: `A fun ${theme}-themed adventure game created just for you!`,
+    ageGroup: request.kidAgeBand,
+    difficulty: difficultyMap[request.kidAgeBand],
+    template: 'platformer' as const,
+    themePack: theme === 'forest' ? 'forest' : 'space',
     theme,
     camera: {
       type: 'side',
@@ -381,14 +386,13 @@ function createSmartFallbackGame(request: DeepSeekGameRequest): DeepSeekGameResp
       touch: true,
       gamepad: false
     },
-    difficulty: difficultyMap[request.kidAgeBand],
     ui: {
       showScore: true,
       showHealth: request.kidAgeBand !== '4-6',
       showTimer: false,
       tutorial: true
     }
-  }
+  })
 
   return {
     success: true,

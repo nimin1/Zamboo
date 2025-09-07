@@ -222,7 +222,7 @@ const BeautifulGameEngine = forwardRef<GameEngineRef, BeautifulGameEngineProps>(
     if (!gameState.player) return
 
     gameState.objects.forEach(obj => {
-      if (obj.id === gameState.player?.id || !obj.visible) return
+      if (obj.id === gameState.player?.id || !obj.visible || !gameState.player) return
 
       // Simple AABB collision
       if (gameState.player.x < obj.x + obj.width &&

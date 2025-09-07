@@ -407,7 +407,7 @@ const GamePage: React.FC = () => {
   };
   
   const generateCodeFromBlocks = (blocks: any[]) => {
-    let code = [];
+    let code: string[] = [];
     let summary = '';
     
     blocks.forEach(block => {
