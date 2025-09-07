@@ -1,77 +1,87 @@
-'use client'
+"use client";
 
-import React, { useState, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Brain, Zap, Rocket, ArrowRight, Code, Gamepad2 } from 'lucide-react'
-import EmergentGameEngine from '@/components/game/EmergentGameEngine'
+import React, { useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Sparkles,
+  Brain,
+  Zap,
+  Rocket,
+  ArrowRight,
+  Code,
+  Gamepad2,
+} from "lucide-react";
+import EmergentGameEngine from "@/components/game/EmergentGameEngine";
 
 const ConceptFirstDemo: React.FC = () => {
-  const [prompt, setPrompt] = useState('')
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [currentPhase, setCurrentPhase] = useState<'input' | 'analyzing' | 'designing' | 'playing'>('input')
+  const [prompt, setPrompt] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [currentPhase, setCurrentPhase] = useState<
+    "input" | "analyzing" | "designing" | "playing"
+  >("input");
   const [conceptData, setConceptData] = useState<{
-    experienceAnalysis?: string
-    gameImplementation?: string
-    userVision?: string
-  }>({})
-  const [error, setError] = useState<string | null>(null)
+    experienceAnalysis?: string;
+    gameImplementation?: string;
+    userVision?: string;
+  }>({});
+  const [error, setError] = useState<string | null>(null);
 
   const generateConceptFirstGame = useCallback(async () => {
-    if (!prompt.trim()) return
+    if (!prompt.trim()) return;
 
-    setIsGenerating(true)
-    setError(null)
-    setCurrentPhase('analyzing')
+    setIsGenerating(true);
+    setError(null);
+    setCurrentPhase("analyzing");
 
     try {
-      console.log('🚀 Starting concept-first generation...')
-      
-      const response = await fetch('/api/conceptFirst', {
-        method: 'POST',
+      console.log("🚀 Starting concept-first generation...");
+
+      const response = await fetch("/api/conceptFirst", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ prompt: prompt.trim() }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.success) {
-        console.log('✨ Concept-first generation successful!')
+        console.log("✨ Concept-first generation successful!");
         setConceptData({
           experienceAnalysis: data.experienceAnalysis,
           gameImplementation: data.gameImplementation,
-          userVision: data.userVision
-        })
-        setCurrentPhase('designing')
-        
+          userVision: data.userVision,
+        });
+        setCurrentPhase("designing");
+
         // Auto-advance to playing phase after a moment
         setTimeout(() => {
-          setCurrentPhase('playing')
-        }, 3000)
+          setCurrentPhase("playing");
+        }, 3000);
       } else {
-        throw new Error(data.error || 'Generation failed')
+        throw new Error(data.error || "Generation failed");
       }
     } catch (err) {
-      console.error('❌ Concept-first generation error:', err)
-      setError(err instanceof Error ? err.message : 'Unknown error')
+      console.error("❌ Concept-first generation error:", err);
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }, [prompt])
+  }, [prompt]);
 
   const examplePrompts = [
     "time-traveling puzzle where your past self helps solve present challenges",
-    "empathic connection game where understanding others unlocks new abilities", 
+    "empathic connection game where understanding others unlocks new abilities",
     "musical ecosystem where sounds create living creatures",
     "gravity-painting game where you draw with physics",
     "memory palace builder where learning becomes architecture",
-    "collaborative storytelling through gesture and color"
-  ]
+    "collaborative storytelling through gesture and color",
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
@@ -86,8 +96,9 @@ const ConceptFirstDemo: React.FC = () => {
             🚀 Concept-First Game Generation
           </h1>
           <p className="text-xl text-gray-300 max-w-4xl mx-auto">
-            Experience the future of AI game design! No schema constraints - pure conceptual reasoning that generates 
-            games through understanding experiences, not filling out forms.
+            Experience the future of AI game design! No schema constraints -
+            pure conceptual reasoning that generates games through understanding
+            experiences, not filling out forms.
           </p>
         </motion.div>
 
@@ -100,7 +111,9 @@ const ConceptFirstDemo: React.FC = () => {
           >
             <div className="flex items-center mb-4">
               <Code className="mr-3 text-red-400" size={24} />
-              <h3 className="text-xl font-bold text-red-400">Schema-Constrained (Old)</h3>
+              <h3 className="text-xl font-bold text-red-400">
+                Schema-Constrained (Old)
+              </h3>
             </div>
             <ul className="space-y-2 text-gray-300">
               <li>❌ AI fills predefined data structures</li>
@@ -118,7 +131,9 @@ const ConceptFirstDemo: React.FC = () => {
           >
             <div className="flex items-center mb-4">
               <Brain className="mr-3 text-green-400" size={24} />
-              <h3 className="text-xl font-bold text-green-400">Concept-First (Revolutionary)</h3>
+              <h3 className="text-xl font-bold text-green-400">
+                Concept-First (Revolutionary)
+              </h3>
             </div>
             <ul className="space-y-2 text-gray-300">
               <li>✅ AI reasons about player experiences</li>
@@ -132,7 +147,7 @@ const ConceptFirstDemo: React.FC = () => {
 
         {/* Input Phase */}
         <AnimatePresence mode="wait">
-          {currentPhase === 'input' && (
+          {currentPhase === "input" && (
             <motion.div
               key="input"
               initial={{ opacity: 0, y: 20 }}
@@ -145,7 +160,7 @@ const ConceptFirstDemo: React.FC = () => {
                   <Sparkles className="mr-3 text-yellow-400" />
                   Describe Your Vision
                 </h3>
-                
+
                 <textarea
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
@@ -154,7 +169,9 @@ const ConceptFirstDemo: React.FC = () => {
                 />
 
                 <div className="mt-6">
-                  <h4 className="text-lg font-semibold mb-3 text-gray-300">Revolutionary Example Prompts:</h4>
+                  <h4 className="text-lg font-semibold mb-3 text-gray-300">
+                    Revolutionary Example Prompts:
+                  </h4>
                   <div className="grid gap-3">
                     {examplePrompts.map((example, index) => (
                       <button
@@ -190,7 +207,7 @@ const ConceptFirstDemo: React.FC = () => {
           )}
 
           {/* Analysis Phase */}
-          {currentPhase === 'analyzing' && (
+          {currentPhase === "analyzing" && (
             <motion.div
               key="analyzing"
               initial={{ opacity: 0, y: 20 }}
@@ -199,10 +216,16 @@ const ConceptFirstDemo: React.FC = () => {
               className="max-w-4xl mx-auto text-center"
             >
               <div className="bg-blue-900/20 border border-blue-500/30 rounded-2xl p-12">
-                <Brain className="mx-auto mb-6 text-blue-400 animate-pulse" size={64} />
-                <h3 className="text-3xl font-bold mb-4 text-blue-400">Experience Analysis</h3>
+                <Brain
+                  className="mx-auto mb-6 text-blue-400 animate-pulse"
+                  size={64}
+                />
+                <h3 className="text-3xl font-bold mb-4 text-blue-400">
+                  Experience Analysis
+                </h3>
                 <p className="text-xl text-gray-300 mb-6">
-                  AI is reasoning about what would make "{prompt}" feel amazing to play...
+                  AI is reasoning about what would make "{prompt}" feel amazing
+                  to play...
                 </p>
                 <div className="space-y-3 text-gray-400">
                   <p>🧠 Analyzing emotional core and player journey...</p>
@@ -215,7 +238,7 @@ const ConceptFirstDemo: React.FC = () => {
           )}
 
           {/* Design Phase */}
-          {currentPhase === 'designing' && (
+          {currentPhase === "designing" && (
             <motion.div
               key="designing"
               initial={{ opacity: 0, y: 20 }}
@@ -225,9 +248,16 @@ const ConceptFirstDemo: React.FC = () => {
             >
               <div className="bg-purple-900/20 border border-purple-500/30 rounded-2xl p-8">
                 <div className="text-center mb-8">
-                  <Zap className="mx-auto mb-4 text-purple-400 animate-bounce" size={48} />
-                  <h3 className="text-2xl font-bold text-purple-400">Dynamic System Generation</h3>
-                  <p className="text-gray-300 mt-2">Creating the perfect systems for your vision...</p>
+                  <Zap
+                    className="mx-auto mb-4 text-purple-400 animate-bounce"
+                    size={48}
+                  />
+                  <h3 className="text-2xl font-bold text-purple-400">
+                    Dynamic System Generation
+                  </h3>
+                  <p className="text-gray-300 mt-2">
+                    Creating the perfect systems for your vision...
+                  </p>
                 </div>
 
                 {conceptData.experienceAnalysis && (
@@ -245,7 +275,9 @@ const ConceptFirstDemo: React.FC = () => {
                 )}
 
                 <div className="text-center">
-                  <p className="text-gray-400">Preparing emergent game engine...</p>
+                  <p className="text-gray-400">
+                    Preparing emergent game engine...
+                  </p>
                   <div className="mt-4 flex justify-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
                   </div>
@@ -255,7 +287,7 @@ const ConceptFirstDemo: React.FC = () => {
           )}
 
           {/* Playing Phase */}
-          {currentPhase === 'playing' && conceptData.experienceAnalysis && (
+          {currentPhase === "playing" && conceptData.experienceAnalysis && (
             <motion.div
               key="playing"
               initial={{ opacity: 0, y: 20 }}
@@ -264,16 +296,19 @@ const ConceptFirstDemo: React.FC = () => {
             >
               <div className="text-center mb-8">
                 <Gamepad2 className="mx-auto mb-4 text-green-400" size={48} />
-                <h3 className="text-3xl font-bold text-green-400 mb-2">🎮 Experience Ready!</h3>
+                <h3 className="text-3xl font-bold text-green-400 mb-2">
+                  🎮 Experience Ready!
+                </h3>
                 <p className="text-gray-300">
-                  Your concept-first game is running! No schemas, no constraints - pure emergent gameplay.
+                  Your concept-first game is running! No schemas, no constraints
+                  - pure emergent gameplay.
                 </p>
               </div>
 
               <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
                 <EmergentGameEngine
                   conceptAnalysis={conceptData.experienceAnalysis}
-                  gameImplementation={conceptData.gameImplementation || ''}
+                  gameImplementation={conceptData.gameImplementation || ""}
                   userVision={conceptData.userVision || prompt}
                   className="mx-auto"
                 />
@@ -281,7 +316,9 @@ const ConceptFirstDemo: React.FC = () => {
 
               <div className="mt-8 grid md:grid-cols-2 gap-6">
                 <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4">
-                  <h4 className="font-bold text-blue-400 mb-2">🌟 Concept-First Features</h4>
+                  <h4 className="font-bold text-blue-400 mb-2">
+                    🌟 Concept-First Features
+                  </h4>
                   <ul className="text-sm text-gray-300 space-y-1">
                     <li>• Dynamic entity generation from concepts</li>
                     <li>• Emergent visual systems</li>
@@ -291,7 +328,9 @@ const ConceptFirstDemo: React.FC = () => {
                 </div>
 
                 <div className="bg-purple-900/20 border border-purple-500/30 rounded-xl p-4">
-                  <h4 className="font-bold text-purple-400 mb-2">🧠 AI Architecture</h4>
+                  <h4 className="font-bold text-purple-400 mb-2">
+                    🧠 AI Architecture
+                  </h4>
                   <ul className="text-sm text-gray-300 space-y-1">
                     <li>• Pure conceptual reasoning</li>
                     <li>• No schema constraints</li>
@@ -304,9 +343,9 @@ const ConceptFirstDemo: React.FC = () => {
               <div className="text-center mt-8">
                 <button
                   onClick={() => {
-                    setCurrentPhase('input')
-                    setConceptData({})
-                    setPrompt('')
+                    setCurrentPhase("input");
+                    setConceptData({});
+                    setPrompt("");
                   }}
                   className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 flex items-center mx-auto"
                 >
@@ -330,8 +369,8 @@ const ConceptFirstDemo: React.FC = () => {
               <p className="text-gray-300">{error}</p>
               <button
                 onClick={() => {
-                  setError(null)
-                  setCurrentPhase('input')
+                  setError(null);
+                  setCurrentPhase("input");
                 }}
                 className="mt-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
               >
@@ -342,7 +381,7 @@ const ConceptFirstDemo: React.FC = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ConceptFirstDemo
+export default ConceptFirstDemo;
