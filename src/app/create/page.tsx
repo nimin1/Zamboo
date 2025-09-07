@@ -291,10 +291,10 @@ const CreateGamePage: React.FC = () => {
           navItems={[
             { href: "/create", icon: "🏠", label: "CREATE", isActive: true },
             { href: "/savedgames", icon: "💾", label: "SAVED GAMES" },
-            { href: "#", icon: "🏆", label: "QUESTS" },
-            { href: "#", icon: "📊", label: "LEADERBOARD" },
-            { href: "#", icon: "👤", label: "PROFILE" },
-            { href: "#", icon: "⋯", label: "MORE" }
+            { href: "/quests", icon: "🏆", label: "QUESTS" },
+            { href: "/leaderboard", icon: "📊", label: "LEADERBOARD" },
+            { href: "/profile", icon: "👤", label: "PROFILE" },
+            { href: "/more", icon: "⋯", label: "MORE" }
           ]}
         />
 
