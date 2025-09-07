@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import ZambooMascot from '@/components/zamboo/ZambooMascot'
 import BackgroundDecorations from '@/components/ui/BackgroundDecorations'
+import Sidebar from '@/components/ui/Sidebar'
 import type { GameLogic, ZambooState } from '@/types'
 
 interface SavedGame {
@@ -123,54 +124,17 @@ const SavedGamesPage: React.FC = () => {
       </nav>
 
       <div className="flex flex-1 relative z-10 min-h-0">
-        <aside className="hidden lg:flex lg:w-64 bg-white border-r border-neutral-200 flex-col">
-          <div className="p-4 flex-1">
-            <div className="sticky top-6">
-              <div className="space-y-1">
-                <Link href="/create" className="nav-item">
-                  <div className="nav-icon">
-                    🏠
-                  </div>
-                  <span>CREATE</span>
-                </Link>
-                <Link href="/savedgames" className="nav-item active">
-                  <div className="nav-icon">
-                    💾
-                  </div>
-                  <span>SAVED GAMES</span>
-                </Link>
-              
-                <div className="nav-item">
-                  <div className="nav-icon">
-                    🏆
-                  </div>
-                  <span>QUESTS</span>
-                </div>
-              
-                <div className="nav-item">
-                  <div className="nav-icon">
-                    📊
-                  </div>
-                  <span>LEADERBOARD</span>
-                </div>
-              
-                <div className="nav-item">
-                  <div className="nav-icon">
-                    👤
-                  </div>
-                  <span>PROFILE</span>
-                </div>
-              
-                <div className="nav-item">
-                  <div className="nav-icon">
-                    ⋯
-                  </div>
-                  <span>MORE</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </aside>
+        {/* Expandable Sidebar */}
+        <Sidebar 
+          navItems={[
+            { href: "/create", icon: "🏠", label: "CREATE" },
+            { href: "/savedgames", icon: "💾", label: "SAVED GAMES", isActive: true },
+            { href: "#", icon: "🏆", label: "QUESTS" },
+            { href: "#", icon: "📊", label: "LEADERBOARD" },
+            { href: "#", icon: "👤", label: "PROFILE" },
+            { href: "#", icon: "⋯", label: "MORE" }
+          ]}
+        />
 
         <main className="flex-1 px-4 py-1 flex flex-col justify-between">
           <div className="max-w-6xl mx-auto w-full">

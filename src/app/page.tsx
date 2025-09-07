@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import BackgroundDecorations from "@/components/ui/BackgroundDecorations";
 import ZambooMascot from "@/components/zamboo/ZambooMascot";
+import Sidebar from "@/components/ui/Sidebar";
 
 export default function Home() {
   return (
@@ -57,44 +58,17 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex flex-1 relative z-10 min-h-0">
-        {/* Full Height Sidebar - Duolingo Style */}
-        <aside className="hidden lg:flex lg:w-64 bg-white border-r border-neutral-200 flex-col">
-          <div className="p-4 flex-1">
-            <div className="sticky top-6">
-              <div className="space-y-1">
-                <Link href="/create" className="nav-item active">
-                  <div className="nav-icon">🏠</div>
-                  <span>CREATE</span>
-                </Link>
-
-                <Link href="/savedgames" className="nav-item">
-                  <div className="nav-icon">💾</div>
-                  <span>SAVED GAMES</span>
-                </Link>
-
-                <div className="nav-item">
-                  <div className="nav-icon">🏆</div>
-                  <span>QUESTS</span>
-                </div>
-
-                <div className="nav-item">
-                  <div className="nav-icon">📊</div>
-                  <span>LEADERBOARD</span>
-                </div>
-
-                <div className="nav-item">
-                  <div className="nav-icon">👤</div>
-                  <span>PROFILE</span>
-                </div>
-
-                <div className="nav-item">
-                  <div className="nav-icon">⋯</div>
-                  <span>MORE</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </aside>
+        {/* Expandable Sidebar */}
+        <Sidebar 
+          navItems={[
+            { href: "/create", icon: "🏠", label: "CREATE", isActive: true },
+            { href: "/savedgames", icon: "💾", label: "SAVED GAMES" },
+            { href: "#", icon: "🏆", label: "QUESTS" },
+            { href: "#", icon: "📊", label: "LEADERBOARD" },
+            { href: "#", icon: "👤", label: "PROFILE" },
+            { href: "#", icon: "⋯", label: "MORE" }
+          ]}
+        />
 
         {/* Main Content Area */}
         <main className="flex-1 px-4 py-2 overflow-hidden">

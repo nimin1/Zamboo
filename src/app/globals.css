@@ -268,8 +268,10 @@ a {
 
 /* Duolingo-style sidebar navigation */
 .nav-item {
-  @apply flex items-center gap-4 px-4 py-4 rounded-2xl text-neutral-500 hover:bg-neutral-50 transition-all duration-200 font-bold cursor-pointer border-none mb-2 font-sans;
+  @apply flex items-center gap-4 px-4 py-4 rounded-2xl text-neutral-500 hover:bg-neutral-50 transition-all duration-200 font-bold cursor-pointer border-none mb-2;
+  font-family: 'Fredoka One', sans-serif;
   font-size: 0.8125rem; /* 13px - increased by 0.5 from 12px */
+  min-height: 56px; /* Consistent height for both states */
 }
 
 .nav-item.active {
@@ -277,11 +279,16 @@ a {
 }
 
 .nav-item .nav-icon {
-  @apply w-8 h-8 flex items-center justify-center text-xl;
+  @apply w-8 h-8 flex items-center justify-center text-xl flex-shrink-0;
 }
 
 .nav-item.active .nav-icon {
   @apply text-white;
+}
+
+/* Sidebar collapsed state adjustments */
+.sidebar-collapsed .nav-item {
+  @apply justify-center px-2;
 }
 
 /* Achievement badges */

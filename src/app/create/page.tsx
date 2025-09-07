@@ -17,6 +17,8 @@ import {
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import BackgroundDecorations from "@/components/ui/BackgroundDecorations";
+import ZambooLoaderGame from "@/components/game/ZambooLoaderGame";
+import Sidebar from "@/components/ui/Sidebar";
 import type { GameLogic } from "@/types";
 
 const CreateGamePage: React.FC = () => {
@@ -29,6 +31,7 @@ const CreateGamePage: React.FC = () => {
   const [showChat, setShowChat] = useState(false);
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
   const [recognition, setRecognition] = useState<any>(null);
+  const [generationProgress, setGenerationProgress] = useState(0);
 
   const handleGenerateGame = useCallback(async () => {
     console.log("🎮 CREATE MY GAME CLICKED! Prompt:", prompt.trim());
@@ -42,10 +45,20 @@ const CreateGamePage: React.FC = () => {
     console.log("✅ Starting game generation...");
     setIsGenerating(true);
     setError(null);
+    setGenerationProgress(0);
 
     try {
       // Use the new HTML game generation API
       console.log("🎮 Using HTML game generation!");
+
+      // Simulate progress updates during generation
+      const progressInterval = setInterval(() => {
+        setGenerationProgress(prev => {
+          const increment = Math.random() * 15 + 5; // 5-20% increments
+          const newProgress = Math.min(prev + increment, 95); // Cap at 95% until complete
+          return newProgress;
+        });
+      }, 800);
 
       const response = await fetch("/api/generateHTMLGame", {
         method: "POST",
@@ -60,6 +73,8 @@ const CreateGamePage: React.FC = () => {
         }),
       });
 
+      clearInterval(progressInterval);
+
       if (!response.ok) {
         throw new Error(`Game generation API error: ${response.status}`);
       }
@@ -71,6 +86,10 @@ const CreateGamePage: React.FC = () => {
         console.log("✅ HTML Game generated successfully!");
         console.log("🎮 Game title:", data.gameTitle);
         console.log("📏 HTML size:", data.htmlGame.length, "characters");
+        
+        // Complete progress
+        setGenerationProgress(100);
+        
         // Store the HTML game data
         const gameData = {
           type: "html",
@@ -80,8 +99,12 @@ const CreateGamePage: React.FC = () => {
           zambooMessage: data.zambooMessage,
         };
         localStorage.setItem("currentGame", JSON.stringify(gameData));
-        console.log("🔄 Navigating to game page...");
-        router.push("/game");
+        
+        // Small delay to show 100% completion
+        setTimeout(() => {
+          console.log("🔄 Navigating to game page...");
+          router.push("/game");
+        }, 1500);
       } else {
         console.log("❌ Game generation failed:", data.error);
         throw new Error(data.error || "Game generation failed");
@@ -263,67 +286,40 @@ const CreateGamePage: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex flex-1 relative z-10 min-h-0">
-        {/* Full Height Sidebar - Duolingo Style */}
-        <aside className="hidden lg:flex lg:w-72 bg-white border-r border-neutral-200 flex-col flex-shrink-0">
-          <div className="p-4 flex-1">
-            <div className="sticky top-6">
-              <div className="space-y-2">
-                <Link href="/create" className="nav-item active">
-                  <div className="nav-icon">🏠</div>
-                  <span className="font-bold text-sm tracking-wide">
-                    CREATE
-                  </span>
-                </Link>
-
-                <Link href="/savedgames" className="nav-item">
-                  <div className="nav-icon">💾</div>
-                  <span className="font-bold text-sm tracking-wide">
-                    SAVED GAMES
-                  </span>
-                </Link>
-
-                <div className="nav-item">
-                  <div className="nav-icon">🏆</div>
-                  <span className="font-bold text-sm tracking-wide">
-                    QUESTS
-                  </span>
-                </div>
-
-                <div className="nav-item">
-                  <div className="nav-icon">📊</div>
-                  <span className="font-bold text-sm tracking-wide">
-                    LEADERBOARD
-                  </span>
-                </div>
-
-                <div className="nav-item">
-                  <div className="nav-icon">👤</div>
-                  <span className="font-bold text-sm tracking-wide">
-                    PROFILE
-                  </span>
-                </div>
-
-                <div className="nav-item">
-                  <div className="nav-icon">⋯</div>
-                  <span className="font-bold text-sm tracking-wide">MORE</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </aside>
+        {/* Expandable Sidebar */}
+        <Sidebar 
+          navItems={[
+            { href: "/create", icon: "🏠", label: "CREATE", isActive: true },
+            { href: "/savedgames", icon: "💾", label: "SAVED GAMES" },
+            { href: "#", icon: "🏆", label: "QUESTS" },
+            { href: "#", icon: "📊", label: "LEADERBOARD" },
+            { href: "#", icon: "👤", label: "PROFILE" },
+            { href: "#", icon: "⋯", label: "MORE" }
+          ]}
+        />
 
         {/* Main Content Area */}
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-4 lg:py-6 overflow-y-auto min-w-0">
-          <div className="max-w-4xl mx-auto w-full">
-            {/* Header */}
-            <div className="text-center mb-4">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-neutral-800 mb-2 font-display leading-tight">
-                Create Your Game!
-              </h1>
-              <p className="text-base sm:text-lg text-neutral-600 font-medium px-4">
-                Tell me your game idea and I'll bring it to life! 🎮
-              </p>
-            </div>
+          <div className="max-w-4xl mx-auto w-full h-full">
+            {/* Show loader game during generation */}
+            {isGenerating ? (
+              <div className="h-full flex items-center justify-center py-8">
+                <ZambooLoaderGame 
+                  progress={generationProgress}
+                  onGameComplete={() => {}}
+                />
+              </div>
+            ) : (
+              <>
+                {/* Header */}
+                <div className="text-center mb-4">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-neutral-800 mb-2 font-display leading-tight">
+                    Create Your Game!
+                  </h1>
+                  <p className="text-base sm:text-lg text-neutral-600 font-medium px-4">
+                    Tell me your game idea and I'll bring it to life! 🎮
+                  </p>
+                </div>
 
             {/* Main Game Idea Section */}
             <div className="bg-white rounded-2xl shadow-soft p-4 sm:p-6 mb-4">
@@ -434,58 +430,60 @@ const CreateGamePage: React.FC = () => {
               </div>
             </div>
 
-            {/* Status Messages */}
-            <AnimatePresence>
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="bg-white rounded-2xl shadow-soft p-6 border-l-4 border-duo-red-500 mt-6"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="text-duo-red-500 text-3xl">⚠️</div>
-                    <div className="flex-1">
-                      <h4 className="font-bold text-duo-red-800 text-lg mb-2">
-                        Oops!
-                      </h4>
-                      <p className="text-duo-red-600 text-base mb-4 font-medium">
-                        {error}
-                      </p>
-                      <button
-                        onClick={() => setError(null)}
-                        className="bg-white hover:bg-neutral-50 text-neutral-700 font-bold py-2 px-4 rounded-xl border border-neutral-200 hover:border-neutral-300 transition-colors"
-                      >
-                        Dismiss
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
+                {/* Status Messages */}
+                <AnimatePresence>
+                  {error && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="bg-white rounded-2xl shadow-soft p-6 border-l-4 border-duo-red-500 mt-6"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="text-duo-red-500 text-3xl">⚠️</div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-duo-red-800 text-lg mb-2">
+                            Oops!
+                          </h4>
+                          <p className="text-duo-red-600 text-base mb-4 font-medium">
+                            {error}
+                          </p>
+                          <button
+                            onClick={() => setError(null)}
+                            className="bg-white hover:bg-neutral-50 text-neutral-700 font-bold py-2 px-4 rounded-xl border border-neutral-200 hover:border-neutral-300 transition-colors"
+                          >
+                            Dismiss
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
 
-              {generatedGame && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  className="bg-white rounded-2xl shadow-soft p-8 text-center bg-gradient-to-br from-duo-green-50 to-duo-green-100 border-l-4 border-duo-green-500 mt-6"
-                >
-                  <div className="text-5xl mb-4">🎉</div>
-                  <h4 className="font-bold text-duo-green-800 text-2xl mb-3 font-display">
-                    Game Created!
-                  </h4>
-                  <p className="text-duo-green-600 mb-4 text-lg font-medium">
-                    Your game "{generatedGame.title}" is ready to play!
-                  </p>
-                  <div className="flex items-center justify-center gap-3 text-duo-green-700 animate-pulse">
-                    <Play size={20} />
-                    <span className="text-base font-bold">
-                      Starting game...
-                    </span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  {generatedGame && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      className="bg-white rounded-2xl shadow-soft p-8 text-center bg-gradient-to-br from-duo-green-50 to-duo-green-100 border-l-4 border-duo-green-500 mt-6"
+                    >
+                      <div className="text-5xl mb-4">🎉</div>
+                      <h4 className="font-bold text-duo-green-800 text-2xl mb-3 font-display">
+                        Game Created!
+                      </h4>
+                      <p className="text-duo-green-600 mb-4 text-lg font-medium">
+                        Your game "{generatedGame.title}" is ready to play!
+                      </p>
+                      <div className="flex items-center justify-center gap-3 text-duo-green-700 animate-pulse">
+                        <Play size={20} />
+                        <span className="text-base font-bold">
+                          Starting game...
+                        </span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </>
+            )}
           </div>
         </main>
       </div>
