@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voice Recognition Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        button {
+            padding: 15px 25px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+            min-height: 100px;
+        }
+        .listening {
+            background-color: #ff4444 !important;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Voice Recognition Test</h1>
+    <p>This tests if your browser supports Web Speech API</p>
+    
+    <button id="startBtn">🎤 Start Listening</button>
+    <button id="stopBtn" disabled>⏹️ Stop Listening</button>
+    <button id="clearBtn">🗑️ Clear Result</button>
+    
+    <div id="status">Ready to listen...</div>
+    <div id="result">Voice transcription will appear here...</div>
+
+    <script>
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const status = document.getElementById('status');
+        const result = document.getElementById('result');
+        
+        let recognition = null;
+
+        // Check if browser supports Web Speech API
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            status.textContent = '❌ Your browser does not support Web Speech API';
+            startBtn.disabled = true;
+        } else {
+            status.textContent = '✅ Web Speech API is supported!';
+        }
+
+        function startListening() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = () => {
+                status.textContent = '🎤 Listening... Speak now!';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                startBtn.classList.add('listening');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                result.textContent = `"${transcript}"`;
+                status.textContent = '✅ Voice captured successfully!';
+            };
+
+            recognition.onerror = (event) => {
+                let errorMsg = 'Voice recognition error: ';
+                switch (event.error) {
+                    case 'no-speech':
+                        errorMsg += 'No speech detected';
+                        break;
+                    case 'network':
+                        errorMsg += 'Network error';
+                        break;
+                    case 'not-allowed':
+                        errorMsg += 'Microphone permission denied';
+                        break;
+                    default:
+                        errorMsg += event.error;
+                }
+                status.textContent = '❌ ' + errorMsg;
+            };
+
+            recognition.onend = () => {
+                status.textContent = '🔇 Listening stopped';
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                startBtn.classList.remove('listening');
+                recognition = null;
+            };
+
+            recognition.start();
+        }
+
+        function stopListening() {
+            if (recognition) {
+                recognition.stop();
+            }
+        }
+
+        function clearResult() {
+            result.textContent = 'Voice transcription will appear here...';
+            status.textContent = 'Ready to listen...';
+        }
+
+        startBtn.onclick = startListening;
+        stopBtn.onclick = stopListening;
+        clearBtn.onclick = clearResult;
+    </script>
+</body>
+</html>

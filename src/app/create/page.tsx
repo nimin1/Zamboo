@@ -28,6 +28,7 @@ const CreateGamePage: React.FC = () => {
   const [generatedGame] = useState<GameLogic | null>(null);
   const [showChat, setShowChat] = useState(false);
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
+  const [recognition, setRecognition] = useState<any>(null);
 
   const handleGenerateGame = useCallback(async () => {
     console.log("🎮 CREATE MY GAME CLICKED! Prompt:", prompt.trim());
@@ -99,10 +100,89 @@ const CreateGamePage: React.FC = () => {
   }, [prompt, router]);
 
   const startListening = useCallback(() => {
-    // Voice recognition placeholder
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      setError("Voice recognition is not supported in your browser. Please try typing your idea instead!");
+      return;
+    }
+
+    // @ts-ignore - Web Speech API types
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognitionInstance = new SpeechRecognition();
+
+    recognitionInstance.continuous = false;
+    recognitionInstance.interimResults = false;
+    recognitionInstance.lang = 'en-US';
+    recognitionInstance.maxAlternatives = 1;
+
+    setRecognition(recognitionInstance);
     setIsListening(true);
-    setTimeout(() => setIsListening(false), 3000);
+    setError(null);
+
+    recognitionInstance.onstart = () => {
+      console.log('🎤 Voice recognition started');
+    };
+
+    recognitionInstance.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      console.log('🎤 Voice recognition result:', transcript);
+      
+      if (transcript.trim()) {
+        setPrompt(prev => {
+          const newPrompt = prev ? `${prev} ${transcript}` : transcript;
+          return newPrompt;
+        });
+      }
+    };
+
+    recognitionInstance.onerror = (event: any) => {
+      console.error('🎤 Voice recognition error:', event.error);
+      setIsListening(false);
+      setRecognition(null);
+      
+      switch (event.error) {
+        case 'no-speech':
+          setError("No speech detected. Please try speaking louder or closer to your microphone.");
+          break;
+        case 'network':
+          setError("Network error. Please check your internet connection and try again.");
+          break;
+        case 'not-allowed':
+          setError("Microphone permission denied. Please allow microphone access and try again.");
+          break;
+        case 'audio-capture':
+          setError("No microphone found. Please check your microphone connection.");
+          break;
+        case 'aborted':
+          // User intentionally stopped, don't show error
+          break;
+        default:
+          setError("Voice recognition failed. Please try typing your idea instead.");
+      }
+    };
+
+    recognitionInstance.onend = () => {
+      console.log('🎤 Voice recognition ended');
+      setIsListening(false);
+      setRecognition(null);
+    };
+
+    try {
+      recognitionInstance.start();
+    } catch (error) {
+      console.error('🎤 Failed to start voice recognition:', error);
+      setIsListening(false);
+      setRecognition(null);
+      setError("Failed to start voice recognition. Please try again or type your idea.");
+    }
   }, []);
+
+  const stopListening = useCallback(() => {
+    if (recognition) {
+      recognition.stop();
+      setIsListening(false);
+      setRecognition(null);
+    }
+  }, [recognition]);
 
   const helpfulTips = [
     "Don't worry if you're not sure - just describe what sounds fun to you!",
@@ -219,10 +299,32 @@ const CreateGamePage: React.FC = () => {
 
             {/* Main Game Idea Section */}
             <div className="bg-white rounded-2xl shadow-soft p-4 sm:p-6 lg:p-8 mb-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-neutral-800 mb-4 sm:mb-6 font-display flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
-                <Sparkles className="text-duo-blue-500 flex-shrink-0" size={28} />
-                <span className="leading-tight">What's Your Game Idea?</span>
-              </h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-4">
+                <h2 className="text-2xl sm:text-3xl font-bold text-neutral-800 font-display flex items-center gap-2 sm:gap-3">
+                  <Sparkles className="text-duo-blue-500 flex-shrink-0" size={28} />
+                  <span className="leading-tight">What's Your Game Idea?</span>
+                </h2>
+                
+                <button
+                  onClick={handleGenerateGame}
+                  disabled={!prompt.trim() || isGenerating}
+                  className={`bg-duo-green-500 hover:bg-duo-green-600 active:bg-duo-green-700 text-white font-bold py-3 px-6 rounded-xl text-base shadow-medium transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
+                    isGenerating ? "opacity-75 cursor-not-allowed" : "hover:shadow-strong transform hover:scale-[1.02]"
+                  }`}
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader className="animate-spin flex-shrink-0" size={18} />
+                      <span>Creating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="flex-shrink-0" size={18} />
+                      <span>Create Game</span>
+                    </>
+                  )}
+                </button>
+              </div>
 
               <div className="space-y-4 sm:space-y-6">
                 <div className="relative">
@@ -235,7 +337,7 @@ const CreateGamePage: React.FC = () => {
                   />
 
                   <button
-                    onClick={startListening}
+                    onClick={isListening ? stopListening : startListening}
                     disabled={isGenerating}
                     className={`absolute bottom-4 right-4 p-4 rounded-2xl shadow-medium transition-all ${
                       isListening
@@ -294,26 +396,6 @@ const CreateGamePage: React.FC = () => {
               </div>
             </div>
 
-            {/* Generate Button */}
-            <button
-              onClick={handleGenerateGame}
-              disabled={!prompt.trim() || isGenerating}
-              className={`w-full bg-duo-green-500 hover:bg-duo-green-600 active:bg-duo-green-700 text-white font-bold py-4 sm:py-5 px-6 sm:px-8 rounded-2xl text-lg sm:text-xl shadow-medium transition-all duration-200 flex items-center justify-center gap-3 sm:gap-4 ${
-                isGenerating ? "opacity-75 cursor-not-allowed" : "hover:shadow-strong transform hover:scale-[1.02]"
-              }`}
-            >
-              {isGenerating ? (
-                <>
-                  <Loader className="animate-spin flex-shrink-0" size={24} />
-                  <span className="truncate">Creating Your Game...</span>
-                </>
-              ) : (
-                <>
-                  <Play className="flex-shrink-0" size={24} />
-                  <span className="truncate">Create My Game!</span>
-                </>
-              )}
-            </button>
 
             {/* Status Messages */}
             <AnimatePresence>

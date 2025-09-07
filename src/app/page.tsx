@@ -114,15 +114,10 @@ export default function Home() {
                 I'm Zamboo, your coding companion! Let's create amazing games together.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="flex justify-center">
                 <Link href="/create" className="btn-success inline-flex items-center gap-2 justify-center text-base py-3 px-6">
                   <Play size={18} />
                   Start Creating Games
-                </Link>
-                
-                <Link href="/templates" className="btn-ghost inline-flex items-center gap-2 justify-center text-base py-3 px-6">
-                  <Sparkles size={16} />
-                  Try Templates
                 </Link>
               </div>
             </div>
