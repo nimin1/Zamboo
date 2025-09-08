@@ -143,16 +143,20 @@ const GameEngine = forwardRef<GameEngineRef, GameEngineProps>(({
         if (this.player && this.cursors) {
           const playerBody = this.player.body as Phaser.Physics.Arcade.Body
 
+          // Kid-friendly movement speeds
+          const PLAYER_SPEED = 150  // Reduced from 200
+          const JUMP_SPEED = 300    // Reduced from 400
+
           if (this.cursors.left.isDown) {
-            playerBody.setVelocityX(-200)
+            playerBody.setVelocityX(-PLAYER_SPEED)
           } else if (this.cursors.right.isDown) {
-            playerBody.setVelocityX(200)
+            playerBody.setVelocityX(PLAYER_SPEED)
           } else {
             playerBody.setVelocityX(0)
           }
 
           if (this.cursors.up.isDown && playerBody.touching.down) {
-            playerBody.setVelocityY(-400)
+            playerBody.setVelocityY(-JUMP_SPEED)
           }
         }
 
@@ -470,6 +474,10 @@ const GameEngine = forwardRef<GameEngineRef, GameEngineProps>(({
       width,
       height,
       parent: gameRef.current,
+      fps: {
+        target: 60,
+        forceSetTimeOut: true
+      },
       physics: {
         default: 'arcade',
         arcade: {

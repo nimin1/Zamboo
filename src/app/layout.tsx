@@ -10,7 +10,9 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5, // Allow zooming for accessibility
+  userScalable: true,
+  viewportFit: 'cover', // Better support for notched screens
   themeColor: '#0ea5e9',
 }
 
@@ -21,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="font-sans">
+      <body className="font-sans antialiased">
         <div className="min-h-screen bg-neutral-50">
           {children}
         </div>

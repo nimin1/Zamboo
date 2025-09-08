@@ -37,16 +37,18 @@ interface GameState {
 
 const BeautifulGameEngine = forwardRef<GameEngineRef, BeautifulGameEngineProps>(({
   gameLogic,
-  width = 800,
-  height = 600,
+  width: propWidth,
+  height: propHeight,
   onScoreChange,
   onGameComplete,
   className = ''
 }, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef<number>()
   const lastTimeRef = useRef<number>(0)
   const [isInitialized, setIsInitialized] = useState(false)
+  const [canvasSize, setCanvasSize] = useState({ width: propWidth || 800, height: propHeight || 600 })
 
   const gameStateRef = useRef<GameState>({
     objects: new Map(),
@@ -133,6 +135,8 @@ const BeautifulGameEngine = forwardRef<GameEngineRef, BeautifulGameEngineProps>(
       return
     }
 
+    const { width, height } = canvasSize
+
     // Create game objects
     gameLogic.objects.forEach((obj, index) => {
       const gameObj: GameObject = {
@@ -160,7 +164,7 @@ const BeautifulGameEngine = forwardRef<GameEngineRef, BeautifulGameEngineProps>(
     
     // Always set initialized to true after processing
     setIsInitialized(true)
-  }, [gameLogic, width, height])
+  }, [gameLogic, canvasSize])
 
   // Game loop
   const gameLoop = useCallback(() => {
@@ -191,6 +195,7 @@ const BeautifulGameEngine = forwardRef<GameEngineRef, BeautifulGameEngineProps>(
     if (!gameState.player) return
 
     const speed = 200
+    const { width, height } = canvasSize
     
     // Handle input
     if (gameState.keys['ArrowLeft'] || gameState.keys['a']) {
@@ -334,6 +339,33 @@ const BeautifulGameEngine = forwardRef<GameEngineRef, BeautifulGameEngineProps>(
     ctx.fillText(`Score: ${gameStateRef.current.score}`, 20, 35)
   }
 
+  // Handle canvas resizing
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const updateCanvasSize = () => {
+      const containerRect = container.getBoundingClientRect()
+      const newWidth = Math.floor(containerRect.width)
+      const newHeight = Math.floor(containerRect.height)
+      
+      if (newWidth > 0 && newHeight > 0) {
+        setCanvasSize({ width: newWidth, height: newHeight })
+      }
+    }
+
+    // Update size initially
+    updateCanvasSize()
+
+    // Set up ResizeObserver for dynamic resizing
+    const resizeObserver = new ResizeObserver(updateCanvasSize)
+    resizeObserver.observe(container)
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [])
+
   // Handle keyboard input
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -381,39 +413,35 @@ const BeautifulGameEngine = forwardRef<GameEngineRef, BeautifulGameEngineProps>(
     }
   }, [gameLogic])
 
-  // Render loading state
-  if (!isInitialized) {
-    return (
-      <div 
-        className={`flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl ${className}`}
-        style={{ width, height }}
-      >
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mb-4 mx-auto"></div>
-          <p className="text-gray-600 font-medium">Loading beautiful graphics...</p>
-          <p className="text-gray-500 text-sm mt-2">
-            {gameLogic ? `Processing ${gameLogic.objects?.length || 0} objects...` : 'Waiting for game data...'}
-          </p>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className={`relative ${className}`}>
-      <canvas
-        ref={canvasRef}
-        width={width}
-        height={height}
-        className="rounded-xl shadow-2xl border-2 border-gray-200"
-        style={{ 
-          background: 'linear-gradient(45deg, #f0f9ff, #e0f2fe)',
-          imageRendering: 'auto'
-        }}
-      />
-      <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-lg text-sm font-medium">
-        Use Arrow Keys or WASD to move
-      </div>
+    <div ref={containerRef} className={`relative w-full h-full ${className}`}>
+      {!isInitialized ? (
+        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mb-4 mx-auto"></div>
+            <p className="text-gray-600 font-medium">Loading beautiful graphics...</p>
+            <p className="text-gray-500 text-sm mt-2">
+              {gameLogic ? `Processing ${gameLogic.objects?.length || 0} objects...` : 'Waiting for game data...'}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <>
+          <canvas
+            ref={canvasRef}
+            width={canvasSize.width}
+            height={canvasSize.height}
+            className="w-full h-full rounded-xl shadow-2xl border-2 border-gray-200"
+            style={{ 
+              background: 'linear-gradient(45deg, #f0f9ff, #e0f2fe)',
+              imageRendering: 'auto'
+            }}
+          />
+          <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-lg text-sm font-medium">
+            Use Arrow Keys or WASD to move
+          </div>
+        </>
+      )}
     </div>
   )
 })

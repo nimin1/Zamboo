@@ -17,12 +17,12 @@ import Sidebar from "@/components/ui/Sidebar";
 
 export default function Home() {
   return (
-    <div className="h-screen bg-neutral-50 relative flex flex-col">
+    <div className="min-h-screen bg-neutral-50 relative flex flex-col">
       {/* Animated Background Decorations */}
       <BackgroundDecorations />
       {/* Navigation Header */}
       <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10 flex-shrink-0">
-        <div className="w-full px-6 py-3">
+        <div className="w-full px-4 sm:px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative panda-logo-special group">
@@ -42,7 +42,7 @@ export default function Home() {
               <h1 className="logo-text-small">zamboo</h1>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <div className="flex items-center gap-2 text-duo-blue-600 font-medium">
                 <Trophy size={18} />
                 <span>500</span>
@@ -71,10 +71,10 @@ export default function Home() {
         />
 
         {/* Main Content Area */}
-        <main className="flex-1 px-4 py-2 overflow-hidden">
+        <main className="flex-1 px-2 sm:px-4 py-2 overflow-hidden">
           <div className="max-w-5xl mx-auto h-full flex flex-col justify-between">
             {/* Hero Section */}
-            <div className="card p-4 text-center mb-3">
+            <div className="card p-3 sm:p-4 text-center mb-3">
               <div className="flex items-center justify-center mb-3">
                 <ZambooMascot
                   size="medium"
@@ -106,40 +106,40 @@ export default function Home() {
             </div>
 
             <div className="flex-1 flex flex-col justify-between">
-              {/* Feature Cards - Single Row */}
-              <div className="grid grid-cols-3 gap-2 mb-4">
-                <div className="card-interactive p-4 text-center">
+              {/* Feature Cards - Responsive Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-2 mb-4">
+                <div className="card-interactive p-3 sm:p-4 text-center">
                   <div className="w-14 h-14 bg-duo-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
                     <Gamepad2 className="text-duo-green-600" size={24} />
                   </div>
-                  <h3 className="text-lg font-bold text-neutral-800 mb-2 font-display">
+                  <h3 className="text-base sm:text-lg font-bold text-neutral-800 mb-2 font-display">
                     Play & Create
                   </h3>
-                  <p className="text-base text-neutral-600 leading-relaxed">
+                  <p className="text-sm sm:text-base text-neutral-600 leading-relaxed">
                     Speak or type your game ideas and watch them come to life!
                   </p>
                 </div>
 
-                <div className="card-interactive p-4 text-center">
+                <div className="card-interactive p-3 sm:p-4 text-center">
                   <div className="w-14 h-14 bg-duo-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
                     <Code className="text-duo-blue-600" size={24} />
                   </div>
-                  <h3 className="text-lg font-bold text-neutral-800 mb-2 font-display">
+                  <h3 className="text-base sm:text-lg font-bold text-neutral-800 mb-2 font-display">
                     Learn Coding
                   </h3>
-                  <p className="text-base text-neutral-600 leading-relaxed">
+                  <p className="text-sm sm:text-base text-neutral-600 leading-relaxed">
                     Discover loops, events, and conditions through gameplay!
                   </p>
                 </div>
 
-                <div className="card-interactive p-4 text-center">
+                <div className="card-interactive p-3 sm:p-4 text-center">
                   <div className="w-14 h-14 bg-duo-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
                     <Sparkles className="text-duo-purple-600" size={24} />
                   </div>
-                  <h3 className="text-lg font-bold text-neutral-800 mb-2 font-display">
+                  <h3 className="text-base sm:text-lg font-bold text-neutral-800 mb-2 font-display">
                     Edit & Experiment
                   </h3>
-                  <p className="text-base text-neutral-600 leading-relaxed">
+                  <p className="text-sm sm:text-base text-neutral-600 leading-relaxed">
                     Use visual blocks to modify games in real-time!
                   </p>
                 </div>

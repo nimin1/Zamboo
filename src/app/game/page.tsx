@@ -449,44 +449,44 @@ const GamePage: React.FC = () => {
   }
 
   return (
-    <div className="h-screen bg-neutral-50 relative flex flex-col">
+    <div className="h-screen bg-neutral-50 relative flex flex-col overflow-hidden">
       {/* Animated Background Decorations */}
       <BackgroundDecorations />
       {/* Navigation Header */}
       <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10 flex-shrink-0">
-        <div className="w-full px-4 py-2">
+        <div className="w-full px-2 sm:px-4 py-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <Link
                 href="/"
                 className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800 transition-colors"
               >
                 <ArrowLeft size={18} />
-                <span>Back</span>
+                <span className="hidden sm:inline">Back</span>
               </Link>
 
-              <div className="flex items-center gap-3">
-                <div className="text-4xl animate-panda-bounce cursor-pointer">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="text-3xl sm:text-4xl animate-panda-bounce cursor-pointer">
                   🐼
                 </div>
-                <h1 className="logo-text-small">zamboo</h1>
+                <h1 className="logo-text-small hidden sm:block">zamboo</h1>
               </div>
 
-              <div className="h-6 w-px bg-neutral-300"></div>
+              <div className="h-6 w-px bg-neutral-300 hidden sm:block"></div>
 
-              <div>
-                <h2 className="text-lg font-bold text-neutral-800 font-display">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-base sm:text-lg font-bold text-neutral-800 font-display truncate">
                   {gameLogic.title}
                 </h2>
-                <p className="text-sm text-neutral-600">
+                <p className="text-xs sm:text-sm text-neutral-600 truncate">
                   {gameLogic.description}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
               {/* Game Stats */}
-              <div className="hidden md:flex items-center gap-4 text-sm text-neutral-600">
+              <div className="hidden lg:flex items-center gap-4 text-sm text-neutral-600">
                 <div className="flex items-center gap-1">
                   <span>Games:</span>
                   <span className="font-bold text-duo-purple-500">
@@ -501,32 +501,32 @@ const GamePage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="h-6 w-px bg-neutral-300 hidden md:block"></div>
+              <div className="h-6 w-px bg-neutral-300 hidden lg:block"></div>
 
-              <div className="flex items-center gap-2 text-duo-blue-600 font-medium">
-                <Trophy size={18} />
-                <span>500</span>
+              <div className="flex items-center gap-1 sm:gap-2 text-duo-blue-600 font-medium">
+                <Trophy size={16} className="sm:w-[18px] sm:h-[18px]" />
+                <span className="text-sm sm:text-base">500</span>
               </div>
-              <div className="flex items-center gap-2 text-duo-red-500 font-medium">
-                <Heart size={18} />
-                <span>5</span>
+              <div className="flex items-center gap-1 sm:gap-2 text-duo-red-500 font-medium">
+                <Heart size={16} className="sm:w-[18px] sm:h-[18px]" />
+                <span className="text-sm sm:text-base">5</span>
               </div>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="flex-1 p-3 relative z-10 min-h-0">
-        <div className="h-full">
+      <div className="flex-1 p-2 sm:p-3 relative z-10 min-h-0 overflow-hidden">
+        <div className="h-full max-w-[100vw] mx-auto">
           {/* Game Layout */}
           <div
             className={`grid ${
-              showEditor ? "grid-cols-1 xl:grid-cols-4" : "grid-cols-1"
-            } gap-3 h-full`}
+              showEditor ? "grid-cols-1 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
+            } gap-3 h-full min-h-full`}
           >
             {/* Main Game Area */}
-            <div className={`${showEditor ? "xl:col-span-3" : "col-span-1"} flex flex-col`}>
-              <div className="card p-4 flex-1 flex flex-col">
+            <div className={`${showEditor ? "lg:col-span-2 xl:col-span-3" : "col-span-1"} flex flex-col min-h-full`}>
+              <div className="card p-4 flex-1 flex flex-col min-h-full">
                 {/* Game Control Bar */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
@@ -601,7 +601,7 @@ const GamePage: React.FC = () => {
                 </div>
 
                 {/* Render different game types */}
-                <div className="flex-1 min-h-0">
+                <div className="flex-1 min-h-0 h-full">
                   {isHTMLGame(gameLogic) ? (
                     /* HTML Game in iframe */
                     <div className="h-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
@@ -609,12 +609,14 @@ const GamePage: React.FC = () => {
                         <h4 className="font-bold text-sm">🎮 {gameLogic.title}</h4>
                         <p className="text-xs opacity-90">{gameLogic.description}</p>
                       </div>
-                      <iframe
-                        srcDoc={gameLogic.html}
-                        className="flex-1 border-0"
-                        sandbox="allow-scripts allow-same-origin"
-                        title={gameLogic.title}
-                      />
+                      <div className="flex-1 overflow-hidden">
+                        <iframe
+                          srcDoc={gameLogic.html}
+                          className="w-full h-full border-0"
+                          sandbox="allow-scripts allow-same-origin"
+                          title={gameLogic.title}
+                        />
+                      </div>
                       <div className="p-2 bg-gray-50 border-t flex-shrink-0">
                         <p className="text-xs text-gray-600 text-center">
                           🎯 Use arrow keys or touch controls to play!
@@ -642,9 +644,9 @@ const GamePage: React.FC = () => {
                   initial={{ opacity: 0, x: 300 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 300 }}
-                  className="xl:col-span-1 flex flex-col"
+                  className="lg:col-span-1 flex flex-col min-h-full"
                 >
-                  <div className="card p-3 flex-1 flex flex-col min-h-0">
+                  <div className="card p-3 flex-1 flex flex-col min-h-full">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-xl font-bold text-neutral-800 flex items-center gap-2 font-display">
                         <Code className="text-duo-purple-500" />

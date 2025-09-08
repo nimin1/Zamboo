@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+export const maxDuration = 300 // 5 minutes
+
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions'
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY
 
@@ -31,11 +33,18 @@ Rules:
 - City: Buildings, cars, urban environments
 
 🏗️ STRUCTURE:
-- Canvas-based rendering with smooth animations
+- Canvas-based rendering with smooth animations (60fps max)
 - Touch-friendly controls (virtual buttons for mobile)
 - Kid-appropriate colors, sounds (beeps), and feedback
 - Score display and simple restart mechanism
 - Responsive design (works on mobile/desktop)
+
+⚡ PERFORMANCE GUIDELINES:
+- Use deltaTime for consistent movement speed across devices
+- Cap movement speeds for kid-friendly gameplay (player: ~200px/s, objects: ~100-150px/s)
+- Use requestAnimationFrame properly for smooth 60fps
+- Add game speed controls: const GAME_SPEED = 1.0; // Adjustable multiplier
+- Test speeds feel comfortable for children (not too fast/slow)
 
 🎯 EXAMPLE OUTPUT FORMAT:
 <!DOCTYPE html>
@@ -92,9 +101,12 @@ Create a complete HTML game for kids age ${kidAgeBand}:
 - Theme and mechanics based on: "${prompt}"
 - Difficulty: ${complexity || 'medium'}
 - Kid-friendly colors and simple controls
-- Canvas-based with smooth animations
+- Canvas-based with smooth animations (60fps)
 - Score system and restart functionality
 - Touch controls for mobile devices
+- IMPORTANT: Use proper deltaTime for movement speed consistency
+- IMPORTANT: Keep movement speeds moderate for kids (player: ~200px/second max)
+- IMPORTANT: Include const GAME_SPEED = 1.0; multiplier for speed adjustments
 
 Generate the complete HTML file now:`
 
@@ -115,7 +127,7 @@ Generate the complete HTML file now:`
 
     // Call DeepSeek API
     const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 60000) // 1 minute timeout
+    const timeoutId = setTimeout(() => controller.abort(), 150000) // 2.5 minute timeout
     
     const deepSeekResponse = await fetch(DEEPSEEK_API_URL, {
       method: 'POST',

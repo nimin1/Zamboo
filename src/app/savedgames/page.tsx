@@ -91,7 +91,7 @@ const SavedGamesPage: React.FC = () => {
   }
 
   return (
-    <div className="h-screen bg-neutral-50 relative flex flex-col">
+    <div className="min-h-screen bg-neutral-50 relative flex flex-col">
       <BackgroundDecorations />
       
       <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10 flex-shrink-0">

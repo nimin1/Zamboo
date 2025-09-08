@@ -54,9 +54,9 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({ progress, onGameCom
   const CANVAS_WIDTH = 600
   const CANVAS_HEIGHT = 300
   const GRAVITY = 0.6
-  const JUMP_STRENGTH = -14
+  const JUMP_STRENGTH = -12  // Reduced for kid-friendly jumping
   const GROUND_Y = 220
-  const SCROLL_SPEED = 2.0 // Faster for excitement!
+  const SCROLL_SPEED = 1.5 // Reduced for kid-friendly pace!
   const TARGET_FPS = 60
 
   const [gameState, setGameState] = useState<GameState>({

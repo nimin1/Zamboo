@@ -194,7 +194,7 @@ const GameContainer: React.FC<GameContainerProps> = ({
   }
 
   return (
-    <div className={`relative bg-gradient-to-br from-zamboo-50 to-panda-50 rounded-2xl shadow-2xl overflow-hidden ${className}`}>
+    <div className={`relative bg-gradient-to-br from-zamboo-50 to-panda-50 rounded-2xl shadow-2xl overflow-hidden flex flex-col h-full ${className}`}>
       {/* Game Header */}
       <div className="bg-white/90 backdrop-blur-sm px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -265,27 +265,27 @@ const GameContainer: React.FC<GameContainerProps> = ({
       </div>
 
       {/* Main Game Area */}
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-col lg:flex-row flex-1 min-h-0">
         {/* Game Canvas */}
-        <div className="flex-1 p-6">
-          <div className="relative">
-            {isConceptFirstGame(gameLogic) ? (
-              <EmergentGameEngine
-                conceptAnalysis={gameLogic.experienceAnalysis}
-                gameImplementation={gameLogic.gameImplementation}
-                userVision={gameLogic.userVision}
-                className="mx-auto"
-              />
-            ) : (
-              <BeautifulGameEngine
-                gameLogic={gameLogic}
-                width={800}
-                height={600}
-                onScoreChange={handleScoreChange}
-                onGameComplete={handleGameComplete}
-                className="mx-auto"
-              />
-            )}
+        <div className="flex-1 p-6 flex flex-col">
+          <div className="relative flex-1 min-h-0">
+            <div className="w-full h-full">
+              {isConceptFirstGame(gameLogic) ? (
+                <EmergentGameEngine
+                  conceptAnalysis={gameLogic.experienceAnalysis}
+                  gameImplementation={gameLogic.gameImplementation}
+                  userVision={gameLogic.userVision}
+                  className="w-full h-full"
+                />
+              ) : (
+                <BeautifulGameEngine
+                  gameLogic={gameLogic}
+                  onScoreChange={handleScoreChange}
+                  onGameComplete={handleGameComplete}
+                  className="w-full h-full"
+                />
+              )}
+            </div>
             
             {/* Game Overlays */}
             <AnimatePresence>
@@ -394,8 +394,8 @@ const GameContainer: React.FC<GameContainerProps> = ({
         </div>
 
         {/* Zamboo Sidebar */}
-        <div className="w-full lg:w-80 bg-white/50 backdrop-blur-sm p-6 border-l border-gray-200">
-          <div className="space-y-6">
+        <div className="w-full lg:w-80 bg-white/50 backdrop-blur-sm p-6 border-l border-gray-200 flex-shrink-0">
+          <div className="space-y-6 h-full overflow-y-auto">
             {/* Zamboo Guide */}
             <div className="text-center">
               <ZambooGuide
