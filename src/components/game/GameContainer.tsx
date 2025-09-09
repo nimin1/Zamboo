@@ -267,9 +267,9 @@ const GameContainer: React.FC<GameContainerProps> = ({
       {/* Main Game Area */}
       <div className="flex flex-col lg:flex-row flex-1 min-h-0">
         {/* Game Canvas */}
-        <div className="flex-1 p-6 flex flex-col">
-          <div className="relative flex-1 min-h-0">
-            <div className="w-full h-full">
+        <div className="flex-1 p-3 flex flex-col">
+          <div className="relative flex-1 min-h-0" style={{ minHeight: '500px' }}>
+            <div className="w-full h-full" style={{ minHeight: '500px' }}>
               {isConceptFirstGame(gameLogic) ? (
                 <EmergentGameEngine
                   conceptAnalysis={gameLogic.experienceAnalysis}

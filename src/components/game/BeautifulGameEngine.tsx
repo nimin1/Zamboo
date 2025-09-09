@@ -48,7 +48,7 @@ const BeautifulGameEngine = forwardRef<GameEngineRef, BeautifulGameEngineProps>(
   const animationRef = useRef<number>()
   const lastTimeRef = useRef<number>(0)
   const [isInitialized, setIsInitialized] = useState(false)
-  const [canvasSize, setCanvasSize] = useState({ width: propWidth || 800, height: propHeight || 600 })
+  const [canvasSize, setCanvasSize] = useState({ width: propWidth || 1200, height: propHeight || 800 })
 
   const gameStateRef = useRef<GameState>({
     objects: new Map(),

@@ -107,50 +107,67 @@ const GamePage: React.FC = () => {
       name: 'Events',
       color: 'bg-amber-500',
       blocks: [
-        { id: 'when-start', name: 'When game starts', shape: 'hat' },
-        { id: 'when-key', name: 'When [arrow] key pressed', shape: 'hat' },
-        { id: 'when-touch', name: 'When touching [collectible]', shape: 'hat' },
-        { id: 'when-click', name: 'When clicked', shape: 'hat' }
+        { id: 'when-start', name: 'When 🏁 game starts', shape: 'hat' },
+        { id: 'when-key', name: 'When ⌨️ [arrow] key pressed', shape: 'hat' },
+        { id: 'when-touch', name: 'When touching 🎯 [collectible]', shape: 'hat' },
+        { id: 'when-click', name: 'When 🖱️ clicked', shape: 'hat' },
+        { id: 'when-enemy-hit', name: 'When hit by 👾 enemy', shape: 'hat' },
+        { id: 'when-timer', name: 'When ⏰ timer reaches [10]', shape: 'hat' }
       ]
     },
     motion: {
       name: 'Motion',
       color: 'bg-blue-500',
       blocks: [
-        { id: 'move-right', name: 'Move right [10] steps', shape: 'stack' },
-        { id: 'move-left', name: 'Move left [10] steps', shape: 'stack' },
-        { id: 'jump', name: 'Jump with power [300]', shape: 'stack' },
-        { id: 'set-speed', name: 'Set speed to [200]', shape: 'stack' }
+        { id: 'move-right', name: 'Move ➡️ [10] steps', shape: 'stack' },
+        { id: 'move-left', name: 'Move ⬅️ [10] steps', shape: 'stack' },
+        { id: 'move-up', name: 'Move ⬆️ [10] steps', shape: 'stack' },
+        { id: 'move-down', name: 'Move ⬇️ [10] steps', shape: 'stack' },
+        { id: 'jump', name: 'Jump 🦘 with power [300]', shape: 'stack' },
+        { id: 'set-speed', name: 'Set speed 🏃 to [200]', shape: 'stack' },
+        { id: 'bounce', name: 'Bounce 🏀 off edges', shape: 'stack' },
+        { id: 'rotate', name: 'Rotate 🔄 [15] degrees', shape: 'stack' }
       ]
     },
     control: {
       name: 'Control',
       color: 'bg-emerald-500',
       blocks: [
-        { id: 'repeat', name: 'Repeat [10] times', shape: 'c-stack' },
-        { id: 'if', name: 'If [touching collectible]', shape: 'c-stack' },
-        { id: 'wait', name: 'Wait [1] seconds', shape: 'stack' },
-        { id: 'forever', name: 'Forever', shape: 'c-stack' }
+        { id: 'repeat', name: 'Repeat 🔁 [10] times', shape: 'c-stack' },
+        { id: 'if', name: 'If 🤔 [touching collectible]', shape: 'c-stack' },
+        { id: 'if-else', name: 'If 🤔 [condition] else', shape: 'c-stack' },
+        { id: 'wait', name: 'Wait ⏳ [1] seconds', shape: 'stack' },
+        { id: 'forever', name: 'Forever ♾️', shape: 'c-stack' },
+        { id: 'stop', name: 'Stop 🛑 all scripts', shape: 'stack' },
+        { id: 'while', name: 'While 🔄 [condition]', shape: 'c-stack' }
       ]
     },
     game: {
       name: 'Game',
       color: 'bg-purple-500',
       blocks: [
-        { id: 'add-score', name: 'Add [10] to score', shape: 'stack' },
-        { id: 'play-sound', name: 'Play sound [jump]', shape: 'stack' },
-        { id: 'change-bg', name: 'Change background to [space]', shape: 'stack' },
-        { id: 'game-over', name: 'Game over', shape: 'stack' }
+        { id: 'add-score', name: 'Add 🏆 [10] to score', shape: 'stack' },
+        { id: 'subtract-score', name: 'Subtract 📉 [5] from score', shape: 'stack' },
+        { id: 'play-sound', name: 'Play 🔊 sound [jump]', shape: 'stack' },
+        { id: 'change-bg', name: 'Change 🖼️ background to [space]', shape: 'stack' },
+        { id: 'game-over', name: 'Game over 💀', shape: 'stack' },
+        { id: 'next-level', name: 'Go to 🚪 next level', shape: 'stack' },
+        { id: 'spawn-enemy', name: 'Spawn 👾 enemy at [x,y]', shape: 'stack' },
+        { id: 'show-message', name: 'Show 💬 message [Hello!]', shape: 'stack' }
       ]
     },
     sensing: {
       name: 'Sensing',
       color: 'bg-cyan-500',
       blocks: [
-        { id: 'get-score', name: 'Score', shape: 'reporter' },
-        { id: 'get-x', name: 'Player X position', shape: 'reporter' },
-        { id: 'touching', name: 'Touching [collectible]?', shape: 'boolean' },
-        { id: 'key-pressed', name: 'Key [space] pressed?', shape: 'boolean' }
+        { id: 'get-score', name: '🏆 Score', shape: 'reporter' },
+        { id: 'get-x', name: '📍 Player X position', shape: 'reporter' },
+        { id: 'get-y', name: '📍 Player Y position', shape: 'reporter' },
+        { id: 'touching', name: 'Touching 🎯 [collectible]?', shape: 'boolean' },
+        { id: 'key-pressed', name: 'Key ⌨️ [space] pressed?', shape: 'boolean' },
+        { id: 'timer', name: '⏰ Timer', shape: 'reporter' },
+        { id: 'distance-to', name: '📏 Distance to [enemy]', shape: 'reporter' },
+        { id: 'random', name: '🎲 Random [1] to [10]', shape: 'reporter' }
       ]
     }
   };
@@ -516,17 +533,17 @@ const GamePage: React.FC = () => {
         </div>
       </nav>
 
-      <div className="flex-1 p-2 sm:p-3 relative z-10 min-h-0 overflow-hidden">
+      <div className="flex-1 p-1 sm:p-2 relative z-10 min-h-0 overflow-hidden">
         <div className="h-full max-w-[100vw] mx-auto">
           {/* Game Layout */}
           <div
             className={`grid ${
-              showEditor ? "grid-cols-1 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
-            } gap-3 h-full min-h-full`}
+              showEditor ? "grid-cols-1 lg:grid-cols-2 xl:grid-cols-5" : "grid-cols-1"
+            } gap-2 h-full min-h-full`}
           >
             {/* Main Game Area */}
             <div className={`${showEditor ? "lg:col-span-2 xl:col-span-3" : "col-span-1"} flex flex-col min-h-full`}>
-              <div className="card p-4 flex-1 flex flex-col min-h-full">
+              <div className="card p-3 flex-1 flex flex-col min-h-full" style={{ minHeight: showEditor ? '70vh' : '80vh' }}>
                 {/* Game Control Bar */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
@@ -609,12 +626,13 @@ const GamePage: React.FC = () => {
                         <h4 className="font-bold text-sm">🎮 {gameLogic.title}</h4>
                         <p className="text-xs opacity-90">{gameLogic.description}</p>
                       </div>
-                      <div className="flex-1 overflow-hidden">
+                      <div className="flex-1 overflow-hidden" style={{ minHeight: '500px', height: 'calc(100vh - 200px)' }}>
                         <iframe
                           srcDoc={gameLogic.html}
                           className="w-full h-full border-0"
                           sandbox="allow-scripts allow-same-origin"
                           title={gameLogic.title}
+                          style={{ width: '100%', height: '100%', minHeight: '500px' }}
                         />
                       </div>
                       <div className="p-2 bg-gray-50 border-t flex-shrink-0">
@@ -644,7 +662,7 @@ const GamePage: React.FC = () => {
                   initial={{ opacity: 0, x: 300 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 300 }}
-                  className="lg:col-span-1 flex flex-col min-h-full"
+                  className="xl:col-span-2 flex flex-col min-h-full"
                 >
                   <div className="card p-3 flex-1 flex flex-col min-h-full">
                     <div className="flex items-center justify-between mb-3">
@@ -722,143 +740,260 @@ const GamePage: React.FC = () => {
                         </div>
                       </div>
                       
-                      {/* Block Categories */}
-                      <div className="mb-3">
-                        <div className="flex gap-2 text-sm">
+                      {/* Scratch-style Block Categories */}
+                      <div className="mb-4">
+                        <div className="grid grid-cols-2 gap-2 text-sm">
                           {Object.entries(blockCategories).map(([key, category]) => (
                             <button
                               key={key}
                               onClick={() => setSelectedCategory(key)}
-                              className={`px-2 py-1 rounded-lg transition-all font-semibold ${
+                              className={`px-4 py-3 rounded-xl transition-all duration-200 font-bold border-2 relative overflow-hidden group ${
                                 selectedCategory === key 
-                                  ? `${category.color} text-white shadow-lg` 
-                                  : 'bg-neutral-200 text-neutral-600 hover:bg-neutral-300'
+                                  ? `${category.color} text-white shadow-xl border-white/30 scale-105` 
+                                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border-neutral-300 hover:scale-105'
                               }`}
+                              style={selectedCategory === key ? {
+                                background: `linear-gradient(135deg, ${category.color.replace('bg-', '')}-500, ${category.color.replace('bg-', '')}-600)`,
+                                boxShadow: '0 6px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2)'
+                              } : {}}
                             >
-                              {category.name}
+                              {/* Scratch-style category highlight */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                              
+                              <div className="relative z-10 flex items-center justify-center gap-2">
+                                {/* Category icons */}
+                                {key === 'events' && <span className="text-lg">⚡</span>}
+                                {key === 'motion' && <span className="text-lg">🏃</span>}
+                                {key === 'control' && <span className="text-lg">🔄</span>}
+                                {key === 'game' && <span className="text-lg">🎮</span>}
+                                {key === 'sensing' && <span className="text-lg">👁️</span>}
+                                
+                                <span className="text-xs font-bold leading-tight">
+                                  {category.name}
+                                </span>
+                              </div>
+                              
+                              {/* Active indicator */}
+                              {selectedCategory === key && (
+                                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-white/50 rounded-t-full"></div>
+                              )}
                             </button>
                           ))}
                         </div>
                       </div>
                       
-                      {/* Block Palette */}
-                      <div className="mb-4 bg-neutral-100 rounded-lg p-3 max-h-36 overflow-y-auto">
-                        <div className="space-y-2">
+                      {/* Scratch-like Block Palette */}
+                      <div className="mb-4 bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-xl p-4 border-2 border-neutral-200 shadow-inner">
+                        <h5 className="text-sm font-bold text-neutral-700 mb-3 flex items-center gap-2">
+                          <span className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-400 to-purple-500"></span>
+                          {blockCategories[selectedCategory as keyof typeof blockCategories]?.name} Blocks
+                        </h5>
+                        <div className="grid grid-cols-1 gap-3 max-h-48 overflow-y-auto">
                           {blockCategories[selectedCategory as keyof typeof blockCategories]?.blocks.map((block) => (
                             <div
                               key={block.id}
                               onClick={() => addBlockToWorkspace(block)}
                               className={`${
                                 blockCategories[selectedCategory as keyof typeof blockCategories].color
-                              } text-white px-3 py-2 text-sm rounded-lg cursor-pointer hover:opacity-80 transition-all ${
+                              } text-white px-4 py-3 text-sm rounded-xl cursor-pointer hover:opacity-90 transition-all duration-200 ${
                                 getBlockShape(block.shape)
-                              } shadow-md hover:shadow-lg transform hover:scale-105`}
+                              } shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-1 select-none relative overflow-hidden group`}
+                              style={{
+                                background: `linear-gradient(135deg, ${blockCategories[selectedCategory as keyof typeof blockCategories].color.replace('bg-', '')}-500, ${blockCategories[selectedCategory as keyof typeof blockCategories].color.replace('bg-', '')}-600)`,
+                                boxShadow: '0 4px 15px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2)'
+                              }}
                             >
-                              <div className="flex items-center gap-1">
-                                {block.shape === 'hat' && <span>🎯</span>}
-                                {block.shape === 'stack' && <span>📦</span>}
-                                {block.shape === 'c-stack' && <span>🔄</span>}
-                                {block.shape === 'reporter' && <span>📊</span>}
-                                {block.shape === 'boolean' && <span>❓</span>}
-                                <span>{block.name.replace(/\[(.*?)\]/g, '($1)')}</span>
+                              {/* Scratch-style highlight */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                              
+                              <div className="flex items-center gap-2 relative z-10">
+                                {/* Block type icons with better styling */}
+                                {block.shape === 'hat' && <span className="text-yellow-200 text-base">⚡</span>}
+                                {block.shape === 'stack' && <span className="text-blue-200 text-base">🔧</span>}
+                                {block.shape === 'c-stack' && <span className="text-green-200 text-base">🔄</span>}
+                                {block.shape === 'reporter' && <span className="text-purple-200 text-base">📊</span>}
+                                {block.shape === 'boolean' && <span className="text-orange-200 text-base">❓</span>}
+                                
+                                <span className="font-medium leading-tight">
+                                  {block.name.replace(/\[(.*?)\]/g, '($1)')}
+                                </span>
+                                
+                                {/* Add icon */}
+                                <span className="ml-auto text-white/70 text-lg font-bold group-hover:text-white transition-colors">+</span>
                               </div>
+                              
+                              {/* Connection notches like Scratch */}
+                              {block.shape === 'stack' && (
+                                <>
+                                  <div className="absolute -top-1 left-6 w-4 h-2 bg-white/20 rounded-t-lg"></div>
+                                  <div className="absolute -bottom-1 left-6 w-4 h-2 bg-black/20 rounded-b-lg"></div>
+                                </>
+                              )}
+                              {block.shape === 'hat' && (
+                                <div className="absolute -bottom-1 left-6 w-4 h-2 bg-black/20 rounded-b-lg"></div>
+                              )}
+                              {block.shape === 'c-stack' && (
+                                <>
+                                  <div className="absolute -top-1 left-6 w-4 h-2 bg-white/20 rounded-t-lg"></div>
+                                  <div className="absolute -bottom-1 left-6 w-4 h-2 bg-black/20 rounded-b-lg"></div>
+                                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-2 h-6 bg-black/10 rounded-r-lg"></div>
+                                </>
+                              )}
                             </div>
                           ))}
                         </div>
                       </div>
                       
-                      {/* Workspace */}
-                      <div className="flex-1 bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-lg border-2 border-dashed border-neutral-300 overflow-hidden relative">
-                        <div className="absolute inset-2">
+                      {/* Scratch-like Workspace */}
+                      <div className="flex-1 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-xl border-3 border-blue-200 overflow-hidden relative shadow-inner">
+                        {/* Background grid pattern like Scratch */}
+                        <div className="absolute inset-0 opacity-30" style={{
+                          backgroundImage: `
+                            linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
+                          `,
+                          backgroundSize: '20px 20px'
+                        }}></div>
+                        
+                        {/* Drop zones for better UX */}
+                        <div className="absolute inset-4 overflow-hidden">
                           {workspaceBlocks.map((block) => (
                             <div
                               key={block.id}
-                              className={`group absolute ${block.color} text-white text-base font-semibold transition-all hover:scale-105 select-none cursor-move shadow-lg hover:shadow-xl ${
+                              className={`group absolute ${block.color} text-white font-bold transition-all duration-200 select-none cursor-move shadow-xl hover:shadow-2xl ${
                                 getBlockShape(block.shape)
-                              } ${block.connected ? 'border-l-4 border-yellow-400' : ''}`}
+                              } ${block.connected ? 'ring-4 ring-yellow-300 ring-opacity-75' : ''} relative overflow-hidden`}
                               style={{ 
-                                left: `${Math.min(Math.max(block.x, 0), 220)}px`, 
-                                top: `${Math.min(Math.max(block.y, 0), 180)}px`,
-                                minWidth: '140px',
-                                padding: block.shape === 'reporter' ? '6px 16px' : '8px 12px'
+                                left: `${Math.min(Math.max(block.x, 0), 400)}px`, 
+                                top: `${Math.min(Math.max(block.y, 0), 300)}px`,
+                                minWidth: '160px',
+                                padding: block.shape === 'reporter' ? '8px 20px' : '10px 16px',
+                                background: `linear-gradient(135deg, ${block.color.replace('bg-', '')}-500, ${block.color.replace('bg-', '')}-600)`,
+                                boxShadow: '0 8px 25px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)'
                               }}
                               draggable
                               onDragStart={(e) => {
                                 e.dataTransfer.setData('text/plain', block.id);
-                                e.currentTarget.style.transform = 'rotate(5deg)';
+                                e.currentTarget.style.transform = 'rotate(3deg) scale(1.05)';
+                                e.currentTarget.style.zIndex = '1000';
                               }}
                               onDragEnd={(e) => {
-                                e.currentTarget.style.transform = 'rotate(0deg)';
+                                e.currentTarget.style.transform = 'rotate(0deg) scale(1)';
+                                e.currentTarget.style.zIndex = 'auto';
                                 const rect = e.currentTarget.parentElement?.getBoundingClientRect();
                                 if (rect) {
-                                  const newX = Math.min(Math.max(e.clientX - rect.left - 60, 0), 220);
-                                  const newY = Math.min(Math.max(e.clientY - rect.top - 15, 0), 180);
+                                  const newX = Math.min(Math.max(e.clientX - rect.left - 80, 0), 400);
+                                  const newY = Math.min(Math.max(e.clientY - rect.top - 20, 0), 300);
                                   handleBlockDrag(block.id, newX, newY);
                                 }
                               }}
                               onDoubleClick={() => deleteBlock(block.id)}
                             >
-                              <div className="flex items-center gap-1 relative">
-                                {/* Block type indicators */}
+                              {/* Scratch-style gloss effect */}
+                              <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/10 rounded-lg pointer-events-none"></div>
+                              
+                              <div className="flex items-center gap-2 relative z-10">
+                                {/* Enhanced block type indicators */}
                                 {block.shape === 'hat' && (
-                                  <div className="w-2 h-2 bg-yellow-300 rounded-full animate-pulse"></div>
+                                  <div className="flex items-center">
+                                    <div className="w-3 h-3 bg-yellow-300 rounded-full animate-pulse mr-1"></div>
+                                    <span className="text-yellow-200 text-lg">⚡</span>
+                                  </div>
                                 )}
                                 {block.shape === 'stack' && (
-                                  <div className="w-1 h-4 bg-white/30 rounded"></div>
+                                  <div className="flex items-center">
+                                    <div className="w-2 h-5 bg-white/40 rounded mr-1"></div>
+                                    <span className="text-blue-200 text-lg">🔧</span>
+                                  </div>
+                                )}
+                                {block.shape === 'c-stack' && (
+                                  <div className="flex items-center">
+                                    <div className="w-2 h-5 bg-white/40 rounded mr-1"></div>
+                                    <span className="text-green-200 text-lg">🔄</span>
+                                  </div>
+                                )}
+                                {block.shape === 'reporter' && (
+                                  <span className="text-purple-200 text-lg">📊</span>
+                                )}
+                                {block.shape === 'boolean' && (
+                                  <span className="text-orange-200 text-lg">❓</span>
                                 )}
                                 
-                                <span className="text-xs leading-tight flex-1">
+                                <span className="text-sm font-bold leading-tight flex-1">
                                   {block.name.replace(/\[(.*?)\]/g, '($1)')}
                                 </span>
                                 
-                                {/* Delete button (appears on hover) */}
+                                {/* Enhanced delete button */}
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     e.preventDefault();
                                     deleteBlock(block.id);
                                   }}
-                                  className="opacity-0 group-hover:opacity-100 absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-all duration-200 z-10"
+                                  className="opacity-0 group-hover:opacity-100 absolute -top-3 -right-3 w-7 h-7 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-all duration-200 z-20 shadow-lg ring-2 ring-white"
                                   title="Delete block (or double-click)"
                                 >
-                                  <X size={10} className="text-white" />
+                                  <X size={12} className="text-white font-bold" />
                                 </button>
                                 
                                 {block.shape === 'c-stack' && (
-                                  <div className="ml-auto text-white/70">⟐</div>
+                                  <div className="ml-2 text-white/80 text-lg">⟐</div>
                                 )}
                               </div>
                               
-                              {/* Connection points */}
+                              {/* Enhanced Scratch-style connection points */}
                               {block.shape !== 'hat' && (
-                                <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-white/20 rounded-t-full"></div>
+                                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-5 h-3 bg-white/30 rounded-t-lg border-2 border-white/50"></div>
                               )}
                               {block.shape !== 'reporter' && block.shape !== 'boolean' && (
-                                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-white/40 rounded-b-full"></div>
+                                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-5 h-3 bg-black/30 rounded-b-lg border-2 border-black/50"></div>
+                              )}
+                              {block.shape === 'c-stack' && (
+                                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 w-3 h-8 bg-black/20 rounded-r-lg border-2 border-black/30"></div>
+                              )}
+                              
+                              {/* Connection indicator for connected blocks */}
+                              {block.connected && (
+                                <div className="absolute -left-1 top-1/2 transform -translate-y-1/2 w-2 h-8 bg-yellow-400 rounded-l-full animate-pulse"></div>
                               )}
                             </div>
                           ))}
                           
                           {workspaceBlocks.length === 0 && (
-                            <div className="absolute inset-0 flex items-center justify-center text-neutral-400 text-center">
-                              <div>
-                                <div className="text-4xl mb-2">🧩</div>
-                                <div className="text-sm">Click blocks above to add them here!</div>
-                                <div className="text-xs mt-1">Then drag them around to build your game logic</div>
-                                <div className="text-xs mt-2 bg-yellow-50 text-yellow-700 p-1 rounded border">
-                                  💡 <strong>Tips:</strong> Double-click or use X button to delete blocks
+                            <div className="absolute inset-0 flex items-center justify-center text-neutral-500">
+                              <div className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-dashed border-blue-300 shadow-lg">
+                                <div className="text-6xl mb-4 animate-bounce">🎯</div>
+                                <div className="text-lg font-bold text-blue-600 mb-2">Start Building!</div>
+                                <div className="text-sm text-neutral-600 mb-3">Click blocks from the palette above to add them here</div>
+                                <div className="text-xs text-neutral-500 mb-4">Drag blocks around to arrange your game logic</div>
+                                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 text-amber-700 p-3 rounded-lg border border-amber-200 text-xs">
+                                  <strong>💡 Scratch Tips:</strong><br/>
+                                  • Drag blocks to move them<br/>
+                                  • Double-click or ❌ to delete<br/>
+                                  • Snap blocks together to connect<br/>
+                                  • Use different colored categories
                                 </div>
                               </div>
                             </div>
                           )}
                         </div>
                         
-                        {/* Snap guidelines */}
+                        {/* Snap zones and visual feedback */}
                         <div className="absolute inset-0 pointer-events-none">
-                          <div className="grid grid-cols-6 grid-rows-5 h-full w-full opacity-5">
-                            {Array.from({ length: 30 }).map((_, i) => (
-                              <div key={i} className="border border-blue-300"></div>
-                            ))}
+                          <div className="w-full h-full opacity-10">
+                            {/* Scratch-style dot grid */}
+                            {Array.from({ length: 20 }).map((_, row) => 
+                              Array.from({ length: 25 }).map((_, col) => (
+                                <div 
+                                  key={`${row}-${col}`}
+                                  className="absolute w-1 h-1 bg-blue-400 rounded-full"
+                                  style={{
+                                    left: `${col * 20 + 10}px`,
+                                    top: `${row * 20 + 10}px`
+                                  }}
+                                />
+                              ))
+                            )}
                           </div>
                         </div>
                       </div>

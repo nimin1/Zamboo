@@ -595,9 +595,9 @@ export default function EmergentGameEngine({
     <div className={`relative ${className}`}>
       <canvas
         ref={canvasRef}
-        width={800}
-        height={600}
-        className="border-2 border-gray-300 rounded-lg"
+        width={1200}
+        height={800}
+        className="border-2 border-gray-300 rounded-lg w-full h-full"
         style={{ 
           background: 'linear-gradient(135deg, #0a0a0a, #1a1a2e)',
           boxShadow: '0 10px 30px rgba(0,0,0,0.5)'

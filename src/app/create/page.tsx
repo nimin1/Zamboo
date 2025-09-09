@@ -244,7 +244,7 @@ const CreateGamePage: React.FC = () => {
   }, [showChat, helpfulTips.length]);
 
   return (
-    <div className="min-h-screen bg-neutral-50 relative flex flex-col">
+    <div className={`min-h-screen bg-neutral-50 relative flex flex-col ${isGenerating ? 'h-screen overflow-hidden' : ''}`}>
       {/* Animated Background Decorations */}
       <BackgroundDecorations />
 
@@ -300,11 +300,11 @@ const CreateGamePage: React.FC = () => {
         />
 
         {/* Main Content Area */}
-        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-4 lg:py-6 overflow-y-auto min-w-0">
-          <div className="max-w-4xl mx-auto w-full h-full">
+        <main className={`flex-1 ${isGenerating ? 'px-0 py-0' : 'px-4 sm:px-6 lg:px-8 py-4 lg:py-6'} ${isGenerating ? 'overflow-hidden' : 'overflow-y-auto'} min-w-0`}>
+          <div className={`${isGenerating ? 'max-w-none w-full h-full' : 'max-w-4xl mx-auto'} w-full h-full`}>
             {/* Show loader game during generation */}
             {isGenerating ? (
-              <div className="h-full flex items-center justify-center py-8">
+              <div className="h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-green-50 overflow-hidden">
                 <ZambooLoaderGame 
                   progress={generationProgress}
                   onGameComplete={() => {}}
