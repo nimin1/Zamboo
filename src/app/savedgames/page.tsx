@@ -104,7 +104,7 @@ const SavedGamesPage: React.FC = () => {
               </Link>
               
               <div className="flex items-center gap-3">
-                <div className="text-4xl animate-panda-bounce cursor-pointer">🐼</div>
+                <div className="text-3xl animate-panda-bounce cursor-pointer">🐼</div>
                 <h1 className="logo-text-small">zamboo</h1>
               </div>
             </div>
@@ -139,8 +139,8 @@ const SavedGamesPage: React.FC = () => {
         <main className="flex-1 px-4 py-1 flex flex-col justify-between">
           <div className="max-w-6xl mx-auto w-full">
             <div className="text-center mb-3">
-              <h1 className="text-3xl font-bold text-neutral-800 mb-2 font-display">Your Saved Games!</h1>
-              <p className="text-base text-neutral-600">Continue playing your saved games anytime! 💾</p>
+              <h1 className="text-2xl font-bold text-neutral-800 mb-2 font-display">Your Saved Games!</h1>
+              <p className="text-sm text-neutral-600">Continue playing your saved games anytime! 💾</p>
             </div>
 
             <div className="card p-4 mb-3">
@@ -157,7 +157,7 @@ const SavedGamesPage: React.FC = () => {
                 />
               </div>
               <div className="text-center">
-                <p className="text-base text-neutral-700 mb-2">
+                <p className="text-sm text-neutral-700 mb-2">
                   {savedGames.length > 0 
                     ? "Pick any saved game below to continue where you left off!"
                     : "Start creating games and save them to build your collection!"

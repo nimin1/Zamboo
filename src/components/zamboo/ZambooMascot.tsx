@@ -196,7 +196,7 @@ const ZambooMascot: React.FC<ZambooMascotProps> = ({
             className="mb-4 relative"
           >
             <div className={`bg-gradient-to-r ${moodColors[state.mood]} rounded-2xl p-4 shadow-lg border-2 border-white max-w-xs`}>
-              <p className="text-lg md:text-xl font-bold text-neutral-800 font-display leading-tight text-center">
+              <p className="text-base md:text-base font-bold text-neutral-800 font-display leading-tight text-center">
                 {message}
               </p>
               {/* Speech bubble tail */}

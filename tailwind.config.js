@@ -122,12 +122,12 @@ module.exports = {
       },
       fontFamily: {
         'sans': ['"Poppins"', 'sans-serif'],
-        'display': ['"Fredoka One"', 'cursive'],
-        'fun': ['"Fredoka One"', 'cursive'],
-        'bubbly': ['"Fredoka One"', 'cursive'],
-        'logo': ['"Fredoka One"', 'cursive'],
+        'display': ['"Fredoka One"', 'sans-serif'],
+        'fun': ['"Fredoka One"', 'sans-serif'],
+        'bubbly': ['"Fredoka One"', 'sans-serif'],
+        'logo': ['"Fredoka One"', 'sans-serif'],
         'kids': ['"Poppins"', 'sans-serif'],
-        'funky': ['"Fredoka One"', 'cursive'],
+        'funky': ['"Fredoka One"', 'sans-serif'],
         'playful': ['"Schoolbell"', 'cursive'],
       },
       fontSize: {

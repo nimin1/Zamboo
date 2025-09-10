@@ -483,7 +483,7 @@ const GamePage: React.FC = () => {
               </Link>
 
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="text-3xl sm:text-4xl animate-panda-bounce cursor-pointer">
+                <div className="text-2xl sm:text-4xl animate-panda-bounce cursor-pointer">
                   🐼
                 </div>
                 <h1 className="logo-text-small hidden sm:block">zamboo</h1>
@@ -492,10 +492,10 @@ const GamePage: React.FC = () => {
               <div className="h-6 w-px bg-neutral-300 hidden sm:block"></div>
 
               <div className="min-w-0 flex-1">
-                <h2 className="text-base sm:text-lg font-bold text-neutral-800 font-display truncate">
+                <h2 className="text-sm sm:text-lg font-bold text-neutral-800 font-display truncate">
                   {gameLogic.title}
                 </h2>
-                <p className="text-xs sm:text-sm text-neutral-600 truncate">
+                <p className="text-xs sm:text-xs text-neutral-600 truncate">
                   {gameLogic.description}
                 </p>
               </div>
@@ -503,7 +503,7 @@ const GamePage: React.FC = () => {
 
             <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
               {/* Game Stats */}
-              <div className="hidden lg:flex items-center gap-4 text-sm text-neutral-600">
+              <div className="hidden lg:flex items-center gap-4 text-xs text-neutral-600">
                 <div className="flex items-center gap-1">
                   <span>Games:</span>
                   <span className="font-bold text-duo-purple-500">
@@ -554,7 +554,7 @@ const GamePage: React.FC = () => {
                       <h3 className="text-xl font-bold text-neutral-800 font-display">
                         Playing Now
                       </h3>
-                      <p className="text-sm text-neutral-600">
+                      <p className="text-xs text-neutral-600">
                         {isConceptFirstGame(gameLogic)
                           ? `🚀 Concept-First • Created by: ${gameLogic.createdBy}`
                           : isHTMLGame(gameLogic)
@@ -688,7 +688,7 @@ const GamePage: React.FC = () => {
                           <p className="text-sm font-medium text-neutral-800 mb-1">
                             Zamboo says:
                           </p>
-                          <p className="text-sm text-neutral-600">
+                          <p className="text-xs text-neutral-600">
                             "Drag blocks to change your game!"
                           </p>
                         </div>
@@ -964,7 +964,7 @@ const GamePage: React.FC = () => {
                               <div className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-dashed border-blue-300 shadow-lg">
                                 <div className="text-6xl mb-4 animate-bounce">🎯</div>
                                 <div className="text-lg font-bold text-blue-600 mb-2">Start Building!</div>
-                                <div className="text-sm text-neutral-600 mb-3">Click blocks from the palette above to add them here</div>
+                                <div className="text-xs text-neutral-600 mb-3">Click blocks from the palette above to add them here</div>
                                 <div className="text-xs text-neutral-500 mb-4">Drag blocks around to arrange your game logic</div>
                                 <div className="bg-gradient-to-r from-yellow-50 to-orange-50 text-amber-700 p-3 rounded-lg border border-amber-200 text-xs">
                                   <strong>💡 Scratch Tips:</strong><br/>

@@ -156,7 +156,7 @@ Self-contained HTML games with inline styling and JavaScript:
 ### Styling & UI Framework
 - **Tailwind CSS** with custom design system
 - Custom color palette: duo-green, duo-blue, zamboo, panda, funky colors
-- Font families: Poppins (sans), Fredoka One (display/fun), Schoolbell (playful)
+- Font families: Poppins (sans), Fredoka One (display/fun/sans-serif), Schoolbell (playful)
 - Custom animations: bounce-slow, wiggle, float, pulse-slow, scale
 - Child-friendly, vibrant design following Duolingo-inspired patterns
 

@@ -262,10 +262,10 @@ const CreateGamePage: React.FC = () => {
               </Link>
 
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="text-3xl sm:text-4xl animate-panda-bounce cursor-pointer">
+                <div className="text-2xl sm:text-4xl animate-panda-bounce cursor-pointer">
                   🐼
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-duo-green-500 font-display">
+                <h1 className="text-xl sm:text-3xl font-bold text-duo-green-500 font-display">
                   zamboo
                 </h1>
               </div>
@@ -274,11 +274,11 @@ const CreateGamePage: React.FC = () => {
             <div className="flex items-center gap-3 sm:gap-6">
               <div className="flex items-center gap-1 sm:gap-2 text-duo-blue-600 font-bold">
                 <Trophy size={18} className="sm:w-5 sm:h-5" />
-                <span className="text-base sm:text-lg">500</span>
+                <span className="text-sm sm:text-lg">500</span>
               </div>
               <div className="flex items-center gap-1 sm:gap-2 text-duo-red-500 font-bold">
                 <Heart size={18} className="sm:w-5 sm:h-5" />
-                <span className="text-base sm:text-lg">5</span>
+                <span className="text-sm sm:text-lg">5</span>
               </div>
             </div>
           </div>
@@ -314,29 +314,29 @@ const CreateGamePage: React.FC = () => {
               <>
                 {/* Header */}
                 <div className="text-center mb-4">
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-neutral-800 mb-2 font-display leading-tight">
+                  <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-neutral-800 mb-2 font-display leading-tight">
                     Create Your Game!
                   </h1>
-                  <p className="text-base sm:text-lg text-neutral-600 font-medium px-4">
+                  <p className="text-sm sm:text-lg text-neutral-600 font-medium px-4">
                     Tell me your game idea and I'll bring it to life! 🎮
                   </p>
                 </div>
 
             {/* Main Game Idea Section */}
             <div className="bg-white rounded-2xl shadow-soft p-4 sm:p-6 mb-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 gap-3">
-                <h2 className="text-xl sm:text-2xl font-bold text-neutral-800 font-display flex items-center gap-2">
+              <div className="flex flex-row items-center justify-between mb-3 sm:mb-4 gap-2 sm:gap-3">
+                <h2 className="text-sm sm:text-2xl font-bold text-neutral-800 font-display flex items-center gap-1 sm:gap-2 flex-1 min-w-0">
                   <Sparkles
                     className="text-duo-blue-500 flex-shrink-0"
-                    size={28}
+                    size={20}
                   />
-                  <span className="leading-tight">What's Your Game Idea?</span>
+                  <span className="leading-tight truncate">What's Your Game Idea?</span>
                 </h2>
 
                 <button
                   onClick={handleGenerateGame}
                   disabled={!prompt.trim() || isGenerating}
-                  className={`bg-duo-green-500 hover:bg-duo-green-600 active:bg-duo-green-700 text-white font-bold py-3 px-6 rounded-xl text-base shadow-medium transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
+                  className={`bg-duo-green-500 hover:bg-duo-green-600 active:bg-duo-green-700 text-white font-bold py-1 sm:py-3 px-2 sm:px-6 rounded-xl text-xs sm:text-base shadow-medium transition-all duration-200 flex items-center gap-1 sm:gap-2 whitespace-nowrap flex-shrink-0 ${
                     isGenerating
                       ? "opacity-75 cursor-not-allowed"
                       : "hover:shadow-strong transform hover:scale-[1.02]"
@@ -346,13 +346,13 @@ const CreateGamePage: React.FC = () => {
                     <>
                       <Loader
                         className="animate-spin flex-shrink-0"
-                        size={18}
+                        size={16}
                       />
                       <span>Creating...</span>
                     </>
                   ) : (
                     <>
-                      <Play className="flex-shrink-0" size={18} />
+                      <Play className="flex-shrink-0" size={16} />
                       <span>Create Game</span>
                     </>
                   )}
@@ -400,7 +400,7 @@ const CreateGamePage: React.FC = () => {
 
                 {/* Revolutionary Examples */}
                 <div className="bg-neutral-50 rounded-2xl p-3 sm:p-4">
-                  <h4 className="text-xl sm:text-xl font-bold text-neutral-800 mb-2 sm:mb-3 font-display">
+                  <h4 className="text-lg sm:text-xl font-bold text-neutral-800 mb-2 sm:mb-3 font-display">
                     Revolutionary Examples - Try These!
                   </h4>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -417,7 +417,7 @@ const CreateGamePage: React.FC = () => {
                       <button
                         key={index}
                         onClick={() => setPrompt(example)}
-                        className="bg-white hover:bg-duo-blue-50 text-left p-2 sm:p-3 text-base sm:text-base font-medium rounded-xl border border-neutral-200 hover:border-duo-blue-200 hover:text-duo-blue-700 transition-colors disabled:opacity-50 leading-tight"
+                        className="bg-white hover:bg-duo-blue-50 text-left p-2 sm:p-3 text-sm sm:text-base font-medium rounded-xl border border-neutral-200 hover:border-duo-blue-200 hover:text-duo-blue-700 transition-colors disabled:opacity-50 leading-tight"
                         disabled={isGenerating}
                       >
                         <span className="flex items-start gap-2">

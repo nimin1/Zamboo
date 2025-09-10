@@ -85,11 +85,11 @@ export default function Home() {
                 />
               </div>
 
-              <h1 className="text-3xl md:text-4xl font-bold text-neutral-800 mb-3 font-display leading-tight">
+              <h1 className="text-xl md:text-3xl font-bold text-neutral-800 mb-3 font-display leading-tight">
                 Learn to Code with Games!
               </h1>
 
-              <p className="text-base text-neutral-600 mb-4 max-w-2xl mx-auto">
+              <p className="text-sm md:text-base text-neutral-600 mb-4 max-w-2xl mx-auto">
                 I'm Zamboo, your vibe coding companion! Let's create amazing
                 games together.
               </p>
@@ -97,9 +97,10 @@ export default function Home() {
               <div className="flex justify-center">
                 <Link
                   href="/create"
-                  className="btn-success inline-flex items-center gap-2 justify-center text-base py-3 px-6"
+                  className="btn-success inline-flex items-center gap-2 justify-center text-sm md:text-base py-2 md:py-3 px-4 md:px-6"
                 >
-                  <Play size={18} />
+                  <Play size={16} className="md:hidden" />
+                  <Play size={18} className="hidden md:block" />
                   Start Creating Games
                 </Link>
               </div>

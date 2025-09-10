@@ -109,8 +109,8 @@ const TemplatesPage: React.FC = () => {
         <main className="flex-1 px-4 py-1 flex flex-col justify-between">
           <div className="max-w-6xl mx-auto w-full">
             <div className="text-center mb-3">
-              <h1 className="text-3xl font-bold text-neutral-800 mb-2 font-display">Game Templates!</h1>
-              <p className="text-base text-neutral-600">Choose a template and start playing instantly! 🎮</p>
+              <h1 className="text-2xl font-bold text-neutral-800 mb-2 font-display">Game Templates!</h1>
+              <p className="text-sm text-neutral-600">Choose a template and start playing instantly! 🎮</p>
             </div>
 
             <div className="card p-4 mb-3">
@@ -124,7 +124,7 @@ const TemplatesPage: React.FC = () => {
                 />
               </div>
               <div className="text-center">
-                <p className="text-base text-neutral-700 mb-2">
+                <p className="text-sm text-neutral-700 mb-2">
                   Pick any game template below and start playing right away!
                 </p>
                 <p className="text-sm text-neutral-600">
@@ -145,8 +145,8 @@ const TemplatesPage: React.FC = () => {
                   </span>
                 </div>
                 
-                <h3 className="text-xl font-bold text-neutral-800 mb-3 font-display">Star Collector</h3>
-                <p className="text-base text-neutral-600 mb-4">
+                <h3 className="text-lg font-bold text-neutral-800 mb-3 font-display">Star Collector</h3>
+                <p className="text-sm text-neutral-600 mb-4">
                   Help the panda collect stars while avoiding obstacles! Learn about movement and collision detection.
                 </p>
                 
@@ -174,8 +174,8 @@ const TemplatesPage: React.FC = () => {
                   </span>
                 </div>
                 
-                <h3 className="text-xl font-bold text-neutral-800 mb-3 font-display">Maze Runner</h3>
-                <p className="text-base text-neutral-600 mb-4">
+                <h3 className="text-lg font-bold text-neutral-800 mb-3 font-display">Maze Runner</h3>
+                <p className="text-sm text-neutral-600 mb-4">
                   Navigate through mazes using arrow keys! Learn about conditions and logic.
                 </p>
                 
@@ -203,8 +203,8 @@ const TemplatesPage: React.FC = () => {
                   </span>
                 </div>
                 
-                <h3 className="text-xl font-bold text-neutral-800 mb-3 font-display">Jumping Panda</h3>
-                <p className="text-base text-neutral-600 mb-4">
+                <h3 className="text-lg font-bold text-neutral-800 mb-3 font-display">Jumping Panda</h3>
+                <p className="text-sm text-neutral-600 mb-4">
                   Make the panda jump over obstacles! Learn about loops and timing.
                 </p>
                 

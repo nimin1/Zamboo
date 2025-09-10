@@ -67,7 +67,7 @@ const WorkInProgress: React.FC<WorkInProgressProps> = ({
                   repeat: Infinity,
                   repeatType: "reverse"
                 }}
-                className="text-8xl mb-4"
+                className="text-7xl mb-4"
               >
                 🐼
               </motion.div>

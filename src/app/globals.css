@@ -322,15 +322,15 @@ a {
 }
 
 .logo-text-large {
-  @apply logo-text text-4xl;
-}
-
-.logo-text-medium {
   @apply logo-text text-2xl;
 }
 
+.logo-text-medium {
+  @apply logo-text text-lg;
+}
+
 .logo-text-small {
-  @apply logo-text text-3xl;
+  @apply logo-text text-xl;
 }
 
 /* Typography enhancements */
