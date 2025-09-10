@@ -471,62 +471,62 @@ const GamePage: React.FC = () => {
       <BackgroundDecorations />
       {/* Navigation Header */}
       <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10 flex-shrink-0">
-        <div className="w-full px-2 sm:px-4 py-2">
+        <div className="w-full px-2 sm:px-4 py-1 sm:py-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1 sm:gap-3">
               <Link
                 href="/"
-                className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800 transition-colors"
+                className="flex items-center gap-1 text-neutral-600 hover:text-neutral-800 transition-colors"
               >
-                <ArrowLeft size={18} />
-                <span className="hidden sm:inline">Back</span>
+                <ArrowLeft size={16} className="sm:w-[18px] sm:h-[18px]" />
+                <span className="hidden sm:inline text-sm">Back</span>
               </Link>
 
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="text-2xl sm:text-4xl animate-panda-bounce cursor-pointer">
+              <div className="flex items-center gap-1 sm:gap-3">
+                <div className="text-lg sm:text-4xl animate-panda-bounce cursor-pointer">
                   🐼
                 </div>
-                <h1 className="logo-text-small hidden sm:block">zamboo</h1>
+                <h1 className="text-sm sm:text-xl font-bold text-duo-green-500 font-display">zamboo</h1>
               </div>
 
-              <div className="h-6 w-px bg-neutral-300 hidden sm:block"></div>
+              <div className="h-4 w-px bg-neutral-300 hidden sm:block"></div>
 
               <div className="min-w-0 flex-1">
-                <h2 className="text-sm sm:text-lg font-bold text-neutral-800 font-display truncate">
+                <h2 className="text-xs sm:text-lg font-bold text-neutral-800 font-display truncate">
                   {gameLogic.title}
                 </h2>
-                <p className="text-xs sm:text-xs text-neutral-600 truncate">
+                <p className="text-xs text-neutral-600 truncate hidden sm:block">
                   {gameLogic.description}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            <div className="flex items-center gap-1 sm:gap-4 flex-shrink-0">
               {/* Game Stats */}
-              <div className="hidden lg:flex items-center gap-4 text-xs text-neutral-600">
+              <div className="hidden lg:flex items-center gap-2 text-xs text-neutral-600">
                 <div className="flex items-center gap-1">
-                  <span>Games:</span>
-                  <span className="font-bold text-duo-purple-500">
+                  <span className="text-xs">Games:</span>
+                  <span className="font-bold text-duo-purple-500 text-xs">
                     {gameStats.gamesPlayed}
                   </span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <span>Best:</span>
-                  <span className="font-bold text-duo-green-500">
+                  <span className="text-xs">Best:</span>
+                  <span className="font-bold text-duo-green-500 text-xs">
                     {gameStats.bestScore}
                   </span>
                 </div>
               </div>
 
-              <div className="h-6 w-px bg-neutral-300 hidden lg:block"></div>
+              <div className="h-4 w-px bg-neutral-300 hidden lg:block"></div>
 
-              <div className="flex items-center gap-1 sm:gap-2 text-duo-blue-600 font-medium">
-                <Trophy size={16} className="sm:w-[18px] sm:h-[18px]" />
-                <span className="text-sm sm:text-base">500</span>
+              <div className="flex items-center gap-1 text-duo-blue-600 font-medium">
+                <Trophy size={14} className="sm:w-[16px] sm:h-[16px]" />
+                <span className="text-xs sm:text-sm">500</span>
               </div>
-              <div className="flex items-center gap-1 sm:gap-2 text-duo-red-500 font-medium">
-                <Heart size={16} className="sm:w-[18px] sm:h-[18px]" />
-                <span className="text-sm sm:text-base">5</span>
+              <div className="flex items-center gap-1 text-duo-red-500 font-medium">
+                <Heart size={14} className="sm:w-[16px] sm:h-[16px]" />
+                <span className="text-xs sm:text-sm">5</span>
               </div>
             </div>
           </div>
@@ -543,18 +543,18 @@ const GamePage: React.FC = () => {
           >
             {/* Main Game Area */}
             <div className={`${showEditor ? "lg:col-span-2 xl:col-span-3" : "col-span-1"} flex flex-col min-h-full`}>
-              <div className="card p-3 flex-1 flex flex-col min-h-full" style={{ minHeight: showEditor ? '70vh' : '80vh' }}>
+              <div className="card p-2 sm:p-3 flex-1 flex flex-col min-h-full" style={{ minHeight: showEditor ? '75vh' : '85vh' }}>
                 {/* Game Control Bar */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-duo-green-500 rounded-full flex items-center justify-center shadow-medium">
-                      <span className="text-xl">🎮</span>
+                <div className="flex items-center justify-between mb-2 sm:mb-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 bg-duo-green-500 rounded-full flex items-center justify-center shadow-medium">
+                      <span className="text-base sm:text-xl">🎮</span>
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-neutral-800 font-display">
+                      <h3 className="text-sm sm:text-xl font-bold text-neutral-800 font-display">
                         Playing Now
                       </h3>
-                      <p className="text-xs text-neutral-600">
+                      <p className="text-xs text-neutral-600 hidden sm:block">
                         {isConceptFirstGame(gameLogic)
                           ? `🚀 Concept-First • Created by: ${gameLogic.createdBy}`
                           : isHTMLGame(gameLogic)
@@ -564,11 +564,11 @@ const GamePage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     <button
                       onClick={isListening ? stopVoicePrompt : startVoicePrompt}
                       disabled={isProcessingVoice}
-                      className={`p-3 rounded-xl transition-all ${
+                      className={`p-2 sm:p-3 rounded-lg sm:rounded-xl transition-all ${
                         isListening 
                           ? "bg-duo-red-500 text-white shadow-medium animate-pulse"
                           : isProcessingVoice
@@ -578,41 +578,41 @@ const GamePage: React.FC = () => {
                       title={isListening ? "Stop voice prompt" : "Voice modify game"}
                     >
                       {isProcessingVoice ? (
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       ) : isListening ? (
-                        <MicOff size={18} />
+                        <MicOff size={14} className="sm:w-[18px] sm:h-[18px]" />
                       ) : (
-                        <Mic size={18} />
+                        <Mic size={14} className="sm:w-[18px] sm:h-[18px]" />
                       )}
                     </button>
 
                     <button
                       onClick={handleShare}
-                      className="btn-ghost p-3 rounded-xl"
+                      className="btn-ghost p-2 sm:p-3 rounded-lg sm:rounded-xl hidden sm:block"
                       title="Share game"
                     >
-                      <Share size={18} />
+                      <Share size={14} className="sm:w-[18px] sm:h-[18px]" />
                     </button>
 
                     <button
                       onClick={handleSaveGame}
-                      className="btn-primary p-3 rounded-xl flex items-center gap-2 text-white bg-duo-green-500 hover:bg-duo-green-600"
+                      className="btn-primary p-2 sm:p-3 rounded-lg sm:rounded-xl flex items-center gap-1 sm:gap-2 text-white bg-duo-green-500 hover:bg-duo-green-600"
                       title="Save game"
                     >
-                      <Save size={18} />
-                      <span className="text-sm font-medium">Save</span>
+                      <Save size={14} className="sm:w-[18px] sm:h-[18px]" />
+                      <span className="text-xs sm:text-sm font-medium hidden sm:inline">Save</span>
                     </button>
 
                     <button
                       onClick={() => setShowEditor(!showEditor)}
-                      className={`p-3 rounded-xl transition-all ${
+                      className={`p-2 sm:p-3 rounded-lg sm:rounded-xl transition-all ${
                         showEditor
                           ? "bg-duo-purple-500 text-white shadow-medium"
                           : "btn-ghost"
                       }`}
                       title="Edit game code"
                     >
-                      <Code size={18} />
+                      <Code size={14} className="sm:w-[18px] sm:h-[18px]" />
                     </button>
                   </div>
                 </div>
@@ -623,19 +623,19 @@ const GamePage: React.FC = () => {
                     /* HTML Game in iframe */
                     <div className="h-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
                       <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-2 flex-shrink-0">
-                        <h4 className="font-bold text-sm">🎮 {gameLogic.title}</h4>
-                        <p className="text-xs opacity-90">{gameLogic.description}</p>
+                        <h4 className="font-bold text-xs sm:text-sm">🎮 {gameLogic.title}</h4>
+                        <p className="text-xs opacity-90 hidden sm:block">{gameLogic.description}</p>
                       </div>
-                      <div className="flex-1 overflow-hidden" style={{ minHeight: '500px', height: 'calc(100vh - 200px)' }}>
+                      <div className="flex-1 overflow-hidden" style={{ minHeight: '400px', height: 'calc(100vh - 150px)' }}>
                         <iframe
                           srcDoc={gameLogic.html}
                           className="w-full h-full border-0"
                           sandbox="allow-scripts allow-same-origin"
                           title={gameLogic.title}
-                          style={{ width: '100%', height: '100%', minHeight: '500px' }}
+                          style={{ width: '100%', height: '100%', minHeight: '400px' }}
                         />
                       </div>
-                      <div className="p-2 bg-gray-50 border-t flex-shrink-0">
+                      <div className="p-1 sm:p-2 bg-gray-50 border-t flex-shrink-0">
                         <p className="text-xs text-gray-600 text-center">
                           🎯 Use arrow keys or touch controls to play!
                         </p>
@@ -664,11 +664,12 @@ const GamePage: React.FC = () => {
                   exit={{ opacity: 0, x: 300 }}
                   className="xl:col-span-2 flex flex-col min-h-full"
                 >
-                  <div className="card p-3 flex-1 flex flex-col min-h-full">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xl font-bold text-neutral-800 flex items-center gap-2 font-display">
-                        <Code className="text-duo-purple-500" />
-                        Game Code
+                  <div className="card p-2 sm:p-3 flex-1 flex flex-col min-h-full">
+                    <div className="flex items-center justify-between mb-2 sm:mb-3">
+                      <h3 className="text-sm sm:text-xl font-bold text-neutral-800 flex items-center gap-2 font-display">
+                        <Code className="text-duo-purple-500" size={16} />
+                        <span className="hidden sm:inline">Game Code</span>
+                        <span className="sm:hidden">Code</span>
                       </h3>
                       <button
                         onClick={() => setShowEditor(false)}
@@ -679,13 +680,13 @@ const GamePage: React.FC = () => {
                     </div>
 
                     {/* Zamboo Code Tutor */}
-                    <div className="mb-3 p-3 bg-duo-green-50 rounded-lg">
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-duo-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-lg">🐼</span>
+                    <div className="mb-2 sm:mb-3 p-2 sm:p-3 bg-duo-green-50 rounded-lg">
+                      <div className="flex items-start gap-2 sm:gap-3">
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-duo-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-sm sm:text-lg">🐼</span>
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-neutral-800 mb-1">
+                          <p className="text-xs sm:text-sm font-medium text-neutral-800 mb-1">
                             Zamboo says:
                           </p>
                           <p className="text-xs text-neutral-600">
@@ -714,40 +715,41 @@ const GamePage: React.FC = () => {
 
                     {/* Scratch-like Visual Coding Blocks */}
                     <div className="flex-1 flex flex-col min-h-0">
-                      <div className="flex items-center justify-between mb-3">
-                        <h4 className="text-base font-semibold text-neutral-800 flex items-center gap-2">
-                          <Package className="text-duo-purple-500" size={18} />
-                          Code Blocks
+                      <div className="flex items-center justify-between mb-2 sm:mb-3">
+                        <h4 className="text-sm sm:text-base font-semibold text-neutral-800 flex items-center gap-1 sm:gap-2">
+                          <Package className="text-duo-purple-500" size={14} />
+                          <span className="hidden sm:inline">Code Blocks</span>
+                          <span className="sm:hidden">Blocks</span>
                         </h4>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1 sm:gap-2">
                           {workspaceBlocks.length > 0 && (
                             <button
                               onClick={clearAllBlocks}
                               className="btn-ghost text-xs px-1 py-0.5 flex items-center gap-1 text-red-600 hover:bg-red-50 transition-all"
                               title="Clear all blocks"
                             >
-                              <Trash2 size={12} />
-                              Clear
+                              <Trash2 size={10} />
+                              <span className="hidden sm:inline">Clear</span>
                             </button>
                           )}
                           <button
                             onClick={applyBlockChanges}
-                            className="btn-success text-xs px-2 py-1 flex items-center gap-1 shadow-lg hover:shadow-xl transition-all"
+                            className="btn-success text-xs px-1 sm:px-2 py-1 flex items-center gap-1 shadow-lg hover:shadow-xl transition-all"
                           >
-                            <Play size={12} />
-                            🚀 Run Code
+                            <Play size={10} />
+                            <span className="hidden sm:inline">🚀</span> Run
                           </button>
                         </div>
                       </div>
                       
                       {/* Scratch-style Block Categories */}
-                      <div className="mb-4">
-                        <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="mb-3 sm:mb-4">
+                        <div className="grid grid-cols-3 sm:grid-cols-2 gap-1 sm:gap-2 text-xs sm:text-sm">
                           {Object.entries(blockCategories).map(([key, category]) => (
                             <button
                               key={key}
                               onClick={() => setSelectedCategory(key)}
-                              className={`px-4 py-3 rounded-xl transition-all duration-200 font-bold border-2 relative overflow-hidden group ${
+                              className={`px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 font-bold border-2 relative overflow-hidden group ${
                                 selectedCategory === key 
                                   ? `${category.color} text-white shadow-xl border-white/30 scale-105` 
                                   : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border-neutral-300 hover:scale-105'
@@ -783,19 +785,20 @@ const GamePage: React.FC = () => {
                       </div>
                       
                       {/* Scratch-like Block Palette */}
-                      <div className="mb-4 bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-xl p-4 border-2 border-neutral-200 shadow-inner">
-                        <h5 className="text-sm font-bold text-neutral-700 mb-3 flex items-center gap-2">
-                          <span className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-400 to-purple-500"></span>
-                          {blockCategories[selectedCategory as keyof typeof blockCategories]?.name} Blocks
+                      <div className="mb-3 sm:mb-4 bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-lg sm:rounded-xl p-2 sm:p-4 border-2 border-neutral-200 shadow-inner">
+                        <h5 className="text-xs sm:text-sm font-bold text-neutral-700 mb-2 sm:mb-3 flex items-center gap-2">
+                          <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gradient-to-r from-blue-400 to-purple-500"></span>
+                          <span className="hidden sm:inline">{blockCategories[selectedCategory as keyof typeof blockCategories]?.name} Blocks</span>
+                          <span className="sm:hidden">Blocks</span>
                         </h5>
-                        <div className="grid grid-cols-1 gap-3 max-h-48 overflow-y-auto">
+                        <div className="grid grid-cols-1 gap-2 sm:gap-3 max-h-32 sm:max-h-48 overflow-y-auto">
                           {blockCategories[selectedCategory as keyof typeof blockCategories]?.blocks.map((block) => (
                             <div
                               key={block.id}
                               onClick={() => addBlockToWorkspace(block)}
                               className={`${
                                 blockCategories[selectedCategory as keyof typeof blockCategories].color
-                              } text-white px-4 py-3 text-sm rounded-xl cursor-pointer hover:opacity-90 transition-all duration-200 ${
+                              } text-white px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm rounded-lg sm:rounded-xl cursor-pointer hover:opacity-90 transition-all duration-200 ${
                                 getBlockShape(block.shape)
                               } shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-1 select-none relative overflow-hidden group`}
                               style={{
@@ -814,12 +817,12 @@ const GamePage: React.FC = () => {
                                 {block.shape === 'reporter' && <span className="text-purple-200 text-base">📊</span>}
                                 {block.shape === 'boolean' && <span className="text-orange-200 text-base">❓</span>}
                                 
-                                <span className="font-medium leading-tight">
+                                <span className="font-medium leading-tight text-xs sm:text-sm">
                                   {block.name.replace(/\[(.*?)\]/g, '($1)')}
                                 </span>
                                 
                                 {/* Add icon */}
-                                <span className="ml-auto text-white/70 text-lg font-bold group-hover:text-white transition-colors">+</span>
+                                <span className="ml-auto text-white/70 text-sm sm:text-lg font-bold group-hover:text-white transition-colors">+</span>
                               </div>
                               
                               {/* Connection notches like Scratch */}
@@ -845,7 +848,7 @@ const GamePage: React.FC = () => {
                       </div>
                       
                       {/* Scratch-like Workspace */}
-                      <div className="flex-1 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-xl border-3 border-blue-200 overflow-hidden relative shadow-inner">
+                      <div className="flex-1 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-lg sm:rounded-xl border-2 sm:border-3 border-blue-200 overflow-hidden relative shadow-inner" style={{ minHeight: '250px' }}>
                         {/* Background grid pattern like Scratch */}
                         <div className="absolute inset-0 opacity-30" style={{
                           backgroundImage: `

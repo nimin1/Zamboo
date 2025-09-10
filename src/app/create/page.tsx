@@ -336,7 +336,7 @@ const CreateGamePage: React.FC = () => {
                 <button
                   onClick={handleGenerateGame}
                   disabled={!prompt.trim() || isGenerating}
-                  className={`bg-duo-green-500 hover:bg-duo-green-600 active:bg-duo-green-700 text-white font-bold py-1 sm:py-3 px-2 sm:px-6 rounded-xl text-xs sm:text-base shadow-medium transition-all duration-200 flex items-center gap-1 sm:gap-2 whitespace-nowrap flex-shrink-0 ${
+                  className={`bg-duo-green-500 hover:bg-duo-green-600 active:bg-duo-green-700 text-white font-bold py-0.5 sm:py-3 px-2 sm:px-6 rounded-xl text-xs sm:text-base shadow-medium transition-all duration-200 flex items-center gap-1 sm:gap-2 whitespace-nowrap flex-shrink-0 ${
                     isGenerating
                       ? "opacity-75 cursor-not-allowed"
                       : "hover:shadow-strong transform hover:scale-[1.02]"
@@ -365,7 +365,7 @@ const CreateGamePage: React.FC = () => {
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     placeholder="Describe your game idea here... like 'a panda collecting bamboo in a magical forest'!"
-                    className="w-full px-4 sm:px-5 py-3 sm:py-4 border-2 border-neutral-200 rounded-2xl focus:border-duo-blue-500 focus:ring-4 focus:ring-duo-blue-100 outline-none transition-all duration-200 text-base min-h-[250px] sm:min-h-[250px] resize-none font-medium"
+                    className="w-full px-4 sm:px-5 py-3 sm:py-4 border-2 border-neutral-200 rounded-2xl focus:border-duo-blue-500 focus:ring-4 focus:ring-duo-blue-100 outline-none transition-all duration-200 text-sm sm:text-base min-h-[300px] sm:min-h-[250px] resize-none font-medium placeholder:text-xs sm:placeholder:text-base"
                     disabled={isGenerating}
                   />
 
@@ -400,7 +400,7 @@ const CreateGamePage: React.FC = () => {
 
                 {/* Revolutionary Examples */}
                 <div className="bg-neutral-50 rounded-2xl p-3 sm:p-4">
-                  <h4 className="text-lg sm:text-xl font-bold text-neutral-800 mb-2 sm:mb-3 font-display">
+                  <h4 className="text-base sm:text-xl font-bold text-neutral-800 mb-2 sm:mb-3 font-display">
                     Revolutionary Examples - Try These!
                   </h4>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -417,7 +417,7 @@ const CreateGamePage: React.FC = () => {
                       <button
                         key={index}
                         onClick={() => setPrompt(example)}
-                        className="bg-white hover:bg-duo-blue-50 text-left p-2 sm:p-3 text-sm sm:text-base font-medium rounded-xl border border-neutral-200 hover:border-duo-blue-200 hover:text-duo-blue-700 transition-colors disabled:opacity-50 leading-tight"
+                        className="bg-white hover:bg-duo-blue-50 text-left p-2 sm:p-3 text-xs sm:text-base font-medium rounded-xl border border-neutral-200 hover:border-duo-blue-200 hover:text-duo-blue-700 transition-colors disabled:opacity-50 leading-tight"
                         disabled={isGenerating}
                       >
                         <span className="flex items-start gap-2">

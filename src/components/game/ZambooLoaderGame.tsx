@@ -1181,15 +1181,15 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({
   return (
     <div className="flex flex-col items-center gap-4 p-2 max-h-screen overflow-hidden">
       {/* Game Title and Instructions */}
-      <div className="text-center">
-        <h3 className="text-xl font-bold text-neutral-800 mb-2">
+      <div className="text-center px-2">
+        <h3 className="text-base sm:text-xl font-bold text-neutral-800 mb-2">
           {getGameConfig().title}
         </h3>
-        <p className="text-sm text-neutral-600 mb-2">
+        <p className="text-xs sm:text-sm text-neutral-600 mb-2">
           <strong>🎯 Goal:</strong> {getGameConfig().goal}
         </p>
         <p className="text-xs text-neutral-500">
-          <strong>Controls:</strong> {getGameConfig().controls} • Get 5+ combo for bonus points!
+          <strong>Controls:</strong> {getGameConfig().controls} • Get 5+ combo for bonus!
         </p>
       </div>
 
@@ -1216,10 +1216,10 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({
       {/* Enhanced Progress Section */}
       <div className="w-full max-w-lg">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-base font-medium text-neutral-700">
+          <span className="text-sm sm:text-base font-medium text-neutral-700">
             🎮 Creating your incredible game...
           </span>
-          <span className="text-base font-bold text-duo-blue-600">
+          <span className="text-sm sm:text-base font-bold text-duo-blue-600">
             {Math.round(progress)}%
           </span>
         </div>
@@ -1234,8 +1234,8 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({
           </div>
         </div>
 
-        <div className="text-center mt-3">
-          <p className="text-sm text-neutral-600 font-medium">
+        <div className="text-center mt-3 px-2">
+          <p className="text-xs sm:text-sm text-neutral-600 font-medium">
             {progress < 10
               ? "🌱 Planting the seeds of your game world..."
               : progress < 20
