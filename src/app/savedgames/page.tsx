@@ -95,28 +95,28 @@ const SavedGamesPage: React.FC = () => {
       <BackgroundDecorations />
       
       <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10 flex-shrink-0">
-        <div className="w-full px-6 py-3">
+        <div className="w-full px-2 sm:px-4 lg:px-6 py-2 sm:py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Link href="/" className="flex items-center gap-2 text-neutral-600 hover:text-neutral-800 transition-colors">
-                <ArrowLeft size={18} />
-                <span>Back</span>
+            <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 min-w-0">
+              <Link href="/" className="flex items-center gap-1 sm:gap-2 text-neutral-600 hover:text-neutral-800 transition-colors">
+                <ArrowLeft size={16} className="sm:w-[18px] sm:h-[18px]" />
+                <span className="hidden sm:inline text-sm">Back</span>
               </Link>
               
-              <div className="flex items-center gap-3">
-                <div className="text-3xl animate-panda-bounce cursor-pointer">🐼</div>
-                <h1 className="logo-text-small">zamboo</h1>
+              <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 min-w-0">
+                <div className="text-2xl sm:text-3xl lg:text-4xl animate-panda-bounce cursor-pointer">🐼</div>
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-duo-green-500 font-display truncate">zamboo</h1>
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-duo-blue-600 font-medium">
-                <Trophy size={18} />
-                <span>500</span>
+            <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-shrink-0">
+              <div className="flex items-center gap-1 sm:gap-2 text-duo-blue-600 font-medium">
+                <Trophy size={14} className="sm:w-[16px] sm:h-[16px] lg:w-[18px] lg:h-[18px]" />
+                <span className="text-sm sm:text-base">500</span>
               </div>
-              <div className="flex items-center gap-2 text-duo-red-500 font-medium">
-                <Heart size={18} />
-                <span>5</span>
+              <div className="flex items-center gap-1 sm:gap-2 text-duo-red-500 font-medium">
+                <Heart size={14} className="sm:w-[16px] sm:h-[16px] lg:w-[18px] lg:h-[18px]" />
+                <span className="text-sm sm:text-base">5</span>
               </div>
             </div>
           </div>
@@ -136,17 +136,17 @@ const SavedGamesPage: React.FC = () => {
           ]}
         />
 
-        <main className="flex-1 px-4 py-1 flex flex-col justify-between">
+        <main className="flex-1 px-2 sm:px-4 py-1 flex flex-col justify-between">
           <div className="max-w-6xl mx-auto w-full">
-            <div className="text-center mb-3">
-              <h1 className="text-2xl font-bold text-neutral-800 mb-2 font-display">Your Saved Games!</h1>
-              <p className="text-sm text-neutral-600">Continue playing your saved games anytime! 💾</p>
+            <div className="text-center mb-2 sm:mb-3">
+              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-neutral-800 mb-1 sm:mb-2 font-display">Your Saved Games!</h1>
+              <p className="text-xs sm:text-sm text-neutral-600">Continue playing your saved games anytime! 💾</p>
             </div>
 
-            <div className="card p-4 mb-3">
-              <div className="flex items-center justify-center mb-2">
+            <div className="card p-2 sm:p-3 lg:p-4 mb-2 sm:mb-3">
+              <div className="flex items-center justify-center mb-1 sm:mb-2">
                 <ZambooMascot 
-                  size="medium"
+                  size="small"
                   state={zambooState}
                   interactive={true}
                   showSpeechBubble={true}
@@ -157,13 +157,13 @@ const SavedGamesPage: React.FC = () => {
                 />
               </div>
               <div className="text-center">
-                <p className="text-sm text-neutral-700 mb-2">
+                <p className="text-xs sm:text-sm text-neutral-700 mb-1 sm:mb-2 leading-tight">
                   {savedGames.length > 0 
                     ? "Pick any saved game below to continue where you left off!"
                     : "Start creating games and save them to build your collection!"
                   }
                 </p>
-                <p className="text-sm text-neutral-600">
+                <p className="text-xs sm:text-sm text-neutral-600 leading-tight">
                   {savedGames.length > 0 
                     ? "Your progress and block arrangements are preserved! 🚀"
                     : "Click 'Save' in any game to add it to your collection! ⭐"
@@ -173,22 +173,22 @@ const SavedGamesPage: React.FC = () => {
             </div>
 
             {savedGames.length === 0 ? (
-              <div className="card p-8 text-center">
-                <div className="text-6xl mb-4">📁</div>
-                <h2 className="text-2xl font-bold text-neutral-700 mb-2">No Saved Games Yet</h2>
-                <p className="text-neutral-600 mb-6">
+              <div className="card p-4 sm:p-6 lg:p-8 text-center">
+                <div className="text-4xl sm:text-5xl lg:text-6xl mb-2 sm:mb-3 lg:mb-4">📁</div>
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-neutral-700 mb-1 sm:mb-2">No Saved Games Yet</h2>
+                <p className="text-sm sm:text-base text-neutral-600 mb-3 sm:mb-4 lg:mb-6 leading-tight">
                   Create awesome games and save them to see them here!
                 </p>
                 <Link 
                   href="/create"
-                  className="btn-primary inline-flex items-center gap-2"
+                  className="btn-primary inline-flex items-center gap-2 text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6"
                 >
-                  <Gamepad2 size={18} />
+                  <Gamepad2 size={16} className="sm:w-[18px] sm:h-[18px]" />
                   Start Creating Games
                 </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
                 {savedGames.map((game) => (
                   <motion.div
                     key={game.id}
@@ -196,12 +196,12 @@ const SavedGamesPage: React.FC = () => {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    className="card-interactive p-6 flex flex-col min-h-[320px] relative group"
+                    className="card-interactive p-3 sm:p-4 lg:p-6 flex flex-col min-h-[280px] sm:min-h-[300px] lg:min-h-[320px] relative group"
                   >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">{getGameTypeIcon(game)}</span>
-                        <span className="text-sm font-medium text-neutral-600">
+                    <div className="flex items-start justify-between mb-2 sm:mb-3 lg:mb-4">
+                      <div className="flex items-center gap-1 sm:gap-2">
+                        <span className="text-lg sm:text-xl lg:text-2xl">{getGameTypeIcon(game)}</span>
+                        <span className="text-xs sm:text-sm font-medium text-neutral-600">
                           {getGameTypeLabel(game)}
                         </span>
                       </div>
@@ -213,28 +213,28 @@ const SavedGamesPage: React.FC = () => {
                         className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-all p-1 rounded"
                         title="Delete game"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={14} className="sm:w-[16px] sm:h-[16px]" />
                       </button>
                     </div>
                     
-                    <h3 className="text-xl font-bold text-neutral-800 mb-3 font-display line-clamp-2">
+                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-neutral-800 mb-2 sm:mb-3 font-display line-clamp-2">
                       {game.title || 'Untitled Game'}
                     </h3>
                     
-                    <div className="flex items-center gap-4 mb-4 text-sm text-neutral-600">
+                    <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 mb-2 sm:mb-3 lg:mb-4 text-xs sm:text-sm text-neutral-600">
                       <div className="flex items-center gap-1">
-                        <Calendar size={14} />
-                        <span>{formatDate(game.savedAt)}</span>
+                        <Calendar size={12} className="sm:w-[14px] sm:h-[14px]" />
+                        <span className="truncate">{formatDate(game.savedAt)}</span>
                       </div>
                     </div>
 
                     {game.stats && (
-                      <div className="mb-4 space-y-2">
-                        <div className="flex justify-between text-sm">
+                      <div className="mb-2 sm:mb-3 lg:mb-4 space-y-1 sm:space-y-2">
+                        <div className="flex justify-between text-xs sm:text-sm">
                           <span className="text-neutral-600">Games Played:</span>
                           <span className="font-medium">{game.stats.gamesPlayed || 0}</span>
                         </div>
-                        <div className="flex justify-between text-sm">
+                        <div className="flex justify-between text-xs sm:text-sm">
                           <span className="text-neutral-600">Best Score:</span>
                           <span className="font-medium text-duo-green-600">{game.stats.bestScore || 0}</span>
                         </div>
@@ -242,9 +242,9 @@ const SavedGamesPage: React.FC = () => {
                     )}
 
                     {game.blockWorkspace && game.blockWorkspace.length > 0 && (
-                      <div className="mb-4">
+                      <div className="mb-2 sm:mb-3 lg:mb-4">
                         <div className="text-xs text-neutral-500 mb-1">Block Workspace:</div>
-                        <div className="text-sm text-duo-purple-600 font-medium">
+                        <div className="text-xs sm:text-sm text-duo-purple-600 font-medium">
                           {game.blockWorkspace.length} block{game.blockWorkspace.length !== 1 ? 's' : ''} saved
                         </div>
                       </div>
@@ -253,9 +253,9 @@ const SavedGamesPage: React.FC = () => {
                     <button
                       onClick={() => handlePlayGame(game)}
                       disabled={isLoading}
-                      className="w-full btn-success flex items-center justify-center gap-2 mt-auto"
+                      className="w-full btn-success flex items-center justify-center gap-2 mt-auto text-sm sm:text-base py-2 sm:py-3"
                     >
-                      <Play size={16} />
+                      <Play size={14} className="sm:w-[16px] sm:h-[16px]" />
                       Continue Playing
                     </button>
                   </motion.div>

@@ -212,4 +212,50 @@ src/
 - Compact design with reduced padding/margins for better fit
 - Duolingo-inspired design patterns with vibrant colors
 
-The codebase emphasizes educational value, safety, and kid-friendly design while maintaining technical robustness through comprehensive schema validation and fallback systems. Recent additions include voice input functionality and HTML game generation for broader compatibility.
+### Responsive Design Implementation
+Recent mobile optimization work includes:
+
+**Canvas Responsiveness** (`src/components/game/ZambooLoaderGame.tsx`)
+- Dynamic scale factor calculation: `getScaleFactor()` function
+- Responsive canvas sizing with proper aspect ratio maintenance
+- Eliminated whitespace above/below canvas using 95vh viewport usage
+- Game elements scale proportionally to screen size
+```javascript
+const getScaleFactor = useCallback(() => {
+  const canvas = canvasRef.current;
+  if (!canvas) return 1;
+  const displayWidth = canvas.getBoundingClientRect().width;
+  const baseWidth = 1200;
+  return Math.max(0.5, Math.min(1.5, displayWidth / baseWidth));
+}, []);
+```
+
+**HTML Game Responsive System** (`src/app/api/generateHTMLGame/route.ts`)
+- Comprehensive responsive canvas framework for AI-generated HTML games
+- Mandatory responsive drawing functions: `drawText()`, `drawObject()`, `drawCircle()`, `drawLine()`
+- BASE_WIDTH (800) x BASE_HEIGHT (600) coordinate system with automatic scaling
+- Critical fix: Template literal syntax error resolved (nested backticks)
+```javascript
+function drawText(text, x, y, baseFontSize = 24, color = 'white', align = 'left') {
+    const { uniformScale } = getScaleFactors();
+    const fontSize = Math.max(12, baseFontSize * uniformScale);
+    ctx.font = fontSize + 'px Arial'; // Fixed syntax error
+    ctx.fillStyle = color;
+    ctx.textAlign = align;
+    ctx.fillText(text, x * uniformScale, y * uniformScale);
+}
+```
+
+**Mobile Layout Optimization**
+- Sidebar visibility breakpoint changed from `lg:` to `sm:` for better mobile UX
+- Compact padding: `px-2 sm:px-4 py-1 sm:py-2` for mobile-first approach
+- Font size reductions implemented via Tailwind responsive utilities
+- Game creation UI optimized for mobile viewport constraints
+
+The codebase emphasizes educational value, safety, and kid-friendly design while maintaining technical robustness through comprehensive schema validation and fallback systems. Recent additions include voice input functionality, HTML game generation for broader compatibility, and comprehensive mobile responsiveness optimizations.
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.

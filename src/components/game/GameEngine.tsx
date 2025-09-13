@@ -120,9 +120,10 @@ const GameEngine = forwardRef<GameEngineRef, GameEngineProps>(({
           this.cameras.main.startFollow(this.player)
         }
 
-        // Create UI
+        // Create UI with responsive font size
+        const responsiveFontSize = Math.max(16, Math.min(32, width * 0.03))
         this.scoreText = this.add.text(16, 16, `Score: ${this.score}`, {
-          fontSize: '24px',
+          fontSize: `${responsiveFontSize}px`,
           color: '#000'
         })
         this.scoreText.setScrollFactor(0) // Keep UI fixed to camera
@@ -367,8 +368,9 @@ const GameEngine = forwardRef<GameEngineRef, GameEngineProps>(({
 
       private showScoreEffect(points: number) {
         if (this.player) {
+          const responsiveFontSize = Math.max(14, Math.min(24, width * 0.025))
           const text = this.add.text((this.player as any).x, (this.player as any).y - 30, `+${points}`, {
-            fontSize: '20px',
+            fontSize: `${responsiveFontSize}px`,
             color: '#ffff00'
           })
           

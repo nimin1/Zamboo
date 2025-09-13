@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -19,7 +19,19 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ navItems }) => {
   const [isExpanded, setIsExpanded] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
   const pathname = usePathname()
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkIsMobile()
+    window.addEventListener('resize', checkIsMobile)
+    
+    return () => window.removeEventListener('resize', checkIsMobile)
+  }, [])
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded)
@@ -29,13 +41,13 @@ const Sidebar: React.FC<SidebarProps> = ({ navItems }) => {
     <motion.aside
       initial={false}
       animate={{ 
-        width: isExpanded ? 256 : 80 // w-64 = 256px, w-20 = 80px
+        width: isExpanded ? (isMobile ? 200 : 256) : 80 // Smaller width on mobile
       }}
       transition={{ 
         duration: 0.3, 
         ease: "easeInOut" 
       }}
-      className="bg-white border-r border-neutral-200 flex-col flex-shrink-0 hidden lg:flex relative"
+      className="bg-white border-r border-neutral-200 flex-col flex-shrink-0 hidden sm:flex relative"
     >
       <div className="p-4 flex-1">
         <div className="sticky top-6">

@@ -61,6 +61,16 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({
   const gameLoopRef = useRef<number>();
   const keysPressed = useRef<Set<string>>(new Set());
   
+  // Calculate responsive scale factor based on canvas display size
+  const getScaleFactor = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return 1;
+    
+    const displayWidth = canvas.getBoundingClientRect().width;
+    const baseWidth = 1200; // Our base canvas width
+    return Math.max(0.5, Math.min(1.5, displayWidth / baseWidth));
+  }, []);
+  
   // Randomly select a game template
   const [gameTemplate] = useState<GameTemplate>(() => {
     const templates: GameTemplate[] = ['car', 'football', 'fighting', 'fighter_jet', 'bird', 'santa'];
@@ -671,6 +681,7 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({
 
   // Render unique backgrounds for each game template
   const renderBackground = useCallback((ctx: CanvasRenderingContext2D, config: any, state: GameState) => {
+    const scaleFactor = getScaleFactor();
     switch (gameTemplate) {
       case 'car': {
         // Neon Racing Track - Dark road with neon edges and city skyline
@@ -689,12 +700,17 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({
         ];
         buildings.forEach(building => {
           ctx.fillRect(building.x, 200 - building.h, 120, building.h);
-          // Building windows
+          // Building windows with responsive scaling
           ctx.fillStyle = '#ffff00';
           for (let i = 0; i < 3; i++) {
             for (let j = 0; j < Math.floor(building.h / 20); j++) {
               if (Math.random() > 0.6) {
-                ctx.fillRect(building.x + 20 + i * 30, 200 - building.h + j * 20 + 5, 8, 10);
+                ctx.fillRect(
+                  building.x + 20 + i * 30, 
+                  200 - building.h + j * 20 + 5, 
+                  Math.max(4, 8 * scaleFactor), 
+                  Math.max(5, 10 * scaleFactor)
+                );
               }
             }
           }
@@ -796,14 +812,14 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({
           }
         }
         
-        // Graffiti tags
-        ctx.font = 'bold 24px Arial';
+        // Graffiti tags with responsive scaling
+        ctx.font = `bold ${Math.round(24 * scaleFactor)}px Arial`;
         ctx.fillStyle = '#FF0080';
         ctx.rotate(0.1);
-        ctx.fillText('FIGHT', 100, 100);
+        ctx.fillText('FIGHT', 100 * scaleFactor, 100 * scaleFactor);
         ctx.rotate(-0.2);
         ctx.fillStyle = '#00FF80';
-        ctx.fillText('ZONE', 600, 120);
+        ctx.fillText('ZONE', 600 * scaleFactor, 120 * scaleFactor);
         ctx.rotate(0.1); // Reset rotation
         
         // Alley ground with debris
@@ -1058,43 +1074,47 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({
           }
         }
 
+        const scaleFactor = getScaleFactor();
+        
         if (obj.isGift) {
           // Falling gifts - simple rotation while falling
           const rotation = (obj.y * 0.01) % (Math.PI * 2);
           ctx.rotate(rotation);
-          ctx.font = "20px Arial";
+          ctx.font = `${Math.round(20 * scaleFactor)}px Arial`;
           ctx.textAlign = "center";
-          ctx.fillText(emoji, 0, 5);
+          ctx.fillText(emoji, 0, 5 * scaleFactor);
         } else if (isObstacle) {
           // Menacing obstacles with warning effect
           if (obj.x < 200) {
             ctx.shadowColor = "red";
-            ctx.shadowBlur = 10;
+            ctx.shadowBlur = 10 * scaleFactor;
           }
           const wobble =
-            Math.sin(updatedState.gameTime * 8 + (obj.animationOffset || 0)) * 2;
+            Math.sin(updatedState.gameTime * 8 + (obj.animationOffset || 0)) * 2 * scaleFactor;
           ctx.translate(wobble, 0);
-          ctx.font = "25px Arial";
+          ctx.font = `${Math.round(25 * scaleFactor)}px Arial`;
           ctx.textAlign = "center";
-          ctx.fillText(emoji, 0, 5);
+          ctx.fillText(emoji, 0, 5 * scaleFactor);
           ctx.shadowBlur = 0;
         } else {
           // Animated floating collectibles
           const float =
-            Math.sin(updatedState.gameTime * 2 + (obj.animationOffset || 0)) * 3;
+            Math.sin(updatedState.gameTime * 2 + (obj.animationOffset || 0)) * 3 * scaleFactor;
           ctx.translate(0, float);
           ctx.rotate(
             Math.sin(updatedState.gameTime + (obj.animationOffset || 0)) * 0.2
           );
-          ctx.font = obj.y < GROUND_Y - 40 ? "20px Arial" : "25px Arial"; // Different sizes for floating vs ground items
+          const fontSize = obj.y < GROUND_Y - 40 ? 20 : 25;
+          ctx.font = `${Math.round(fontSize * scaleFactor)}px Arial`;
           ctx.textAlign = "center";
-          ctx.fillText(emoji, 0, 5);
+          ctx.fillText(emoji, 0, 5 * scaleFactor);
         }
 
         ctx.restore();
       });
 
       // Draw panda with death/invulnerability states
+      const scaleFactor = getScaleFactor();
       ctx.save();
       ctx.translate(
         updatedState.panda.x + updatedState.panda.width / 2,
@@ -1113,42 +1133,42 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({
       } else if (updatedState.panda.isJumping) {
         ctx.rotate(updatedState.panda.animationFrame * 0.1);
       } else {
-        ctx.translate(0, updatedState.panda.animationFrame * 2);
+        ctx.translate(0, updatedState.panda.animationFrame * 2 * scaleFactor);
       }
 
-      ctx.font = "45px Arial";
+      ctx.font = `${Math.round(45 * scaleFactor)}px Arial`;
       ctx.textAlign = "center";
-      ctx.fillText(config.player.emoji, 0, 10);
+      ctx.fillText(config.player.emoji, 0, 10 * scaleFactor);
       ctx.restore();
 
-      // Draw UI elements
+      // Draw UI elements with responsive scaling
       ctx.fillStyle = "#333";
-      ctx.font = "bold 16px Arial";
+      ctx.font = `bold ${Math.round(16 * scaleFactor)}px Arial`;
       ctx.textAlign = "left";
-      ctx.fillText(`Score: ${updatedState.score}`, 10, 25);
-      ctx.fillText(`High: ${updatedState.highScore}`, 10, 45);
-      ctx.fillText(`Lives: ${"❤️".repeat(updatedState.lives)}`, 10, 65);
+      ctx.fillText(`Score: ${updatedState.score}`, 10 * scaleFactor, 25 * scaleFactor);
+      ctx.fillText(`High: ${updatedState.highScore}`, 10 * scaleFactor, 45 * scaleFactor);
+      ctx.fillText(`Lives: ${"❤️".repeat(updatedState.lives)}`, 10 * scaleFactor, 65 * scaleFactor);
 
       // Draw combo
       if (updatedState.showCombo && updatedState.combo >= 5) {
         ctx.fillStyle = "#FF6B6B";
-        ctx.font = "bold 20px Arial";
+        ctx.font = `bold ${Math.round(20 * scaleFactor)}px Arial`;
         ctx.textAlign = "center";
-        ctx.fillText(`${updatedState.combo}x COMBO!`, CANVAS_WIDTH / 2, 50);
+        ctx.fillText(`${updatedState.combo}x COMBO!`, CANVAS_WIDTH / 2, 50 * scaleFactor);
       }
 
-      // Draw game over screen
+      // Draw game over screen with responsive scaling
       if (updatedState.gameOver) {
         ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
         ctx.fillStyle = "#FF4444";
-        ctx.font = "bold 32px Arial";
+        ctx.font = `bold ${Math.round(32 * scaleFactor)}px Arial`;
         ctx.textAlign = "center";
-        ctx.fillText("GAME OVER!", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 40);
+        ctx.fillText("GAME OVER!", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 40 * scaleFactor);
 
         ctx.fillStyle = "#FFF";
-        ctx.font = "20px Arial";
+        ctx.font = `${Math.round(20 * scaleFactor)}px Arial`;
         ctx.fillText(
           `Final Score: ${updatedState.score}`,
           CANVAS_WIDTH / 2,
@@ -1157,12 +1177,12 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({
         ctx.fillText(
           `High Score: ${updatedState.highScore}`,
           CANVAS_WIDTH / 2,
-          CANVAS_HEIGHT / 2 + 25
+          CANVAS_HEIGHT / 2 + 25 * scaleFactor
         );
         ctx.fillText(
           "Restarting in " + Math.ceil(3 - updatedState.restartTimer) + "...",
           CANVAS_WIDTH / 2,
-          CANVAS_HEIGHT / 2 + 55
+          CANVAS_HEIGHT / 2 + 55 * scaleFactor
         );
       }
 
@@ -1179,92 +1199,38 @@ const ZambooLoaderGame: React.FC<ZambooLoaderGameProps> = ({
   }, [updateGame]);
 
   return (
-    <div className="flex flex-col items-center gap-4 p-2 max-h-screen overflow-hidden">
-      {/* Game Title and Instructions */}
-      <div className="text-center px-2">
-        <h3 className="text-base sm:text-xl font-bold text-neutral-800 mb-2">
-          {getGameConfig().title}
-        </h3>
-        <p className="text-xs sm:text-sm text-neutral-600 mb-2">
-          <strong>🎯 Goal:</strong> {getGameConfig().goal}
-        </p>
-        <p className="text-xs text-neutral-500">
-          <strong>Controls:</strong> {getGameConfig().controls} • Get 5+ combo for bonus!
-        </p>
-      </div>
-
-      {/* Game Canvas - Now fills 3/4 of screen */}
-      <div className="relative w-full flex justify-center">
+    <div className="relative flex flex-col h-full w-full max-w-none overflow-hidden">
+      {/* Maximum Canvas Space - No title section */}
+      <div className="flex-1 w-full flex justify-center items-center min-h-0">
         <canvas
           ref={canvasRef}
           width={CANVAS_WIDTH}
           height={CANVAS_HEIGHT}
-          className="border-4 border-green-300 rounded-xl shadow-2xl bg-gradient-to-b from-sky-200 to-green-200 max-w-full h-auto"
+          className="border border-green-300 rounded-lg shadow-lg bg-gradient-to-b from-sky-200 to-green-200"
           style={{
-            width: "min(75vw, 1200px)",
-            height: "min(45vh, 500px)",
-            minWidth: "600px",
-            minHeight: "300px",
+            width: "min(100vw, min(95vh * 2.4, 100vw))",
+            height: "min(95vh, 100vw / 2.4)",
             maxWidth: "1200px",
-            maxHeight: "500px",
+            maxHeight: "700px",
             outline: "none",
+            imageRendering: "pixelated",
           }}
           tabIndex={0}
         />
       </div>
 
-      {/* Enhanced Progress Section */}
-      <div className="w-full max-w-lg">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-sm sm:text-base font-medium text-neutral-700">
-            🎮 Creating your incredible game...
-          </span>
-          <span className="text-sm sm:text-base font-bold text-duo-blue-600">
+      {/* Minimized Progress Section - Overlay on canvas */}
+      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/50 rounded-full px-3 py-1 backdrop-blur-sm">
+        <div className="flex items-center gap-2">
+          <div className="w-20 bg-white/20 rounded-full h-1 overflow-hidden">
+            <div
+              className="h-full bg-white rounded-full transition-all duration-500 ease-out"
+              style={{ width: `${Math.max(progress, 5)}%` }}
+            />
+          </div>
+          <span className="text-xs font-medium text-white">
             {Math.round(progress)}%
           </span>
-        </div>
-
-        <div className="w-full bg-neutral-200 rounded-full h-4 overflow-hidden shadow-inner">
-          <div
-            className="h-full bg-gradient-to-r from-duo-green-500 via-duo-blue-500 to-duo-purple-500 rounded-full transition-all duration-500 ease-out relative"
-            style={{ width: `${Math.max(progress, 5)}%` }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 animate-pulse"></div>
-            <div className="absolute right-0 top-0 h-full w-1 bg-white opacity-60 animate-pulse"></div>
-          </div>
-        </div>
-
-        <div className="text-center mt-3 px-2">
-          <p className="text-xs sm:text-sm text-neutral-600 font-medium">
-            {progress < 10
-              ? "🌱 Planting the seeds of your game world..."
-              : progress < 20
-              ? "🏗️ Building the foundation and game structure..."
-              : progress < 30
-              ? "🎨 Painting beautiful backgrounds and environments..."
-              : progress < 40
-              ? "👾 Creating characters and bringing them to life..."
-              : progress < 50
-              ? "⚡ Adding special powers and abilities..."
-              : progress < 60
-              ? "🎵 Composing sound effects and music..."
-              : progress < 70
-              ? "🔧 Programming game logic and interactions..."
-              : progress < 80
-              ? "🌟 Adding sparkles, animations, and magic..."
-              : progress < 90
-              ? "🎮 Testing gameplay and fine-tuning controls..."
-              : progress < 95
-              ? "✨ Polishing every detail to perfection..."
-              : "🎉 Your amazing game is ready to play!"}
-          </p>
-          <p className="text-xs text-neutral-500 mt-1">
-            {progress < 50
-              ? "Play the panda game above while we work! Avoid the rocks! 🐼"
-              : progress < 90
-              ? "Almost there! Try to beat your high score! 🏆"
-              : "Get ready for an amazing gaming experience! 🚀"}
-          </p>
         </div>
       </div>
     </div>

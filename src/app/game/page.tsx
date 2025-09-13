@@ -466,7 +466,7 @@ const GamePage: React.FC = () => {
   }
 
   return (
-    <div className="h-screen bg-neutral-50 relative flex flex-col overflow-hidden">
+    <div className="min-h-screen bg-neutral-50 relative flex flex-col">
       {/* Animated Background Decorations */}
       <BackgroundDecorations />
       {/* Navigation Header */}
@@ -533,17 +533,21 @@ const GamePage: React.FC = () => {
         </div>
       </nav>
 
-      <div className="flex-1 p-1 sm:p-2 relative z-10 min-h-0 overflow-hidden">
-        <div className="h-full max-w-[100vw] mx-auto">
+      <div className="flex-1 p-1 sm:p-2 relative z-10 overflow-auto">
+        <div className="w-full max-w-none mx-auto">
           {/* Game Layout */}
           <div
-            className={`grid ${
-              showEditor ? "grid-cols-1 lg:grid-cols-2 xl:grid-cols-5" : "grid-cols-1"
-            } gap-2 h-full min-h-full`}
+            className={`${
+              showEditor 
+                ? "flex flex-col lg:grid lg:grid-cols-2 xl:grid-cols-5 gap-2" 
+                : "grid grid-cols-1 gap-2"
+            } min-h-[calc(100vh-120px)]`}
           >
             {/* Main Game Area */}
-            <div className={`${showEditor ? "lg:col-span-2 xl:col-span-3" : "col-span-1"} flex flex-col min-h-full`}>
-              <div className="card p-2 sm:p-3 flex-1 flex flex-col min-h-full" style={{ minHeight: showEditor ? '75vh' : '85vh' }}>
+            <div className={`${showEditor ? "order-1 lg:col-span-2 xl:col-span-3" : "col-span-1"} flex flex-col ${
+              showEditor ? "h-[50vh] lg:h-auto lg:min-h-full" : "min-h-full"
+            }`}>
+              <div className="card p-2 sm:p-3 flex-1 flex flex-col overflow-hidden">
                 {/* Game Control Bar */}
                 <div className="flex items-center justify-between mb-2 sm:mb-3">
                   <div className="flex items-center gap-2 sm:gap-3">
@@ -568,7 +572,7 @@ const GamePage: React.FC = () => {
                     <button
                       onClick={isListening ? stopVoicePrompt : startVoicePrompt}
                       disabled={isProcessingVoice}
-                      className={`p-2 sm:p-3 rounded-lg sm:rounded-xl transition-all ${
+                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all ${
                         isListening 
                           ? "bg-duo-red-500 text-white shadow-medium animate-pulse"
                           : isProcessingVoice
@@ -578,41 +582,33 @@ const GamePage: React.FC = () => {
                       title={isListening ? "Stop voice prompt" : "Voice modify game"}
                     >
                       {isProcessingVoice ? (
-                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       ) : isListening ? (
-                        <MicOff size={14} className="sm:w-[18px] sm:h-[18px]" />
+                        <MicOff size={18} />
                       ) : (
-                        <Mic size={14} className="sm:w-[18px] sm:h-[18px]" />
+                        <Mic size={18} />
                       )}
                     </button>
 
                     <button
-                      onClick={handleShare}
-                      className="btn-ghost p-2 sm:p-3 rounded-lg sm:rounded-xl hidden sm:block"
-                      title="Share game"
-                    >
-                      <Share size={14} className="sm:w-[18px] sm:h-[18px]" />
-                    </button>
-
-                    <button
                       onClick={handleSaveGame}
-                      className="btn-primary p-2 sm:p-3 rounded-lg sm:rounded-xl flex items-center gap-1 sm:gap-2 text-white bg-duo-green-500 hover:bg-duo-green-600"
+                      className="w-auto h-10 sm:h-12 px-3 sm:px-4 rounded-xl flex items-center gap-2 text-white bg-duo-green-500 hover:bg-duo-green-600 transition-all"
                       title="Save game"
                     >
-                      <Save size={14} className="sm:w-[18px] sm:h-[18px]" />
-                      <span className="text-xs sm:text-sm font-medium hidden sm:inline">Save</span>
+                      <Save size={18} />
+                      <span className="text-sm font-medium hidden sm:inline">Save</span>
                     </button>
 
                     <button
                       onClick={() => setShowEditor(!showEditor)}
-                      className={`p-2 sm:p-3 rounded-lg sm:rounded-xl transition-all ${
+                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all ${
                         showEditor
                           ? "bg-duo-purple-500 text-white shadow-medium"
-                          : "btn-ghost"
+                          : "btn-ghost hover:bg-duo-purple-100"
                       }`}
                       title="Edit game code"
                     >
-                      <Code size={14} className="sm:w-[18px] sm:h-[18px]" />
+                      <Code size={18} />
                     </button>
                   </div>
                 </div>
@@ -626,17 +622,24 @@ const GamePage: React.FC = () => {
                         <h4 className="font-bold text-xs sm:text-sm">🎮 {gameLogic.title}</h4>
                         <p className="text-xs opacity-90 hidden sm:block">{gameLogic.description}</p>
                       </div>
-                      <div className="flex-1 overflow-hidden" style={{ minHeight: '400px', height: 'calc(100vh - 150px)' }}>
+                      <div className="flex-1 overflow-hidden" style={{ 
+                        minHeight: showEditor ? '300px' : '400px', 
+                        height: showEditor ? 'calc(50vh - 100px)' : 'calc(100vh - 150px)' 
+                      }}>
                         <iframe
                           srcDoc={gameLogic.html}
                           className="w-full h-full border-0"
                           sandbox="allow-scripts allow-same-origin"
                           title={gameLogic.title}
-                          style={{ width: '100%', height: '100%', minHeight: '400px' }}
+                          style={{ 
+                            width: '100%', 
+                            height: '100%', 
+                            minHeight: showEditor ? '300px' : '400px' 
+                          }}
                         />
                       </div>
                       <div className="p-1 sm:p-2 bg-gray-50 border-t flex-shrink-0">
-                        <p className="text-xs text-gray-600 text-center">
+                        <p className="text-xs sm:text-sm text-gray-600 text-center">
                           🎯 Use arrow keys or touch controls to play!
                         </p>
                       </div>
@@ -659,12 +662,13 @@ const GamePage: React.FC = () => {
             <AnimatePresence>
               {showEditor && (
                 <motion.div
-                  initial={{ opacity: 0, x: 300 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 300 }}
-                  className="xl:col-span-2 flex flex-col min-h-full"
+                  initial={{ opacity: 0, y: 300 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 300 }}
+                  transition={{ duration: 0.3 }}
+                  className="order-2 xl:col-span-2 flex flex-col h-[50vh] lg:h-auto lg:min-h-full"
                 >
-                  <div className="card p-2 sm:p-3 flex-1 flex flex-col min-h-full">
+                  <div className="card p-2 sm:p-3 flex-1 flex flex-col overflow-hidden">
                     <div className="flex items-center justify-between mb-2 sm:mb-3">
                       <h3 className="text-sm sm:text-xl font-bold text-neutral-800 flex items-center gap-2 font-display">
                         <Code className="text-duo-purple-500" size={16} />
@@ -714,44 +718,43 @@ const GamePage: React.FC = () => {
                     )}
 
                     {/* Scratch-like Visual Coding Blocks */}
-                    <div className="flex-1 flex flex-col min-h-0">
+                    <div className="flex-1 flex flex-col overflow-hidden">
                       <div className="flex items-center justify-between mb-2 sm:mb-3">
                         <h4 className="text-sm sm:text-base font-semibold text-neutral-800 flex items-center gap-1 sm:gap-2">
                           <Package className="text-duo-purple-500" size={14} />
                           <span className="hidden sm:inline">Code Blocks</span>
                           <span className="sm:hidden">Blocks</span>
                         </h4>
-                        <div className="flex items-center gap-1 sm:gap-2">
+                        <div className="flex items-center gap-2">
                           {workspaceBlocks.length > 0 && (
                             <button
                               onClick={clearAllBlocks}
-                              className="btn-ghost text-xs px-1 py-0.5 flex items-center gap-1 text-red-600 hover:bg-red-50 transition-all"
+                              className="w-8 h-8 rounded-lg flex items-center justify-center text-red-600 hover:bg-red-50 transition-all border border-red-200"
                               title="Clear all blocks"
                             >
-                              <Trash2 size={10} />
-                              <span className="hidden sm:inline">Clear</span>
+                              <Trash2 size={14} />
                             </button>
                           )}
                           <button
                             onClick={applyBlockChanges}
-                            className="btn-success text-xs px-1 sm:px-2 py-1 flex items-center gap-1 shadow-lg hover:shadow-xl transition-all"
+                            className="h-8 px-3 rounded-lg flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all"
                           >
-                            <Play size={10} />
-                            <span className="hidden sm:inline">🚀</span> Run
+                            <Play size={14} />
+                            <span>Run</span>
                           </button>
                         </div>
                       </div>
                       
                       {/* Scratch-style Block Categories */}
-                      <div className="mb-3 sm:mb-4">
-                        <div className="grid grid-cols-3 sm:grid-cols-2 gap-1 sm:gap-2 text-xs sm:text-sm">
+                      <div className="mb-2 sm:mb-3">
+                        <div className="grid grid-cols-5 gap-1 text-xs">
                           {Object.entries(blockCategories).map(([key, category]) => (
                             <button
                               key={key}
                               onClick={() => setSelectedCategory(key)}
-                              className={`px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 font-bold border-2 relative overflow-hidden group ${
+                              className={`h-14 sm:h-16 px-1 py-2 rounded-lg transition-all duration-200 font-bold border relative overflow-hidden group flex flex-col items-center justify-center ${
                                 selectedCategory === key 
-                                  ? `${category.color} text-white shadow-xl border-white/30 scale-105` 
+                                  ? `${category.color} text-white shadow-lg border-white/30 scale-105` 
                                   : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border-neutral-300 hover:scale-105'
                               }`}
                               style={selectedCategory === key ? {
@@ -762,7 +765,7 @@ const GamePage: React.FC = () => {
                               {/* Scratch-style category highlight */}
                               <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                               
-                              <div className="relative z-10 flex items-center justify-center gap-2">
+                              <div className="relative z-10 flex flex-col items-center justify-center gap-1 w-full h-full">
                                 {/* Category icons */}
                                 {key === 'events' && <span className="text-lg">⚡</span>}
                                 {key === 'motion' && <span className="text-lg">🏃</span>}
@@ -770,8 +773,8 @@ const GamePage: React.FC = () => {
                                 {key === 'game' && <span className="text-lg">🎮</span>}
                                 {key === 'sensing' && <span className="text-lg">👁️</span>}
                                 
-                                <span className="text-xs font-bold leading-tight">
-                                  {category.name}
+                                <span className="text-xs font-bold leading-tight text-center">
+                                  {key === 'events' ? 'Event' : key === 'motion' ? 'Move' : key === 'control' ? 'Loop' : key === 'game' ? 'Game' : 'Sense'}
                                 </span>
                               </div>
                               
@@ -785,22 +788,22 @@ const GamePage: React.FC = () => {
                       </div>
                       
                       {/* Scratch-like Block Palette */}
-                      <div className="mb-3 sm:mb-4 bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-lg sm:rounded-xl p-2 sm:p-4 border-2 border-neutral-200 shadow-inner">
-                        <h5 className="text-xs sm:text-sm font-bold text-neutral-700 mb-2 sm:mb-3 flex items-center gap-2">
-                          <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gradient-to-r from-blue-400 to-purple-500"></span>
+                      <div className="mb-2 sm:mb-3 bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-lg sm:rounded-xl p-2 border border-neutral-200 shadow-inner">
+                        <h5 className="text-xs font-bold text-neutral-700 mb-2 flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-500"></span>
                           <span className="hidden sm:inline">{blockCategories[selectedCategory as keyof typeof blockCategories]?.name} Blocks</span>
                           <span className="sm:hidden">Blocks</span>
                         </h5>
-                        <div className="grid grid-cols-1 gap-2 sm:gap-3 max-h-32 sm:max-h-48 overflow-y-auto">
+                        <div className="space-y-1 sm:space-y-2 max-h-32 sm:max-h-40 overflow-y-auto">
                           {blockCategories[selectedCategory as keyof typeof blockCategories]?.blocks.map((block) => (
                             <div
                               key={block.id}
                               onClick={() => addBlockToWorkspace(block)}
                               className={`${
                                 blockCategories[selectedCategory as keyof typeof blockCategories].color
-                              } text-white px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm rounded-lg sm:rounded-xl cursor-pointer hover:opacity-90 transition-all duration-200 ${
+                              } text-white px-2 sm:px-3 py-2 sm:py-2 text-xs sm:text-sm rounded-md sm:rounded-lg cursor-pointer hover:opacity-90 transition-all duration-200 ${
                                 getBlockShape(block.shape)
-                              } shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-1 select-none relative overflow-hidden group`}
+                              } shadow-md hover:shadow-lg transform hover:scale-105 hover:-translate-y-1 select-none relative overflow-hidden group w-full flex items-center justify-start`}
                               style={{
                                 background: `linear-gradient(135deg, ${blockCategories[selectedCategory as keyof typeof blockCategories].color.replace('bg-', '')}-500, ${blockCategories[selectedCategory as keyof typeof blockCategories].color.replace('bg-', '')}-600)`,
                                 boxShadow: '0 4px 15px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2)'
@@ -809,20 +812,20 @@ const GamePage: React.FC = () => {
                               {/* Scratch-style highlight */}
                               <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                               
-                              <div className="flex items-center gap-2 relative z-10">
+                              <div className="flex items-center gap-2 relative z-10 w-full">
                                 {/* Block type icons with better styling */}
-                                {block.shape === 'hat' && <span className="text-yellow-200 text-base">⚡</span>}
-                                {block.shape === 'stack' && <span className="text-blue-200 text-base">🔧</span>}
-                                {block.shape === 'c-stack' && <span className="text-green-200 text-base">🔄</span>}
-                                {block.shape === 'reporter' && <span className="text-purple-200 text-base">📊</span>}
-                                {block.shape === 'boolean' && <span className="text-orange-200 text-base">❓</span>}
+                                {block.shape === 'hat' && <span className="text-yellow-200 text-sm sm:text-base flex-shrink-0">⚡</span>}
+                                {block.shape === 'stack' && <span className="text-blue-200 text-sm sm:text-base flex-shrink-0">🔧</span>}
+                                {block.shape === 'c-stack' && <span className="text-green-200 text-sm sm:text-base flex-shrink-0">🔄</span>}
+                                {block.shape === 'reporter' && <span className="text-purple-200 text-sm sm:text-base flex-shrink-0">📊</span>}
+                                {block.shape === 'boolean' && <span className="text-orange-200 text-sm sm:text-base flex-shrink-0">❓</span>}
                                 
-                                <span className="font-medium leading-tight text-xs sm:text-sm">
+                                <span className="font-medium leading-tight text-xs sm:text-sm flex-1 text-left">
                                   {block.name.replace(/\[(.*?)\]/g, '($1)')}
                                 </span>
                                 
                                 {/* Add icon */}
-                                <span className="ml-auto text-white/70 text-sm sm:text-lg font-bold group-hover:text-white transition-colors">+</span>
+                                <span className="text-white/70 text-sm font-bold group-hover:text-white transition-colors flex-shrink-0">+</span>
                               </div>
                               
                               {/* Connection notches like Scratch */}
@@ -848,7 +851,7 @@ const GamePage: React.FC = () => {
                       </div>
                       
                       {/* Scratch-like Workspace */}
-                      <div className="flex-1 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-lg sm:rounded-xl border-2 sm:border-3 border-blue-200 overflow-hidden relative shadow-inner" style={{ minHeight: '250px' }}>
+                      <div className="flex-1 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-lg sm:rounded-xl border border-blue-200 overflow-hidden relative shadow-inner" style={{ minHeight: '180px', maxHeight: '280px' }}>
                         {/* Background grid pattern like Scratch */}
                         <div className="absolute inset-0 opacity-30" style={{
                           backgroundImage: `
@@ -859,7 +862,7 @@ const GamePage: React.FC = () => {
                         }}></div>
                         
                         {/* Drop zones for better UX */}
-                        <div className="absolute inset-4 overflow-hidden">
+                        <div className="absolute inset-2 sm:inset-4 overflow-auto" style={{ height: 'calc(100% - 16px)', width: 'calc(100% - 16px)' }}>
                           {workspaceBlocks.map((block) => (
                             <div
                               key={block.id}
@@ -867,12 +870,13 @@ const GamePage: React.FC = () => {
                                 getBlockShape(block.shape)
                               } ${block.connected ? 'ring-4 ring-yellow-300 ring-opacity-75' : ''} relative overflow-hidden`}
                               style={{ 
-                                left: `${Math.min(Math.max(block.x, 0), 400)}px`, 
-                                top: `${Math.min(Math.max(block.y, 0), 300)}px`,
-                                minWidth: '160px',
-                                padding: block.shape === 'reporter' ? '8px 20px' : '10px 16px',
+                                left: `${Math.min(Math.max(block.x, 0), 300)}px`, 
+                                top: `${Math.min(Math.max(block.y, 0), 200)}px`,
+                                minWidth: '120px',
+                                fontSize: '11px',
+                                padding: block.shape === 'reporter' ? '4px 12px' : '6px 10px',
                                 background: `linear-gradient(135deg, ${block.color.replace('bg-', '')}-500, ${block.color.replace('bg-', '')}-600)`,
-                                boxShadow: '0 8px 25px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)'
+                                boxShadow: '0 4px 15px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2)'
                               }}
                               draggable
                               onDragStart={(e) => {
@@ -885,8 +889,8 @@ const GamePage: React.FC = () => {
                                 e.currentTarget.style.zIndex = 'auto';
                                 const rect = e.currentTarget.parentElement?.getBoundingClientRect();
                                 if (rect) {
-                                  const newX = Math.min(Math.max(e.clientX - rect.left - 80, 0), 400);
-                                  const newY = Math.min(Math.max(e.clientY - rect.top - 20, 0), 300);
+                                  const newX = Math.min(Math.max(e.clientX - rect.left - 60, 0), 300);
+                                  const newY = Math.min(Math.max(e.clientY - rect.top - 15, 0), 200);
                                   handleBlockDrag(block.id, newX, newY);
                                 }
                               }}
@@ -963,18 +967,16 @@ const GamePage: React.FC = () => {
                           ))}
                           
                           {workspaceBlocks.length === 0 && (
-                            <div className="absolute inset-0 flex items-center justify-center text-neutral-500">
-                              <div className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-8 border-2 border-dashed border-blue-300 shadow-lg">
-                                <div className="text-6xl mb-4 animate-bounce">🎯</div>
-                                <div className="text-lg font-bold text-blue-600 mb-2">Start Building!</div>
-                                <div className="text-xs text-neutral-600 mb-3">Click blocks from the palette above to add them here</div>
-                                <div className="text-xs text-neutral-500 mb-4">Drag blocks around to arrange your game logic</div>
-                                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 text-amber-700 p-3 rounded-lg border border-amber-200 text-xs">
-                                  <strong>💡 Scratch Tips:</strong><br/>
-                                  • Drag blocks to move them<br/>
-                                  • Double-click or ❌ to delete<br/>
-                                  • Snap blocks together to connect<br/>
-                                  • Use different colored categories
+                            <div className="flex items-center justify-center text-neutral-500 h-full w-full">
+                              <div className="text-center bg-white/80 backdrop-blur-sm rounded-lg p-2 sm:p-4 border border-dashed border-blue-300 shadow-md max-w-xs">
+                                <div className="text-2xl sm:text-4xl mb-1 sm:mb-2 animate-bounce">🎯</div>
+                                <div className="text-xs sm:text-sm font-bold text-blue-600 mb-1">Start Building!</div>
+                                <div className="text-xs text-neutral-600 mb-1 sm:mb-2">Click blocks above to add them here</div>
+                                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 text-amber-700 p-1 sm:p-2 rounded-md border border-amber-200 text-xs">
+                                  <strong>💡 Tips:</strong><br/>
+                                  • Drag blocks to move<br/>
+                                  • Double-click to delete<br/>
+                                  • Connect blocks together
                                 </div>
                               </div>
                             </div>
@@ -1001,11 +1003,11 @@ const GamePage: React.FC = () => {
                         </div>
                       </div>
                       
-                      <div className="mt-2 text-xs text-neutral-500 text-center bg-gradient-to-r from-blue-50 to-purple-50 p-1 rounded">
-                        🎮 <strong>How to use:</strong> Click blocks above → Drag them around → Double-click or use ❌ to delete → Click "Run Code"!
+                      <div className="mt-1 text-xs text-neutral-500 text-center bg-gradient-to-r from-blue-50 to-purple-50 p-1 rounded flex-shrink-0">
+                        🎮 <strong>How to use:</strong> Click blocks → Drag → Double-click to delete → Click "Run"!
                         {workspaceBlocks.length > 0 && (
-                          <div className="mt-1 text-xs text-green-700">
-                            ✨ You have {workspaceBlocks.length} block{workspaceBlocks.length !== 1 ? 's' : ''} in your workspace
+                          <div className="mt-0.5 text-xs text-green-700">
+                            ✨ {workspaceBlocks.length} block{workspaceBlocks.length !== 1 ? 's' : ''}
                           </div>
                         )}
                       </div>

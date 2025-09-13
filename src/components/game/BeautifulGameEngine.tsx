@@ -331,12 +331,17 @@ const BeautifulGameEngine = forwardRef<GameEngineRef, BeautifulGameEngineProps>(
       ctx.restore()
     })
 
-    // Render UI
+    // Render UI with responsive font size
+    const responsiveFontSize = Math.max(16, Math.min(32, canvasWidth * 0.03))
+    const uiPadding = Math.max(8, canvasWidth * 0.01)
+    const uiWidth = Math.max(150, canvasWidth * 0.2)
+    const uiHeight = Math.max(30, canvasHeight * 0.05)
+    
     ctx.fillStyle = 'rgba(0,0,0,0.7)'
-    ctx.fillRect(10, 10, 200, 40)
+    ctx.fillRect(uiPadding, uiPadding, uiWidth, uiHeight)
     ctx.fillStyle = '#FFFFFF'
-    ctx.font = '20px Arial'
-    ctx.fillText(`Score: ${gameStateRef.current.score}`, 20, 35)
+    ctx.font = `${responsiveFontSize}px Arial`
+    ctx.fillText(`Score: ${gameStateRef.current.score}`, uiPadding + 10, uiPadding + uiHeight * 0.7)
   }
 
   // Handle canvas resizing

@@ -300,11 +300,11 @@ const CreateGamePage: React.FC = () => {
         />
 
         {/* Main Content Area */}
-        <main className={`flex-1 ${isGenerating ? 'px-0 py-0' : 'px-4 sm:px-6 lg:px-8 py-4 lg:py-6'} ${isGenerating ? 'overflow-hidden' : 'overflow-y-auto'} min-w-0`}>
+        <main className={`flex-1 ${isGenerating ? 'px-0 py-0' : 'px-2 sm:px-4 py-1 sm:py-2'} ${isGenerating ? 'overflow-hidden' : 'overflow-y-auto'} min-w-0`}>
           <div className={`${isGenerating ? 'max-w-none w-full h-full' : 'max-w-4xl mx-auto'} w-full h-full`}>
             {/* Show loader game during generation */}
             {isGenerating ? (
-              <div className="h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-green-50 overflow-hidden">
+              <div className="h-full w-full bg-gradient-to-br from-blue-50 to-green-50 overflow-hidden">
                 <ZambooLoaderGame 
                   progress={generationProgress}
                   onGameComplete={() => {}}
@@ -313,22 +313,22 @@ const CreateGamePage: React.FC = () => {
             ) : (
               <>
                 {/* Header */}
-                <div className="text-center mb-4">
-                  <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-neutral-800 mb-2 font-display leading-tight">
+                <div className="text-center mb-2 sm:mb-3">
+                  <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold text-neutral-800 mb-1 sm:mb-2 font-display leading-tight">
                     Create Your Game!
                   </h1>
-                  <p className="text-sm sm:text-lg text-neutral-600 font-medium px-4">
+                  <p className="text-xs sm:text-base text-neutral-600 font-medium px-2 sm:px-4">
                     Tell me your game idea and I'll bring it to life! 🎮
                   </p>
                 </div>
 
             {/* Main Game Idea Section */}
-            <div className="bg-white rounded-2xl shadow-soft p-4 sm:p-6 mb-4">
-              <div className="flex flex-row items-center justify-between mb-3 sm:mb-4 gap-2 sm:gap-3">
-                <h2 className="text-sm sm:text-2xl font-bold text-neutral-800 font-display flex items-center gap-1 sm:gap-2 flex-1 min-w-0">
+            <div className="bg-white rounded-2xl shadow-soft p-3 sm:p-4 mb-2 sm:mb-3">
+              <div className="flex flex-row items-center justify-between mb-2 sm:mb-3 gap-2 sm:gap-3">
+                <h2 className="text-sm sm:text-xl font-bold text-neutral-800 font-display flex items-center gap-1 sm:gap-2 flex-1 min-w-0">
                   <Sparkles
                     className="text-duo-blue-500 flex-shrink-0"
-                    size={20}
+                    size={16}
                   />
                   <span className="leading-tight truncate">What's Your Game Idea?</span>
                 </h2>
@@ -359,13 +359,13 @@ const CreateGamePage: React.FC = () => {
                 </button>
               </div>
 
-              <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-2 sm:space-y-3">
                 <div className="relative">
                   <textarea
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     placeholder="Describe your game idea here... like 'a panda collecting bamboo in a magical forest'!"
-                    className="w-full px-4 sm:px-5 py-3 sm:py-4 border-2 border-neutral-200 rounded-2xl focus:border-duo-blue-500 focus:ring-4 focus:ring-duo-blue-100 outline-none transition-all duration-200 text-sm sm:text-base min-h-[300px] sm:min-h-[250px] resize-none font-medium placeholder:text-xs sm:placeholder:text-base"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-neutral-200 rounded-2xl focus:border-duo-blue-500 focus:ring-4 focus:ring-duo-blue-100 outline-none transition-all duration-200 text-sm sm:text-base min-h-[200px] sm:min-h-[220px] resize-none font-medium placeholder:text-xs sm:placeholder:text-base"
                     disabled={isGenerating}
                   />
 
@@ -399,11 +399,11 @@ const CreateGamePage: React.FC = () => {
                 )}
 
                 {/* Revolutionary Examples */}
-                <div className="bg-neutral-50 rounded-2xl p-3 sm:p-4">
-                  <h4 className="text-base sm:text-xl font-bold text-neutral-800 mb-2 sm:mb-3 font-display">
+                <div className="bg-neutral-50 rounded-2xl p-2 sm:p-3">
+                  <h4 className="text-sm sm:text-lg font-bold text-neutral-800 mb-1 sm:mb-2 font-display">
                     Revolutionary Examples - Try These!
                   </h4>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-1 sm:gap-2">
                     {[
                       "Happy panda collecting bamboos in the forest",
                       "Little fish swimming and eating bubbles",
@@ -417,7 +417,7 @@ const CreateGamePage: React.FC = () => {
                       <button
                         key={index}
                         onClick={() => setPrompt(example)}
-                        className="bg-white hover:bg-duo-blue-50 text-left p-2 sm:p-3 text-xs sm:text-base font-medium rounded-xl border border-neutral-200 hover:border-duo-blue-200 hover:text-duo-blue-700 transition-colors disabled:opacity-50 leading-tight"
+                        className="bg-white hover:bg-duo-blue-50 text-left p-1.5 sm:p-2 text-xs sm:text-sm font-medium rounded-xl border border-neutral-200 hover:border-duo-blue-200 hover:text-duo-blue-700 transition-colors disabled:opacity-50 leading-tight"
                         disabled={isGenerating}
                       >
                         <span className="flex items-start gap-2">
@@ -438,7 +438,7 @@ const CreateGamePage: React.FC = () => {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="bg-white rounded-2xl shadow-soft p-6 border-l-4 border-duo-red-500 mt-6"
+                      className="bg-white rounded-2xl shadow-soft p-4 sm:p-6 border-l-4 border-duo-red-500 mt-3 sm:mt-4"
                     >
                       <div className="flex items-start gap-4">
                         <div className="text-duo-red-500 text-3xl">⚠️</div>
@@ -465,7 +465,7 @@ const CreateGamePage: React.FC = () => {
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.8 }}
-                      className="bg-white rounded-2xl shadow-soft p-8 text-center bg-gradient-to-br from-duo-green-50 to-duo-green-100 border-l-4 border-duo-green-500 mt-6"
+                      className="bg-white rounded-2xl shadow-soft p-4 sm:p-6 text-center bg-gradient-to-br from-duo-green-50 to-duo-green-100 border-l-4 border-duo-green-500 mt-3 sm:mt-4"
                     >
                       <div className="text-5xl mb-4">🎉</div>
                       <h4 className="font-bold text-duo-green-800 text-2xl mb-3 font-display">
