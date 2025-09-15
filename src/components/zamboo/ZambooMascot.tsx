@@ -16,10 +16,10 @@ interface ZambooMascotProps {
 }
 
 const sizeClasses = {
-  small: 'w-16 h-16',
-  medium: 'w-24 h-24',
-  large: 'w-32 h-32',
-  xl: 'w-48 h-48'
+  small: 'w-12 h-12 sm:w-16 sm:h-16',
+  medium: 'w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24',
+  large: 'w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32',
+  xl: 'w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48'
 }
 
 const ZambooMascot: React.FC<ZambooMascotProps> = ({
@@ -161,11 +161,11 @@ const ZambooMascot: React.FC<ZambooMascotProps> = ({
   }
 
   const moodColors = {
-    happy: 'from-duo-green-100 to-duo-green-200',
-    excited: 'from-duo-blue-100 to-duo-blue-200',
-    thinking: 'from-duo-purple-100 to-duo-purple-200',
-    celebrating: 'from-duo-yellow-100 to-duo-yellow-200',
-    encouraging: 'from-duo-red-100 to-duo-red-200'
+    happy: 'from-blue-100 to-blue-200',
+    excited: 'from-sky-100 to-sky-200',
+    thinking: 'from-teal-100 to-teal-200',
+    celebrating: 'from-yellow-100 to-yellow-200',
+    encouraging: 'from-blue-100 to-sky-200'
   }
 
   const handleClick = useCallback(() => {
@@ -195,8 +195,8 @@ const ZambooMascot: React.FC<ZambooMascotProps> = ({
             exit={{ opacity: 0, y: -10, scale: 0.8 }}
             className="mb-4 relative"
           >
-            <div className={`bg-gradient-to-r ${moodColors[state.mood]} rounded-2xl p-4 shadow-lg border-2 border-white max-w-xs`}>
-              <p className="text-base md:text-base font-bold text-neutral-800 font-display leading-tight text-center">
+            <div className={`bg-gradient-to-r ${moodColors[state.mood]} rounded-2xl p-2 sm:p-3 md:p-4 shadow-lg border-2 border-white max-w-xs`}>
+              <p className="text-sm sm:text-base font-bold text-neutral-800 font-display leading-tight text-center">
                 {message}
               </p>
               {/* Speech bubble tail */}
@@ -227,7 +227,7 @@ const ZambooMascot: React.FC<ZambooMascotProps> = ({
         {/* Main panda body */}
         <div className={`w-full h-full bg-gradient-to-br ${moodColors[state.mood]} rounded-full shadow-lg border-4 border-white relative overflow-hidden`}>
           {/* Panda face */}
-          <div className="absolute inset-0 flex items-center justify-center text-6xl">
+          <div className="absolute inset-0 flex items-center justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
             🐼
           </div>
           
@@ -237,7 +237,7 @@ const ZambooMascot: React.FC<ZambooMascotProps> = ({
           
           {/* Bamboo accessory */}
           <motion.div
-            className="absolute -top-2 -right-1 text-2xl"
+            className="absolute -top-1 sm:-top-2 -right-0.5 sm:-right-1 text-lg sm:text-xl md:text-2xl"
             animate={{ rotate: showParticles ? [0, 10, -10, 0] : 0 }}
             transition={{ duration: 0.5, repeat: showParticles ? Infinity : 0 }}
           >

@@ -61,7 +61,7 @@ const TemplatesPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 relative flex flex-col">
+    <div className="min-h-screen bg-white relative flex flex-col font-sans">
       <BackgroundDecorations />
       
       <nav className="bg-white shadow-soft border-b border-neutral-200 relative z-10 flex-shrink-0">
@@ -75,16 +75,16 @@ const TemplatesPage: React.FC = () => {
               
               <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 min-w-0">
                 <div className="text-2xl sm:text-3xl lg:text-4xl animate-panda-bounce cursor-pointer">🐼</div>
-                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-duo-green-500 font-display truncate">zamboo</h1>
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-500 font-sans truncate">zamboo</h1>
               </div>
             </div>
             
             <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-shrink-0">
-              <div className="flex items-center gap-1 sm:gap-2 text-duo-blue-600 font-medium">
+              <div className="flex items-center gap-1 sm:gap-2 text-blue-500 font-semibold">
                 <Trophy size={14} className="sm:w-[16px] sm:h-[16px] lg:w-[18px] lg:h-[18px]" />
                 <span className="text-sm sm:text-base">500</span>
               </div>
-              <div className="flex items-center gap-1 sm:gap-2 text-duo-red-500 font-medium">
+              <div className="flex items-center gap-1 sm:gap-2 text-yellow-500 font-semibold">
                 <Heart size={14} className="sm:w-[16px] sm:h-[16px] lg:w-[18px] lg:h-[18px]" />
                 <span className="text-sm sm:text-base">5</span>
               </div>
@@ -145,7 +145,7 @@ const TemplatesPage: React.FC = () => {
                   </span>
                 </div>
                 
-                <h3 className="text-base sm:text-lg font-bold text-neutral-800 mb-2 sm:mb-3 font-display">Star Collector</h3>
+                <h3 className="text-sm sm:text-base lg:text-lg font-bold text-neutral-800 mb-2 sm:mb-3 font-display">Star Collector</h3>
                 <p className="text-xs sm:text-sm text-neutral-600 mb-3 sm:mb-4 leading-tight">
                   Help the panda collect stars while avoiding obstacles! Learn about movement and collision detection.
                 </p>
@@ -174,7 +174,7 @@ const TemplatesPage: React.FC = () => {
                   </span>
                 </div>
                 
-                <h3 className="text-base sm:text-lg font-bold text-neutral-800 mb-2 sm:mb-3 font-display">Maze Runner</h3>
+                <h3 className="text-sm sm:text-base lg:text-lg font-bold text-neutral-800 mb-2 sm:mb-3 font-display">Maze Runner</h3>
                 <p className="text-xs sm:text-sm text-neutral-600 mb-3 sm:mb-4 leading-tight">
                   Navigate through mazes using arrow keys! Learn about conditions and logic.
                 </p>
@@ -203,7 +203,7 @@ const TemplatesPage: React.FC = () => {
                   </span>
                 </div>
                 
-                <h3 className="text-base sm:text-lg font-bold text-neutral-800 mb-2 sm:mb-3 font-display">Jumping Panda</h3>
+                <h3 className="text-sm sm:text-base lg:text-lg font-bold text-neutral-800 mb-2 sm:mb-3 font-display">Jumping Panda</h3>
                 <p className="text-xs sm:text-sm text-neutral-600 mb-3 sm:mb-4 leading-tight">
                   Make the panda jump over obstacles! Learn about loops and timing.
                 </p>

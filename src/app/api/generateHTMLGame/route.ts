@@ -95,6 +95,31 @@ Rules:
             color: white;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
         }
+        /* Mobile touch controls styling */
+        .touch-button, .game-button, button {
+            background: #148AFF !important;
+            color: white !important;
+            border: 2px solid #1056CC !important;
+            border-radius: 12px !important;
+            padding: 12px 16px !important;
+            font-weight: 600 !important;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+            box-shadow: 0 2px 8px rgba(20, 138, 255, 0.3) !important;
+            cursor: pointer !important;
+            user-select: none !important;
+            touch-action: manipulation !important;
+            transition: all 0.2s ease !important;
+        }
+        .touch-button:hover, .game-button:hover, button:hover {
+            background: #1056CC !important;
+            box-shadow: 0 4px 12px rgba(20, 138, 255, 0.4) !important;
+            transform: translateY(-1px) !important;
+        }
+        .touch-button:active, .game-button:active, button:active {
+            background: #0C4299 !important;
+            transform: translateY(0) !important;
+            box-shadow: 0 2px 6px rgba(20, 138, 255, 0.3) !important;
+        }
     </style>
 </head>
 <body>

@@ -59,12 +59,12 @@ const Sidebar: React.FC<SidebarProps> = ({ navItems }) => {
                 <Link 
                   key={index}
                   href={item.href} 
-                  className={`relative group flex items-center transition-all duration-200 font-bold cursor-pointer border-none mb-2 min-h-[56px] rounded-2xl ${
-                    isExpanded 
-                      ? `gap-4 px-4 py-4 ${isActive ? 'text-white bg-blue-400 hover:bg-blue-500' : 'text-neutral-500 hover:bg-neutral-50'}`
-                      : `justify-center px-2 py-4 ${isActive ? 'text-white bg-blue-400 hover:bg-blue-500' : 'text-neutral-500 hover:bg-neutral-50'}`
+                  className={`relative group flex items-center transition-all duration-200 font-semibold cursor-pointer border-none mb-2 min-h-[56px] rounded-2xl ${
+                    isExpanded
+                      ? `gap-4 px-4 py-4 ${isActive ? 'text-white bg-blue-500 hover:bg-blue-600' : 'text-neutral-600 hover:bg-blue-50'}`
+                      : `justify-center px-2 py-4 ${isActive ? 'text-white bg-blue-500 hover:bg-blue-600' : 'text-neutral-600 hover:bg-blue-50'}`
                   }`}
-                  style={{ fontFamily: "'Fredoka One', sans-serif", fontSize: '0.8125rem' }}
+                  style={{ fontFamily: "'Outfit', sans-serif", fontSize: '0.8125rem' }}
                 >
                   <div className="w-8 h-8 flex items-center justify-center text-xl flex-shrink-0">
                     {item.icon}
@@ -100,9 +100,9 @@ const Sidebar: React.FC<SidebarProps> = ({ navItems }) => {
             <button
               onClick={toggleSidebar}
               className={`relative group w-12 h-12 mx-auto flex items-center justify-center rounded-full transition-all duration-300 ${
-                isExpanded 
-                  ? 'bg-gradient-to-r from-duo-blue-500 to-duo-green-500 text-white hover:from-duo-blue-600 hover:to-duo-green-600 shadow-lg hover:shadow-xl' 
-                  : 'bg-gradient-to-r from-duo-blue-500 to-duo-green-500 text-white hover:from-duo-blue-600 hover:to-duo-green-600 shadow-lg hover:shadow-xl'
+                isExpanded
+                  ? 'bg-gradient-to-r from-blue-500 to-sky-400 text-white hover:from-blue-600 hover:to-sky-500 shadow-lg hover:shadow-xl'
+                  : 'bg-gradient-to-r from-blue-500 to-sky-400 text-white hover:from-blue-600 hover:to-sky-500 shadow-lg hover:shadow-xl'
               }`}
               title={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
             >

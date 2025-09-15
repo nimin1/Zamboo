@@ -8,11 +8,36 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Duolingo-inspired primary colors
+        // Exact AngelQ.ai color palette
+        blue: {
+          50: '#E5F0F3',    // AngelQ background
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#148AFF',   // Exact AngelQ primary blue
+          600: '#1056CC',   // Darker shade of primary
+          700: '#0C4299',   // Even darker shade
+          800: '#075985',
+          900: '#0c4a6e',
+        },
+        teal: {
+          50: '#f0fdfa',
+          100: '#ccfbf1',
+          200: '#99f6e4',
+          300: '#5eead4',
+          400: '#2dd4bf',
+          500: '#14b8a6',
+          600: '#0d9488',
+          700: '#1b4332',  // AngelQ deep teal/green
+          800: '#134e4a',
+          900: '#042f2e',
+        },
+        // Keep existing duo colors for compatibility
         'duo': {
           green: {
             50: '#f0fdf4',
-            100: '#dcfce7', 
+            100: '#dcfce7',
             200: '#bbf7d0',
             300: '#86efac',
             400: '#4ade80',
@@ -28,19 +53,19 @@ module.exports = {
             200: '#bfdbfe',
             300: '#93c5fd',
             400: '#60a5fa',
-            500: '#3b82f6',  // Main bright blue
+            500: '#148aff',  // Updated to match AngelQ
             600: '#2563eb',
             700: '#1d4ed8',
             800: '#1e40af',
             900: '#1e3a8a',
           },
           yellow: {
-            50: '#fefce8',
+            50: '#fffbeb',
             100: '#fef3c7',
             200: '#fde68a',
             300: '#fcd34d',
             400: '#fbbf24',
-            500: '#f59e0b',  // Warm yellow
+            500: '#F6C83B',  // Exact AngelQ yellow
             600: '#d97706',
             700: '#b45309',
             800: '#92400e',
@@ -71,18 +96,18 @@ module.exports = {
             900: '#581c87',
           },
         },
-        // Additional colors used in the CSS
-        'zamboo': {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
+        // AngelQ.ai exact color palette for precise matching
+        'angelq': {
+          primary: '#148AFF',      // Main primary blue
+          yellow: '#F6C83B',       // Main yellow accent
+          background: '#E5F0F3',   // Light background
+          'background-alt': '#F7FBFC', // Alternative background
+          'text-primary': '#1A1A1A',   // Primary text
+          'text-secondary': '#666666', // Secondary text
+          'text-light': '#999999',     // Light text
+          'gray-light': '#F5F5F5',     // Light gray
+          'gray-medium': '#E0E0E0',    // Medium gray
+          'border': '#E6E6E6',         // Border color
         },
         'panda': {
           50: '#f8fafc',
@@ -121,40 +146,78 @@ module.exports = {
         },
       },
       fontFamily: {
-        'sans': ['"Poppins"', 'sans-serif'],
-        'display': ['"Fredoka One"', 'sans-serif'],
-        'fun': ['"Fredoka One"', 'sans-serif'],
-        'bubbly': ['"Fredoka One"', 'sans-serif'],
-        'logo': ['"Fredoka One"', 'sans-serif'],
-        'kids': ['"Poppins"', 'sans-serif'],
-        'funky': ['"Fredoka One"', 'sans-serif'],
+        'sans': ['"Outfit"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        'display': ['"Outfit"', 'system-ui', 'sans-serif'],
+        'heading': ['"Outfit"', 'system-ui', 'sans-serif'],
+        'body': ['"Outfit"', 'system-ui', 'sans-serif'],
+        // Keep existing fonts for compatibility
+        'fun': ['"Outfit"', '"Fredoka One"', 'system-ui', 'sans-serif'],
+        'bubbly': ['"Outfit"', '"Fredoka One"', 'system-ui', 'sans-serif'],
+        'logo': ['"Outfit"', 'system-ui', 'sans-serif'],
         'playful': ['"Schoolbell"', 'cursive'],
       },
       fontSize: {
-        'xs': ['0.75rem', { lineHeight: '1rem' }],
-        'sm': ['0.875rem', { lineHeight: '1.25rem' }],
-        'base': ['1rem', { lineHeight: '1.5rem' }],
-        'lg': ['1.125rem', { lineHeight: '1.75rem' }],
-        'xl': ['1.25rem', { lineHeight: '1.75rem' }],
-        '2xl': ['1.5rem', { lineHeight: '2rem' }],
-        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-        '5xl': ['3rem', { lineHeight: '1' }],
-        '6xl': ['3.75rem', { lineHeight: '1' }],
-        '7xl': ['4.5rem', { lineHeight: '1' }],
-        '8xl': ['6rem', { lineHeight: '1' }],
-        '9xl': ['8rem', { lineHeight: '1' }],
+        // AngelQ.ai typography scale
+        'xs': ['0.75rem', { lineHeight: '1.2', fontWeight: '400' }],      // 12px
+        'sm': ['0.875rem', { lineHeight: '1.3', fontWeight: '400' }],     // 14px
+        'base': ['1rem', { lineHeight: '1.5', fontWeight: '400' }],       // 16px - body text
+        'lg': ['1.125rem', { lineHeight: '1.4', fontWeight: '500' }],     // 18px
+        'xl': ['1.25rem', { lineHeight: '1.3', fontWeight: '600' }],      // 20px - small headings
+        '2xl': ['1.5rem', { lineHeight: '1.25', fontWeight: '600' }],     // 24px - medium headings
+        '3xl': ['2rem', { lineHeight: '1.2', fontWeight: '700' }],        // 32px - large headings
+        '4xl': ['2.5rem', { lineHeight: '1.1', fontWeight: '700' }],      // 40px - hero headings
+        '5xl': ['3rem', { lineHeight: '1.1', fontWeight: '800' }],        // 48px - main hero
+        '6xl': ['3.75rem', { lineHeight: '1', fontWeight: '800' }],       // 60px
+        '7xl': ['4.5rem', { lineHeight: '1', fontWeight: '800' }],        // 72px
+        '8xl': ['6rem', { lineHeight: '1', fontWeight: '800' }],          // 96px
+        '9xl': ['8rem', { lineHeight: '1', fontWeight: '800' }],          // 128px
       },
       borderRadius: {
-        'xl': '1rem',
-        '2xl': '1.5rem',
-        '3xl': '2rem',
-        '4xl': '2.5rem',
+        'xs': '0.25rem',    // 4px - AngelQ small radius
+        'sm': '0.375rem',   // 6px
+        'default': '0.5rem', // 8px
+        'md': '0.5rem',     // 8px
+        'lg': '0.75rem',    // 12px - AngelQ medium radius
+        'xl': '1rem',       // 16px - AngelQ large radius
+        '2xl': '1.5rem',    // 24px
+        '3xl': '2rem',      // 32px
+        '4xl': '2.5rem',    // 40px
+      },
+      spacing: {
+        // AngelQ.ai spacing scale (4px base)
+        '0': '0',
+        '1': '0.25rem',     // 4px
+        '2': '0.5rem',      // 8px
+        '3': '0.75rem',     // 12px
+        '4': '1rem',        // 16px - base unit
+        '5': '1.25rem',     // 20px
+        '6': '1.5rem',      // 24px
+        '8': '2rem',        // 32px
+        '10': '2.5rem',     // 40px
+        '12': '3rem',       // 48px
+        '16': '4rem',       // 64px
+        '20': '5rem',       // 80px
+        '24': '6rem',       // 96px
+        '32': '8rem',       // 128px
       },
       boxShadow: {
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-        'medium': '0 4px 25px -2px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-        'strong': '0 10px 40px -12px rgba(0, 0, 0, 0.25)',
+        // AngelQ.ai shadow system
+        'none': '0 0 #0000',
+        'sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        'default': '0 2px 8px 0 rgba(0, 0, 0, 0.06)',
+        'md': '0 4px 12px 0 rgba(0, 0, 0, 0.08)',
+        'lg': '0 6px 16px 0 rgba(0, 0, 0, 0.10)',
+        'xl': '0 10px 25px 0 rgba(0, 0, 0, 0.15)',
+        '2xl': '0 20px 40px 0 rgba(0, 0, 0, 0.20)',
+        // Button specific shadows
+        'button': '0 2px 8px rgba(20, 138, 255, 0.2)',
+        'button-hover': '0 4px 12px rgba(20, 138, 255, 0.3)',
+        'button-yellow': '0 2px 8px rgba(246, 200, 59, 0.2)',
+        'button-yellow-hover': '0 4px 12px rgba(246, 200, 59, 0.3)',
+        // Legacy shadows for compatibility
+        'soft': '0 2px 12px rgba(0, 0, 0, 0.04)',
+        'medium': '0 4px 20px rgba(0, 0, 0, 0.08)',
+        'strong': '0 10px 40px rgba(0, 0, 0, 0.15)',
       },
       animation: {
         'bounce-slow': 'bounce 2s infinite',
